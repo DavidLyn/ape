@@ -9,8 +9,10 @@ import 'package:ape/global/global_provider.dart';
 import 'package:ape/global/theme_provider.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/global/home_page.dart';
+import 'package:ape/global/splash_page.dart';
 import 'package:ape/common/storage_manager.dart';
 import 'package:ape/common/sqlite_manager.dart';
+import 'package:ape/util/log_utils.dart';
 
 // 初始化 provider
 List<SingleChildWidget> _providers = [
@@ -24,6 +26,9 @@ List<SingleChildWidget> _providers = [
 ];
 
 void main() async {
+  // 初始化日志工具
+  Log.init();
+
   // 初始化 router
   GlobalRouter.initRouters();
 
@@ -45,6 +50,10 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final Widget home;
+
+  MyApp({this.home});
+
   @override
   Widget build(BuildContext context) {
     return OKToast(
@@ -58,13 +67,19 @@ class MyApp extends StatelessWidget {
                   debugShowCheckedModeBanner: false,
                   theme: themeProvider.themeData(),
                   darkTheme: themeProvider.themeData(platformDarkMode: true),
-                  home: HomePage(),
+                  home: home ?? SplashPage(),
                   onGenerateRoute: GlobalRouter.router.generator,
+
                 ),
               );
             }
         )
-      )
+      ),
+      /// Toast 配置
+      backgroundColor: Colors.black54,
+      textPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+      radius: 20.0,
+      position: ToastPosition.bottom
    );
   }
 }

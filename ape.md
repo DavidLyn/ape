@@ -31,4 +31,15 @@
 > 
 > xxx_page.dart : 页面文件
 
+---
+# 资源文件结构
+
+> /assets/images/common 下放置框架类图片，正常每个应用不会改变
+
+---
+# 公用组件和包
+
+## 最基本
+
++ log_utils.log
 

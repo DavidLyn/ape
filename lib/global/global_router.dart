@@ -3,6 +3,9 @@ import 'package:fluro/fluro.dart';
 
 import 'package:ape/global/home_page.dart';
 import 'package:ape/login/login_page.dart';
+import 'package:ape/login/register_page.dart';
+import 'package:ape/login/sms_login_page.dart';
+import 'package:ape/login/reset_password_page.dart';
 
 /// 定义全局 Router 和初始化方法
 ///
@@ -22,6 +25,9 @@ class GlobalRouter {
     router.define("/home", handler: Handler(handlerFunc: (_,params){return HomePage();}));
 
     router.define("/login", handler: Handler(handlerFunc: (_,params){return LoginPage();}));
+    router.define("/login/register", handler: Handler(handlerFunc: (_,params){return RegisterPage();}));
+    router.define("/login/smsLogin", handler: Handler(handlerFunc: (_,params){return SMSLoginPage();}));
+    router.define("/login/resetPassword", handler: Handler(handlerFunc: (_,params){return ResetPasswordPage();}));
 
   }
 }

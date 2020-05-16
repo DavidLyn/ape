@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:keyboard_actions/keyboard_action.dart';
 import 'package:keyboard_actions/keyboard_actions_config.dart';
 
+import 'package:oktoast/oktoast.dart';
+
 import 'package:ape/util/theme_utils.dart';
 
 class OtherUtils {
@@ -25,6 +27,17 @@ class OtherUtils {
           },
         ],
       )),
+    );
+  }
+
+  static showToastMessage(String msg, {duration = 2000}) {
+    if (msg == null) {
+      return;
+    }
+    showToast(
+        msg,
+        duration: Duration(milliseconds: duration),
+        dismissOtherToast: true
     );
   }
 

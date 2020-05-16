@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flustars/flustars.dart';
+import 'package:ape/util/theme_utils.dart';
 
 class ThemeProvider with ChangeNotifier {
 
@@ -98,6 +99,12 @@ class ThemeProvider with ChangeNotifier {
       ),
   //          textTheme: CupertinoTextThemeData(brightness: Brightness.light)
       inputDecorationTheme: _ThemeHelper.inputDecorationTheme(themeData),
+      dividerTheme: DividerThemeData(
+          color: platformDarkMode ? Colours.dark_line : Colours.line,
+          space: 0.6,
+          thickness: 0.6
+      ),
+
     );
     return themeData;
   }

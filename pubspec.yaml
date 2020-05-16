@@ -35,6 +35,9 @@ dependencies:
   # 路由框架 https://github.com/theyakka/fluro
   fluro: ^1.6.3
 
+  # 处理键盘事件 https://github.com/diegoveloper/flutter_keyboard_actions
+  keyboard_actions: ^3.2.1
+
   # 本地json对象存储  https://github.com/lesnitsky/flutter_localstorage
   localstorage: ^3.0.0
 
@@ -78,5 +81,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/common/
+    - assets/images/login/
     - assets/images/logo/
     - assets/images/splash/

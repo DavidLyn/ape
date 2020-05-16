@@ -1,32 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'package:flustars/flustars.dart';
+
 class ThemeProvider with ChangeNotifier {
 
-  /// 用户选择的明暗模式
-  bool _userDarkMode;
+  // 是否 dark mode 在 sharedPreferences 中的键值
+  static const useDarkModeTheme = "useDarkModeTheme";
+
+  // 当前主题颜色索引在 sharedPreferences 中的键值
+  static const themeColorIndex = "themeColorIndex";
+
+  /// 用户选择暗模式
+  bool _useDarkMode;
+  bool get useDarkMode => _useDarkMode;
 
   /// 当前主题颜色
   MaterialColor _themeColor;
+  MaterialColor get themeColor => _themeColor;
 
   /// 当前字体索引
   int _fontIndex;
+  int get fontIndex => _fontIndex;
 
   ThemeProvider() {
     /// 用户选择的明暗模式
-    _userDarkMode = false;
+    _useDarkMode = SpUtil.getBool(useDarkModeTheme) ?? false;
 
     /// 获取主题色
-    _themeColor = Colors.primaries[5];
+    _themeColor = Colors.primaries[SpUtil.getInt(themeColorIndex) ?? 5];
 
     /// 获取字体
     _fontIndex = 0;
   }
 
+  void setBrightnessMode({bool useDarkMode}) {
+    _useDarkMode = useDarkMode ?? _useDarkMode;
+    notifyListeners();
+
+    SpUtil.putBool(useDarkModeTheme, _useDarkMode);
+
+  }
+
+  void setThemeColor({MaterialColor themeColor}) {
+    _themeColor = themeColor ?? _themeColor;
+    notifyListeners();
+
+    var index = Colors.primaries.indexOf(themeColor);
+    SpUtil.putInt(themeColorIndex, index);
+
+  }
+
   /// 根据主题 明暗 和 颜色 生成对应的主题
   /// [dark]系统的Dark Mode
   themeData({bool platformDarkMode: false}) {
-    var isDark = platformDarkMode || _userDarkMode;
+    var isDark = platformDarkMode || _useDarkMode;
     Brightness brightness = isDark ? Brightness.dark : Brightness.light;
 
     var themeColor = _themeColor;

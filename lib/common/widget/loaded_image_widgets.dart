@@ -13,7 +13,8 @@ class LoadedImageWidget extends StatelessWidget {
     this.height,
     this.fit: BoxFit.cover, 
     this.format: 'png',
-    this.holderImg: 'img_none'
+    this.holderImg: 'img_none',
+    this.path : 'assets/images'
   }): super(key: key);
   
   final String image;
@@ -22,6 +23,7 @@ class LoadedImageWidget extends StatelessWidget {
   final BoxFit fit;
   final String format;
   final String holderImg;
+  final String path;
   
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,8 @@ class LoadedImageWidget extends StatelessWidget {
         height: height,
         width: width,
         fit: fit,
-        format: format
+        format: format,
+        path:path
       );
     } else {
       if (image.startsWith('http')) {
@@ -47,7 +50,8 @@ class LoadedImageWidget extends StatelessWidget {
             height: height,
             width: width,
             fit: fit,
-            format: format
+            format: format,
+            path: path
         );
       }
     }
@@ -65,7 +69,8 @@ class LoadedAssetImageWidget extends StatelessWidget {
     this.cacheHeight,
     this.fit,
     this.format: 'png',
-    this.color
+    this.color,
+    this.path: 'assets/images'
   }): super(key: key);
 
   final String image;
@@ -76,12 +81,13 @@ class LoadedAssetImageWidget extends StatelessWidget {
   final BoxFit fit;
   final String format;
   final Color color;
+  final String path;
   
   @override
   Widget build(BuildContext context) {
 
     return Image.asset(
-      ImageUtils.getImgPath(image, format: format),
+      ImageUtils.getImgPath(image, format: format, path: path),
       height: height,
       width: width,
       cacheWidth: cacheWidth,
@@ -98,17 +104,17 @@ class LoadedAssetImageWidget extends StatelessWidget {
 ///
 class ImageUtils {
 
-  static ImageProvider getAssetImageProvider(String name, {String format: 'png'}) {
-    return AssetImage(getImgPath(name, format: format));
+  static ImageProvider getAssetImageProvider(String name, {String format: 'png',String path : 'assets/images'}) {
+    return AssetImage(getImgPath(name, format: format, path : path));
   }
 
-  static String getImgPath(String name, {String format: 'png'}) {
-    return 'assets/images/$name.$format';
+  static String getImgPath(String name, {String format: 'png',String path : 'assets/images'}) {
+    return '$path/$name.$format';
   }
 
   static ImageProvider getWebImageProvider(String imageUrl, {String holderImg: 'img_none'}) {
     if (TextUtil.isEmpty(imageUrl)) {
-      return AssetImage(getImgPath(holderImg));
+      return AssetImage(getImgPath(holderImg, path : 'assets/images/common'));
     }
     return CachedNetworkImageProvider(imageUrl, errorListener: () => Log.e("图片加载失败！"));
   }

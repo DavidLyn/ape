@@ -35,11 +35,27 @@
 # 资源文件结构
 
 > /assets/images/common 下放置框架类图片，正常每个应用不会改变
+>
+> /assets/images/splash splash 图片
 
 ---
 # 公用组件和包
 
-## 最基本
+## /lib/util/log_utils.dart
 
-+ log_utils.log
+> 日志工具类，用于输出日志
+
+## lib/util/device_info_utils.dart
+
+> 设备信息工具，用于判断当前设备类型
+
+## /common/widget/loaded_image_widgets.dart
+
+> 从本地资源或url获取的 image 组件
+
+## /lib/util/theme_utils.dart
+
+> 定义常用颜色以及从当前主题中获取特定颜色
+
+
 

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flustars/flustars.dart';
 
 import 'package:ape/global/global_provider.dart';
 import 'package:ape/global/theme_provider.dart';
@@ -26,11 +27,18 @@ List<SingleChildWidget> _providers = [
 ];
 
 void main() async {
+
+  // 不加这句，SpUtil.getInstance()将报错
+  WidgetsFlutterBinding.ensureInitialized();
+
   // 初始化日志工具
   Log.init();
 
   // 初始化 router
   GlobalRouter.initRouters();
+
+  // 初始化 SpUtil
+  await SpUtil.getInstance();
 
   // 初始化 SharedPreferences、LocalStorage 等
   await StorageManager.init();

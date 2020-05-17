@@ -51,4 +51,35 @@ class User {
     this.status,
   });
 
+  User.fromJson(json)
+      :
+        name = json["name"],
+        nickname = json["nickname"],
+        birthday = json["birthday"],
+        mobile = json["mobile"],
+        email = json["email"],
+        password = json["password"],
+        salt = json["salt"],
+        avatar = json["avatar"],
+        createAt = json["createAt"],
+        updateAt = json["updateAt"],
+        status = json["status"];
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = name;
+    data['nickname'] = nickname;
+    data['birthday'] = birthday;
+    data['mobile'] = mobile;
+    data['email'] = email;
+    data['password'] = password;
+    data['salt'] = salt;
+    data['avatar'] = avatar;
+    data['createAt'] = createAt;
+    data['updateAt'] = updateAt;
+    data['status'] = status;
+
+    return data;
+  }
+
 }

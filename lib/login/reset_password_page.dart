@@ -7,6 +7,10 @@ import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_text_field.dart';
 import 'package:ape/common/widget/my_button.dart';
 import 'package:ape/util/other_utils.dart';
+import 'package:ape/entity/user.dart';
+import 'package:ape/network/nw_api.dart';
+import 'package:ape/network/rest_result_wrapper.dart';
+import 'package:ape/network/dio_manager.dart';
 
 /// 重置密码页面
 class ResetPasswordPage extends StatefulWidget {
@@ -55,7 +59,29 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   }
   
   void _reset() {
-    OtherUtils.showToastMessage('确认......');
+
+    // 用 salt 存储短信验证码
+    var user = User( mobile: _nameController.text,
+        password: _passwordController.text,
+        salt: _vCodeController.text );
+
+    DioManager().request<User>(
+        NWMethod.POST,
+        NWApi.resetpassword,
+        params: user.toJson(),
+        success: (data) {
+          print("success data = $data");
+
+          // 切换到 home 页面
+          NavigatorUtils.push(context, '/home');
+        },
+        error: (error) {
+          print("error code = ${error.code}, massage = ${error.message}");
+
+          OtherUtils.showToastMessage('重置登录密码失败!');
+        }
+    );
+
   }
 
   @override

@@ -6,6 +6,10 @@ import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_text_field.dart';
 import 'package:ape/common/widget/my_button.dart';
 import 'package:ape/util/other_utils.dart';
+import 'package:ape/entity/user.dart';
+import 'package:ape/network/nw_api.dart';
+import 'package:ape/network/rest_result_wrapper.dart';
+import 'package:ape/network/dio_manager.dart';
 
 /// 短信验证登录页面
 class SMSLoginPage extends StatefulWidget {
@@ -46,7 +50,25 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
   }
 
   void _login() {
-    OtherUtils.showToastMessage('去登录......');
+    var user = User( mobile: _phoneController.text,
+                     salt: _vCodeController.text );
+
+    DioManager().request<User>(
+        NWMethod.POST,
+        NWApi.smslogin,
+        params: user.toJson(),
+        success: (data) {
+          print("success data = $data");
+
+          // 切换到 home 页面
+          NavigatorUtils.push(context, '/home');
+        },
+        error: (error) {
+          print("error code = ${error.code}, massage = ${error.message}");
+
+          OtherUtils.showToastMessage('登录失败!');
+        }
+    );
   }
 
   @override

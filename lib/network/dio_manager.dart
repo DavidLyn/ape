@@ -5,6 +5,30 @@ import 'package:ape/network/nw_api.dart';
 import 'package:ape/network/rest_result_wrapper.dart';
 import 'package:ape/util/log_utils.dart';
 
+/// Dio Http 管理类
+/// 例子 : 返回 LoginEntity
+///DioManager().request<LoginEntity>(
+///  NWMethod.POST,
+///  NWApi.loginPath,
+///  params: {"account": "421789838@qq.com", "password": "123456"},
+///  success: (data) {
+///    print("success data = $data"});
+///  }, error: (error) {
+///    print("error code = ${error.code}, massage = ${error.message}");
+///  }
+///);
+
+/// 例子 : 返回 List
+///DioManager().requestList<LoginEntity>(
+///  NWMethod.POST,
+///  NWApi.queryListJsonPath,
+///  params: {"account": "421789838@qq.com", "password": "123456"},
+///  success: (data) {
+///    print("success data = $data"});
+///  }, error: (error) {
+///    print("error code = ${error.code}, massage = ${error.message}");
+///  }
+///);
 class DioManager {
 
   static final DioManager _shared = DioManager._internal();
@@ -28,8 +52,8 @@ class DioManager {
       _dio = Dio(options);
 
       // 添加拦截器
-      _dio.interceptors.add(AuthenticationInterceptor());
-      _dio.interceptors.add(LoggingInterceptor());
+      _dio.interceptors.add(_AuthenticationInterceptor());
+      _dio.interceptors.add(_LoggingInterceptor());
 
     }
   }
@@ -120,32 +144,8 @@ class DioManager {
 
 }
 
-// 例子 : 返回 LoginEntity
-//DioManager().request<LoginEntity>(
-//  NWMethod.POST,
-//  NWApi.loginPath,
-//  params: {"account": "421789838@qq.com", "password": "123456"},
-//  success: (data) {
-//    print("success data = $data"});
-//  }, error: (error) {
-//    print("error code = ${error.code}, massage = ${error.message}");
-//  }
-//);
-
-// 例子 : 返回 List
-//DioManager().requestList<LoginEntity>(
-//  NWMethod.POST,
-//  NWApi.queryListJsonPath,
-//  params: {"account": "421789838@qq.com", "password": "123456"},
-//  success: (data) {
-//    print("success data = $data"});
-//  }, error: (error) {
-//    print("error code = ${error.code}, massage = ${error.message}");
-//  }
-//);
-
 /// 将 token 追加到 header 中的拦截器
-class AuthenticationInterceptor extends Interceptor {
+class _AuthenticationInterceptor extends Interceptor {
 
   @override
   onRequest(RequestOptions options) {
@@ -162,7 +162,7 @@ class AuthenticationInterceptor extends Interceptor {
 }
 
 /// 输出 http 请求响应日志的拦截器
-class LoggingInterceptor extends Interceptor{
+class _LoggingInterceptor extends Interceptor{
 
   DateTime _startTime;
   DateTime _endTime;

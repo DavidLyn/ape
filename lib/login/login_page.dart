@@ -8,6 +8,10 @@ import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_text_field.dart';
 import 'package:ape/common/widget/my_button.dart';
 import 'package:ape/util/other_utils.dart';
+import 'package:ape/network/dio_manager.dart';
+import 'package:ape/entity/user.dart';
+import 'package:ape/network/nw_api.dart';
+import 'package:ape/network/rest_result_wrapper.dart';
 
 /// 登录页面
 class LoginPage extends StatefulWidget {
@@ -55,7 +59,27 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login() {
     FlutterStars.SpUtil.putString(phoneNumber, _nameController.text);
-    NavigatorUtils.push(context, '/store/audit');
+
+    var user = User( mobile: _nameController.text,
+                     password: _passwordController.text );
+
+    DioManager().request<User>(
+      NWMethod.POST,
+      NWApi.login,
+      params: user.toJson(),
+      success: (data) {
+        print("success data = $data");
+
+        // 切换到 home 页面
+        NavigatorUtils.push(context, '/home');
+      },
+      error: (error) {
+        print("error code = ${error.code}, massage = ${error.message}");
+
+        OtherUtils.showToastMessage('登录失败!');
+      }
+    );
+
   }
 
   @override

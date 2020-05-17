@@ -1,15 +1,19 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:ape/global/global_router.dart';
 import 'package:ape/common/widget/my_scroll_view.dart';
 import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_text_field.dart';
 import 'package:ape/common/widget/my_button.dart';
 import 'package:ape/util/other_utils.dart';
+import 'package:ape/entity/user.dart';
+import 'package:ape/network/nw_api.dart';
+import 'package:ape/network/rest_result_wrapper.dart';
+import 'package:ape/network/dio_manager.dart';
 
-/// design/1注册登录/index.html#artboard11
+/// 注册登录
 class RegisterPage extends StatefulWidget {
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -56,7 +60,29 @@ class _RegisterPageState extends State<RegisterPage> {
   }
   
   void _register() {
-    OtherUtils.showToastMessage('点击注册');
+
+    // 用 salt 存储短信验证码
+    var user = User( mobile: _nameController.text,
+                     password: _passwordController.text,
+                     salt: _vCodeController.text );
+
+    DioManager().request<User>(
+        NWMethod.POST,
+        NWApi.register,
+        params: user.toJson(),
+        success: (data) {
+          print("success data = $data");
+
+          // 切换到 home 页面
+          NavigatorUtils.push(context, '/home');
+        },
+        error: (error) {
+          print("error code = ${error.code}, massage = ${error.message}");
+
+          OtherUtils.showToastMessage('注册失败!');
+        }
+    );
+
   }
 
   @override

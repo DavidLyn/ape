@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
     DioManager().request<User>(
       NWMethod.POST,
       NWApi.login,
-      params: user.toJson(),
+      data : user.toJson(),
       success: (data) {
         print("success data = $data");
 

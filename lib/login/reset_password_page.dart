@@ -68,7 +68,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     DioManager().request<User>(
         NWMethod.POST,
         NWApi.resetpassword,
-        params: user.toJson(),
+        data: user.toJson(),
         success: (data) {
           print("success data = $data");
 

@@ -64,9 +64,9 @@ class DioManager {
   // params：请求参数
   // success：请求成功回调
   // error：请求失败回调
-  Future request<T>(NWMethod method, String path, {Map params, Function(T) success, Function(RestErrorEntity) error}) async {
+  Future request<T>(NWMethod method, String path, {Map data, Map params, Function(T) success, Function(RestErrorEntity) error}) async {
     try {
-      Response response = await _dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[method]));
+      Response response = await _dio.request(path, data : data, queryParameters: params, options: Options(method: NWMethodValues[method]));
       if (response != null) {
         RestResultBaseWrapper entity = RestResultBaseWrapper<T>.fromJson(response.data);
         if (entity.code == 0) {
@@ -88,9 +88,9 @@ class DioManager {
   // params：请求参数
   // success：请求成功回调
   // error：请求失败回调
-  Future requestList<T>(NWMethod method, String path, {Map params, Function(List<T>) success, Function(RestErrorEntity) error}) async {
+  Future requestList<T>(NWMethod method, String path, {Map data, Map params, Function(List<T>) success, Function(RestErrorEntity) error}) async {
     try {
-      Response response = await _dio.request(path, queryParameters: params, options: Options(method: NWMethodValues[method]));
+      Response response = await _dio.request(path, data : data, queryParameters: params, options: Options(method: NWMethodValues[method]));
       if (response != null) {
         RestResultListWrapper entity = RestResultListWrapper<T>.fromJson(response.data);
 
@@ -193,7 +193,8 @@ class _LoggingInterceptor extends Interceptor{
       Log.e('ResponseCode: ${response.statusCode}');
     }
     // 输出结果
-    Log.json(response.data.toString());
+    //Log.json(response.data.toString());   -- Log.json 会报错
+    Log.d(response.data.toString());
     Log.d('-------------------- Http End: $duration 毫秒 --------------------');
     return super.onResponse(response);
   }

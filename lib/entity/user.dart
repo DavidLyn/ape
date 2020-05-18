@@ -52,7 +52,7 @@ class User {
   });
 
   User.fromJson(json)
-      :
+      : uid = json["uid"],
         name = json["name"],
         nickname = json["nickname"],
         birthday = json["birthday"],
@@ -67,6 +67,8 @@ class User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['uid'] = uid;
     data['name'] = name;
     data['nickname'] = nickname;
     data['birthday'] = birthday;

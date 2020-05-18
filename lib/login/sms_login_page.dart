@@ -56,7 +56,7 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
     DioManager().request<User>(
         NWMethod.POST,
         NWApi.smslogin,
-        params: user.toJson(),
+        data: user.toJson(),
         success: (data) {
           print("success data = $data");
 

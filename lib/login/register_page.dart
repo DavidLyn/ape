@@ -69,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
     DioManager().request<User>(
         NWMethod.POST,
         NWApi.register,
-        params: user.toJson(),
+        data: user.toJson(),
         success: (data) {
           print("success data = $data");
 

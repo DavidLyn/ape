@@ -60,8 +60,12 @@ class _LoginPageState extends State<LoginPage> {
   void _login() {
     FlutterStars.SpUtil.putString(phoneNumber, _nameController.text);
 
+    // 约定 app 端以电话号码作为 key 的一部分保存 userid
+    var userid = FlutterStars.SpUtil.getInt('user_mobile_' +  _nameController.text.trim());
+
     var user = User( mobile: _nameController.text,
-                     password: _passwordController.text );
+                     password: _passwordController.text,
+                     uid: userid);
 
     DioManager().request<User>(
       NWMethod.POST,

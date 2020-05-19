@@ -61,7 +61,8 @@ class DioManager {
   // 请求，返回参数为 T
   // method：请求方法，NWMethod.POST等
   // path：请求地址
-  // params：请求参数
+  // data: http body,Map 类型
+  // params：URL 请求参数,Map 类型
   // success：请求成功回调
   // error：请求失败回调
   Future request<T>(NWMethod method, String path, {Map data, Map params, Function(T) success, Function(RestErrorEntity) error}) async {
@@ -84,7 +85,8 @@ class DioManager {
 
   // 请求，返回参数为 List
   // method：请求方法，NWMethod.POST等
-  // path：请求地址
+  // data: http body,Map 类型
+  // path：请求地址,Map 类型
   // params：请求参数
   // success：请求成功回调
   // error：请求失败回调

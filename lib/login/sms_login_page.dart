@@ -61,7 +61,7 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
           print("success data = $data");
 
           // 切换到 home 页面
-          NavigatorUtils.push(context, '/home');
+          NavigatorUtils.push(context, GlobalRouter.home);
         },
         error: (error) {
           print("error code = ${error.code}, massage = ${error.message}");
@@ -126,7 +126,7 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
               ],
             ),
           ),
-          onTap: () => NavigatorUtils.push(context, '/login/register'),
+          onTap: () => NavigatorUtils.push(context, GlobalRouter.register),
         )
       ),
       SizedBox(height: 24),
@@ -142,7 +142,7 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
             '忘记密码',
             style: Theme.of(context).textTheme.subtitle,
           ),
-          onTap: () => NavigatorUtils.push(context, '/login/resetPassword'),
+          onTap: () => NavigatorUtils.push(context, GlobalRouter.resetPassword),
         ),
       )
     ];

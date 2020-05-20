@@ -73,7 +73,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           print("success data = $data");
 
           // 切换到 home 页面
-          NavigatorUtils.push(context, '/home');
+          NavigatorUtils.push(context, GlobalRouter.home);
         },
         error: (error) {
           print("error code = ${error.code}, massage = ${error.message}");

@@ -10,6 +10,12 @@ import 'package:ape/login/reset_password_page.dart';
 /// 定义全局 Router 和初始化方法
 ///
 class GlobalRouter {
+  static final home = '/home';
+  static final login = '/login';
+  static final register = '/login/register';
+  static final smsLogin = '/login/smsLogin';
+  static final resetPassword = '/login/resetPassword';
+
   static final  router = Router();
 
   static initRouters() {
@@ -22,12 +28,12 @@ class GlobalRouter {
         }
     );
 
-    router.define("/home", handler: Handler(handlerFunc: (_,params){return HomePage();}));
+    router.define(home, handler: Handler(handlerFunc: (_,params){return HomePage();}));
 
-    router.define("/login", handler: Handler(handlerFunc: (_,params){return LoginPage();}));
-    router.define("/login/register", handler: Handler(handlerFunc: (_,params){return RegisterPage();}));
-    router.define("/login/smsLogin", handler: Handler(handlerFunc: (_,params){return SMSLoginPage();}));
-    router.define("/login/resetPassword", handler: Handler(handlerFunc: (_,params){return ResetPasswordPage();}));
+    router.define(login, handler: Handler(handlerFunc: (_,params){return LoginPage();}));
+    router.define(register, handler: Handler(handlerFunc: (_,params){return RegisterPage();}));
+    router.define(smsLogin, handler: Handler(handlerFunc: (_,params){return SMSLoginPage();}));
+    router.define(resetPassword, handler: Handler(handlerFunc: (_,params){return ResetPasswordPage();}));
 
   }
 }

@@ -58,6 +58,27 @@
 > 定义常用颜色以及从当前主题中获取特定颜色
 
 ---
+# 需要根据业务需求个性化的模块
+
+## common/constants.dart
+
++ SpConstants
+
+> Shared Preference 中用到的 key name 以静态方式在本类中声明，并被引用
+
+## global/global_router.dart
+
++ GlobalRouter
+
+> 所有页面的 router 以静态方式在本类中声明，并被引用
+
+## network/nm_api.dart
+
++ NWApi
+
+> base url 和所有 Rest 接口 url 以静态方式在本类中声明，并被引用
+
+---
 # 踩坑记录
 
 ## 在虚拟机中不能使用 127.0.0.1 或 localhost 访问本机，应使用本机的 ip 地址

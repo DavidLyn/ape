@@ -74,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
           print("success data = $data");
 
           // 切换到 home 页面
-          NavigatorUtils.push(context, '/home');
+          NavigatorUtils.push(context, GlobalRouter.home);
         },
         error: (error) {
           print("error code = ${error.code}, massage = ${error.message}");
@@ -126,8 +126,25 @@ class _RegisterPageState extends State<RegisterPage> {
         keyboardType: TextInputType.number,
         getVCode: () async {
           if (_nameController.text.length == 11) {
-            OtherUtils.showToastMessage('并没有真正发送哦，直接登录吧！');
-            /// 一般可以在这里发送真正的请求，请求成功返回true
+
+            // 通过后台向手机发短信
+            DioManager().request<String>(
+                NWMethod.GET,
+                NWApi.sendSms,
+                params : {'mobile':_nameController.text},
+                success: (data) {
+                  print("success data = $data");
+
+                  return true;
+                },
+                error: (error) {
+                  print("error code = ${error.code}, massage = ${error.message}");
+
+                  OtherUtils.showToastMessage('短信发送失败:' + error.message);
+                  return false;
+                }
+            );
+
             return true;
           } else {
             OtherUtils.showToastMessage('请输入有效的手机号');

@@ -4,6 +4,7 @@ import 'package:flustars/flustars.dart';
 import 'package:ape/network/nw_api.dart';
 import 'package:ape/network/rest_result_wrapper.dart';
 import 'package:ape/util/log_utils.dart';
+import 'package:ape/common/constants.dart';
 
 /// Dio Http 管理类
 /// 例子 : 返回 LoginEntity
@@ -151,7 +152,7 @@ class _AuthenticationInterceptor extends Interceptor {
 
   @override
   onRequest(RequestOptions options) {
-    String token = SpUtil.getString('accessToken');
+    String token = SpUtil.getString(SpConstants.accessToken);
     if (token.isNotEmpty) {
       //options.headers['Authorization'] = 'Bearer $token';
       //options.headers.putIfAbsent('token', () => token);

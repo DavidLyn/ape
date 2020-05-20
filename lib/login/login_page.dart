@@ -7,6 +7,7 @@ import 'package:ape/common/widget/my_scroll_view.dart';
 import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_text_field.dart';
 import 'package:ape/common/widget/my_button.dart';
+import 'package:ape/common/constants.dart';
 import 'package:ape/util/other_utils.dart';
 import 'package:ape/network/dio_manager.dart';
 import 'package:ape/entity/user.dart';
@@ -61,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
     FlutterStars.SpUtil.putString(phoneNumber, _nameController.text);
 
     // 约定 app 端以电话号码作为 key 的一部分保存 userid
-    var userid = FlutterStars.SpUtil.getInt('user_mobile_' +  _nameController.text.trim());
+    var userid = FlutterStars.SpUtil.getInt(SpConstants.getMobileSpKey(_nameController.text));
 
     var user = User( mobile: _nameController.text,
                      password: _passwordController.text,
@@ -74,13 +75,18 @@ class _LoginPageState extends State<LoginPage> {
       success: (data) {
         print("success data = $data");
 
+        // 在 shared preference 中保存基本信息
+        FlutterStars.SpUtil.putString(SpConstants.accessToken, data.password);
+        FlutterStars.SpUtil.putString(SpConstants.accessSalt, data.salt);
+        FlutterStars.SpUtil.putInt(SpConstants.getMobileSpKey(data.mobile), data.uid);
+
         // 切换到 home 页面
-        NavigatorUtils.push(context, '/home');
+        NavigatorUtils.push(context, GlobalRouter.home);
       },
       error: (error) {
         print("error code = ${error.code}, massage = ${error.message}");
 
-        OtherUtils.showToastMessage('登录失败!');
+        OtherUtils.showToastMessage('登录失败' + error.message);
       }
     );
 
@@ -93,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
         isBack: false,
         actionName: '验证码登录',
         onPressed: () {
-          NavigatorUtils.push(context, '/login/smsLogin');
+          NavigatorUtils.push(context, GlobalRouter.smsLogin);
         },
       ),
       body: MyScrollView(
@@ -146,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
           '忘记密码',
           style: Theme.of(context).textTheme.subtitle,
         ),
-        onTap: () => NavigatorUtils.push(context, '/login/resetPassword'),
+        onTap: () => NavigatorUtils.push(context, GlobalRouter.resetPassword),
       ),
     ),
     SizedBox(height: 16),
@@ -159,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                 color: Theme.of(context).primaryColor
             ),
           ),
-          onTap: () => NavigatorUtils.push(context, '/login/register'),
+          onTap: () => NavigatorUtils.push(context, GlobalRouter.register),
         )
     )
   ];

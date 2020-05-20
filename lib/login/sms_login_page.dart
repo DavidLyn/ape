@@ -10,6 +10,8 @@ import 'package:ape/entity/user.dart';
 import 'package:ape/network/nw_api.dart';
 import 'package:ape/network/rest_result_wrapper.dart';
 import 'package:ape/network/dio_manager.dart';
+import 'package:flustars/flustars.dart' as flustars;
+import 'package:ape/common/constants.dart';
 
 /// 短信验证登录页面
 class SMSLoginPage extends StatefulWidget {
@@ -50,8 +52,14 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
   }
 
   void _login() {
+    flustars.SpUtil.putString(SpConstants.phoneNumber, _phoneController.text);
+
+    // 约定 app 端以电话号码作为 key 的一部分保存 userid
+    var userid = flustars.SpUtil.getInt(SpConstants.getMobileSpKey(_phoneController.text));
+
     var user = User( mobile: _phoneController.text,
-                     salt: _vCodeController.text );
+                     salt: _vCodeController.text,
+                     uid: userid );
 
     DioManager().request<User>(
         NWMethod.POST,
@@ -107,9 +115,32 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
         maxLength: 6,
         keyboardType: TextInputType.number,
         hintText: '请输入验证码',
-        getVCode: () {
-          OtherUtils.showToastMessage('获取验证码');
-          return Future.value(true);
+        getVCode: () async {
+          if (_phoneController.text.length == 11) {
+
+            // 通过后台向手机发短信
+            DioManager().request<String>(
+                NWMethod.GET,
+                NWApi.sendSms,
+                params : {'mobile':_phoneController.text},
+                success: (data) {
+                  print("success data = $data");
+
+                  return true;
+                },
+                error: (error) {
+                  print("error code = ${error.code}, massage = ${error.message}");
+
+                  OtherUtils.showToastMessage('短信发送失败:' + error.message);
+                  return false;
+                }
+            );
+
+            return true;
+          } else {
+            OtherUtils.showToastMessage('请输入有效的手机号');
+            return false;
+          }
         },
       ),
       SizedBox(height: 8),

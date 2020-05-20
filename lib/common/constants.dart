@@ -1,6 +1,8 @@
 
 /// 保存可能被多个模块引用的 Shared Preference 常量
 class SpConstants {
+  static const String phoneNumber = 'phoneNumber';
+
   static final accessToken = 'accessToken';
 
   static final accessSalt = 'accessSalt';

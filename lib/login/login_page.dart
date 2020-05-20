@@ -22,8 +22,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
-  static const String phoneNumber = 'phoneNumber';
-
   TextEditingController _nameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   final FocusNode _nodeText1 = FocusNode();
@@ -36,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
     //监听输入改变
     _nameController.addListener(_verify);
     _passwordController.addListener(_verify);
-    _nameController.text = FlutterStars.SpUtil.getString(phoneNumber);
+    _nameController.text = FlutterStars.SpUtil.getString(SpConstants.phoneNumber);
   }
 
   void _verify() {
@@ -59,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login() {
-    FlutterStars.SpUtil.putString(phoneNumber, _nameController.text);
+    FlutterStars.SpUtil.putString(SpConstants.phoneNumber, _nameController.text);
 
     // 约定 app 端以电话号码作为 key 的一部分保存 userid
     var userid = FlutterStars.SpUtil.getInt(SpConstants.getMobileSpKey(_nameController.text));

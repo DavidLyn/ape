@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flustars/flustars.dart';
-
 import 'package:ape/common/widget/loaded_image_widgets.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/util/theme_utils.dart';
+import 'package:ape/common/constants.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -16,8 +15,6 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-
-  static const openSlash = "openSlash";
 
   // 状态为 0 时显示 logo，状态为 1 时显示 splash
   int _status = 0;
@@ -31,7 +28,7 @@ class _SplashPageState extends State<SplashPage> {
 
     // Frame build 结束回调下述方法
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (SpUtil.getBool(openSlash, defValue: true)) {
+      if (SpUtil.getBool(SpConstants.openSlash, defValue: true)) {
         /// 预先缓存图片，避免直接使用时因为首次加载造成闪动
         _guideList.forEach((image) {
           precacheImage(ImageUtils.getAssetImageProvider(image,path : 'assets/images/splash'), context);
@@ -41,7 +38,7 @@ class _SplashPageState extends State<SplashPage> {
       // 延时 1500 毫秒后或显示 splash 或跳转至 Login 页面
       Future.delayed(Duration(milliseconds: 1500),(){
         //if (SpUtil.getBool(openSlash, defValue: true)) {
-          SpUtil.putBool(openSlash, false);
+          SpUtil.putBool(SpConstants.openSlash, false);
 
           setState(() {
             _status = 1;    // 设置为 splash 显示状态
@@ -61,7 +58,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _gotoLogin() {
-    NavigatorUtils.push(context, "/login", replace: true);
+    NavigatorUtils.push(context, GlobalRouter.login, replace: true);
   }
 
   @override

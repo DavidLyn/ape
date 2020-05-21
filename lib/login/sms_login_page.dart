@@ -70,7 +70,7 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
           Log.d("success data = $data");
 
           // 切换到 home 页面
-          NavigatorUtils.push(context, GlobalRouter.home);
+          NavigatorUtils.push(context, GlobalRouter.home, replace: true);
         },
         error: (error) {
           Log.e("error code = ${error.code}, message = ${error.message}");

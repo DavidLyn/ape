@@ -81,8 +81,8 @@ class _RegisterPageState extends State<RegisterPage> {
           FlutterStars.SpUtil.putString(SpConstants.accessSalt, data.salt);
           FlutterStars.SpUtil.putString(SpConstants.accessToken, message);
 
-          // 切换到 home 页面
-          NavigatorUtils.push(context, GlobalRouter.home);
+          // 返回上级页面
+          NavigatorUtils.goBack(context);
         },
         error: (error) {
           Log.e("error code = ${error.code}, message = ${error.message}");

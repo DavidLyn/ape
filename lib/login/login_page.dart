@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
         FlutterStars.SpUtil.putInt(SpConstants.getMobileSpKey(data.mobile), data.uid);
 
         // 切换到 home 页面
-        NavigatorUtils.push(context, GlobalRouter.home);
+        NavigatorUtils.push(context, GlobalRouter.home, replace: true);
       },
       error: (error) {
         Log.e("error code = ${error.code}, message = ${error.message}");
@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
         isBack: false,
         actionName: '验证码登录',
         onPressed: () {
-          NavigatorUtils.push(context, GlobalRouter.smsLogin);
+          NavigatorUtils.push(context, GlobalRouter.smsLogin, replace: true);
         },
       ),
       body: MyScrollView(

@@ -11,11 +11,11 @@ import 'package:ape/common/constants.dart';
 ///DioManager().request<LoginEntity>(
 ///  NWMethod.POST,
 ///  NWApi.loginPath,
-///  params: {"account": "421789838@qq.com", "password": "123456"},
+///  params: <String,dynamic>{"account": "421789838@qq.com", "password": "123456"},
 ///  success: (data) {
 ///    print("success data = $data"});
 ///  }, error: (error) {
-///    print("error code = ${error.code}, massage = ${error.message}");
+///    print("error code = ${error.code}, message = ${error.message}");
 ///  }
 ///);
 
@@ -23,11 +23,11 @@ import 'package:ape/common/constants.dart';
 ///DioManager().requestList<LoginEntity>(
 ///  NWMethod.POST,
 ///  NWApi.queryListJsonPath,
-///  params: {"account": "421789838@qq.com", "password": "123456"},
+///  params: <String,dynamic>{"account": "421789838@qq.com", "password": "123456"},
 ///  success: (data) {
 ///    print("success data = $data"});
 ///  }, error: (error) {
-///    print("error code = ${error.code}, massage = ${error.message}");
+///    print("error code = ${error.code}, message = ${error.message}");
 ///  }
 ///);
 class DioManager {
@@ -66,13 +66,13 @@ class DioManager {
   // params：URL 请求参数,Map 类型
   // success：请求成功回调
   // error：请求失败回调
-  Future request<T>(NWMethod method, String path, {Map data, Map params, Function(T) success, Function(RestErrorEntity) error}) async {
+  Future request<T>(NWMethod method, String path, {Map data, Map params, Function(T t,String msg) success, Function(RestErrorEntity) error}) async {
     try {
       Response response = await _dio.request(path, data : data, queryParameters: params, options: Options(method: NWMethodValues[method]));
       if (response != null) {
         RestResultBaseWrapper entity = RestResultBaseWrapper<T>.fromJson(response.data);
         if (entity.code == 0) {
-          success(entity.data);
+          success(entity.data,entity.message);
         } else {
           error(RestErrorEntity(code: entity.code, message: entity.message));
         }

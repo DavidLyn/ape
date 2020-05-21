@@ -7,10 +7,13 @@ import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_text_field.dart';
 import 'package:ape/common/widget/my_button.dart';
 import 'package:ape/util/other_utils.dart';
+import 'package:ape/util/log_utils.dart';
 import 'package:ape/entity/user.dart';
 import 'package:ape/network/nw_api.dart';
 import 'package:ape/network/rest_result_wrapper.dart';
 import 'package:ape/network/dio_manager.dart';
+import 'package:flustars/flustars.dart' as flustars;
+import 'package:ape/common/constants.dart';
 
 /// 重置密码页面
 class ResetPasswordPage extends StatefulWidget {
@@ -60,25 +63,34 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   
   void _reset() {
 
+    // 约定 app 端以电话号码作为 key 的一部分保存 userid
+    var userid = flustars.SpUtil.getInt(SpConstants.getMobileSpKey(_nameController.text));
+
     // 用 salt 存储短信验证码
     var user = User( mobile: _nameController.text,
         password: _passwordController.text,
-        salt: _vCodeController.text );
+        salt: _vCodeController.text,
+        uid: userid );
 
     DioManager().request<User>(
         NWMethod.POST,
         NWApi.resetpassword,
         data: user.toJson(),
-        success: (data) {
-          print("success data = $data");
+        success: (data,message) {
+          Log.d("success data = $data");
 
-          // 切换到 home 页面
-          NavigatorUtils.push(context, GlobalRouter.home);
+          flustars.SpUtil.putString(SpConstants.accessSalt, data.salt);
+          flustars.SpUtil.putString(SpConstants.accessToken, message);
+
+          OtherUtils.showToastMessage('重置密码成功!');
+
+          // 返回到上级页面
+          NavigatorUtils.goBack(context);
         },
         error: (error) {
-          print("error code = ${error.code}, massage = ${error.message}");
+          Log.e("error code = ${error.code}, message = ${error.message}");
 
-          OtherUtils.showToastMessage('重置登录密码失败!');
+          OtherUtils.showToastMessage('重置密码失败!');
         }
     );
 
@@ -121,8 +133,33 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         focusNode: _nodeText2,
         controller: _vCodeController,
         keyboardType: TextInputType.number,
-        getVCode: () {
-          return Future.value(true);
+        getVCode: () async {
+
+          if (_nameController.text.length == 11) {
+
+            // 通过后台向手机发短信
+            DioManager().request<String>(
+                NWMethod.GET,
+                NWApi.sendSms,
+                params : <String,dynamic>{'mobile':_nameController.text},
+                success: (data,message) {
+                  Log.d("success data = $data");
+
+                  return true;
+                },
+                error: (error) {
+                  Log.e("error code = ${error.code}, message = ${error.message}");
+
+                  OtherUtils.showToastMessage('短信发送失败!');
+                  return false;
+                }
+            );
+
+            return true;
+          } else {
+            OtherUtils.showToastMessage('请输入有效的手机号');
+            return false;
+          }
         },
         maxLength: 6,
         hintText: '请输入验证码',

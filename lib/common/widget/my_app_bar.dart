@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ape/util/theme_utils.dart';
+import 'package:ape/global/global_router.dart';
 
 /// 自定义 AppBar
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -41,7 +42,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     var back = isBack ? IconButton(
       onPressed: () {
         FocusScope.of(context).unfocus();
-        Navigator.maybePop(context);
+        //Navigator.maybePop(context);
+        NavigatorUtils.goBack(context);
       },
       tooltip: 'Back',
       padding: const EdgeInsets.all(12.0),

@@ -9,6 +9,7 @@ import 'package:ape/common/widget/my_text_field.dart';
 import 'package:ape/common/widget/my_button.dart';
 import 'package:ape/common/constants.dart';
 import 'package:ape/util/other_utils.dart';
+import 'package:ape/util/log_utils.dart';
 import 'package:ape/network/dio_manager.dart';
 import 'package:ape/entity/user.dart';
 import 'package:ape/network/nw_api.dart';
@@ -70,8 +71,8 @@ class _LoginPageState extends State<LoginPage> {
       NWMethod.POST,
       NWApi.login,
       data : user.toJson(),
-      success: (data) {
-        print("success data = $data");
+      success: (data,message) {
+        Log.d("success data = $data");
 
         // 在 shared preference 中保存基本信息
         FlutterStars.SpUtil.putString(SpConstants.accessToken, data.password);
@@ -82,9 +83,9 @@ class _LoginPageState extends State<LoginPage> {
         NavigatorUtils.push(context, GlobalRouter.home);
       },
       error: (error) {
-        print("error code = ${error.code}, massage = ${error.message}");
+        Log.e("error code = ${error.code}, message = ${error.message}");
 
-        OtherUtils.showToastMessage('登录失败' + error.message);
+        OtherUtils.showToastMessage('登录失败!');
       }
     );
 

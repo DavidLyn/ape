@@ -10,9 +10,9 @@ class RestResultBaseWrapper<T> {
 
   factory RestResultBaseWrapper.fromJson(json) {
     return RestResultBaseWrapper(
-      code: json["code"],
-      message: json["msg"],
-      data: EntityFactory.generateOBJ<T>(json["data"]),
+      code: json['code'],
+      message: json['message'],
+      data: EntityFactory.generateOBJ<T>(json['data']),
     );
   }
 }
@@ -34,8 +34,8 @@ class RestResultListWrapper<T> {
     }
 
     return RestResultListWrapper(
-      code: json["code"],
-      message: json["msg"],
+      code: json['code'],
+      message: json['message'],
       data: mData,
     );
   }

@@ -41,4 +41,8 @@ class OtherUtils {
     );
   }
 
+  static cancelToast() {
+    dismissAllToast();
+  }
+
 }

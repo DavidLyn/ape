@@ -7,6 +7,9 @@ import 'package:ape/login/register_page.dart';
 import 'package:ape/login/sms_login_page.dart';
 import 'package:ape/login/reset_password_page.dart';
 
+import 'package:ape/wode/message_page.dart';
+import 'package:ape/wode/setting_page.dart';
+
 /// 定义全局 Router 和初始化方法
 ///
 class GlobalRouter {
@@ -15,6 +18,9 @@ class GlobalRouter {
   static final register = '/login/register';
   static final smsLogin = '/login/smsLogin';
   static final resetPassword = '/login/resetPassword';
+
+  static final message = '/message';
+  static final setting = '/setting';
 
   static final  router = Router();
 
@@ -34,6 +40,9 @@ class GlobalRouter {
     router.define(register, handler: Handler(handlerFunc: (_,params){return RegisterPage();}));
     router.define(smsLogin, handler: Handler(handlerFunc: (_,params){return SMSLoginPage();}));
     router.define(resetPassword, handler: Handler(handlerFunc: (_,params){return ResetPasswordPage();}));
+
+    router.define(message, handler: Handler(handlerFunc: (_,params){return MessagePage();}));
+    router.define(setting, handler: Handler(handlerFunc: (_,params){return SettingPage();}));
 
   }
 }

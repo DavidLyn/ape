@@ -5,7 +5,7 @@ class SpConstants {
   // 当前 亮度模式 ，sysrem dark light
   static const String appTheme = 'appTheme';
 
-  //
+  // 是否已启动 splash
   static const openSplash = "openSplash";
 
   // 当前用户的电话号码

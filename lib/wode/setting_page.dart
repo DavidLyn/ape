@@ -60,7 +60,7 @@ class _SettingPageState extends State<SettingPage> {
                 onTap: () => NavigatorUtils.push(context, GlobalRouter.changeBrightness)
             ),
             MySelectionItem(
-                title: '关于我们',
+                title: '关于猩猩',
                 onTap: () => NavigatorUtils.push(context, GlobalRouter.aboutUs)
             ),
             MySelectionItem(

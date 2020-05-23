@@ -70,7 +70,7 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
           Log.d("success data = $data");
 
           // 切换到 home 页面
-          NavigatorUtils.push(context, GlobalRouter.home, replace: true);
+          NavigatorUtils.push(context, GlobalRouter.home, clearStack: true);
         },
         error: (error) {
           Log.e("error code = ${error.code}, message = ${error.message}");
@@ -83,7 +83,9 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(),
+      appBar: const MyAppBar(
+        title: '短信验证登录',
+      ),
       body: MyScrollView(
         keyboardConfig: OtherUtils.getKeyboardActionsConfig(context, [_nodeText1, _nodeText2]),
         padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 20.0),

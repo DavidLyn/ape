@@ -1,6 +1,9 @@
 
 /// 保存可能被多个模块引用的 Shared Preference 常量
 class SpConstants {
+
+  static const String appTheme = 'appTheme';
+
   static const openSlash = "openSlash";
 
   static const phoneNumber = 'phoneNumber';

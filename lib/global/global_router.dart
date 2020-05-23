@@ -20,7 +20,10 @@ class GlobalRouter {
   static final resetPassword = '/login/resetPassword';
 
   static final message = '/message';
+
   static final setting = '/setting';
+  static final changeBrightness = '/changeBrightness';
+  static final aboutUs = '/aboutUs';
 
   static final  router = Router();
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ape/common/widget/my_app_bar.dart';
 
 /// 自习 页面
 ///
@@ -12,12 +13,23 @@ class _ZixiPageState extends State<ZixiPage> {
   @override
   void initState() {
     super.initState();
+
+  }
+
+  @override
+  void dispose() {
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('Zixi Page'),
+    return Scaffold(
+      appBar: MyAppBar(
+        centerTitle: '自习',
+        isBack: false,
+      ),
+      body: Text('zixi'),
     );
   }
 

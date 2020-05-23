@@ -24,6 +24,12 @@ class _WodePageState extends State<WodePage> {
 
     return Scaffold(
       appBar: AppBar(
+        title: Text('我的',
+          style: TextStyle(fontSize: 18,
+            color: Colours.app_main,
+          ),
+        ),
+        centerTitle: true,
         actions: <Widget>[
           IconButton(
             tooltip: '消息',

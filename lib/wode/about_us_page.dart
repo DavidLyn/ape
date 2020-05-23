@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_selection_item.dart';
 
-/// 更改 关于猩猩 页面
+/// 关于 猩猩 页面
 class AboutUsPage extends StatefulWidget {
   @override
   _AboutUsPageState createState() => _AboutUsPageState();
@@ -75,9 +75,21 @@ class _AboutUsPageState extends State<AboutUsPage> {
           ),
           SizedBox(height: 10),
           MySelectionItem(
-              title: 'Github',
+              title: '功能介绍',
               content: 'Go Star',
               onTap: (){},        // => NavigatorUtils.goWebViewPage(context, 'Flutter Deer', 'https://github.com/simplezhli/flutter_deer')
+          ),
+          MySelectionItem(
+            title: '去评分',
+            onTap: (){},
+          ),
+          MySelectionItem(
+            title: '投诉',
+            onTap: (){},
+          ),
+          MySelectionItem(
+            title: '版本更新',
+            onTap: (){},
           ),
         ],
       ),

@@ -9,6 +9,8 @@ import 'package:ape/login/reset_password_page.dart';
 
 import 'package:ape/wode/message_page.dart';
 import 'package:ape/wode/setting_page.dart';
+import 'package:ape/wode/change_brightness_page.dart';
+import 'package:ape/wode/about_us_page.dart';
 
 /// 定义全局 Router 和初始化方法
 ///
@@ -19,9 +21,8 @@ class GlobalRouter {
   static final smsLogin = '/login/smsLogin';
   static final resetPassword = '/login/resetPassword';
 
-  static final message = '/message';
-
   static final setting = '/setting';
+  static final message = '/message';
   static final changeBrightness = '/changeBrightness';
   static final aboutUs = '/aboutUs';
 
@@ -46,6 +47,8 @@ class GlobalRouter {
 
     router.define(message, handler: Handler(handlerFunc: (_,params){return MessagePage();}));
     router.define(setting, handler: Handler(handlerFunc: (_,params){return SettingPage();}));
+    router.define(changeBrightness, handler: Handler(handlerFunc: (_,params){return ChangeBrightnessPage();}));
+    router.define(aboutUs, handler: Handler(handlerFunc: (_,params){return AboutUsPage();}));
 
   }
 }

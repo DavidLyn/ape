@@ -2,6 +2,9 @@
 /// 保存可能被多个模块引用的 Shared Preference 常量
 class SpConstants {
 
+  // 当前主题颜色索引在 sharedPreferences 中的键值
+  static const themeColorIndex = "themeColorIndex";
+
   static const String appTheme = 'appTheme';
 
   static const openSlash = "openSlash";

@@ -60,10 +60,6 @@ class _SettingPageState extends State<SettingPage> {
                 onTap: () => NavigatorUtils.push(context, GlobalRouter.changeBrightness)
             ),
             _ClickItem(
-                title: '检查更新',
-                onTap: (){}
-            ),
-            _ClickItem(
                 title: '关于我们',
                 onTap: () => NavigatorUtils.push(context, GlobalRouter.aboutUs)
             ),

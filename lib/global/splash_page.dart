@@ -28,7 +28,7 @@ class _SplashPageState extends State<SplashPage> {
 
     // Frame build 结束回调下述方法
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (SpUtil.getBool(SpConstants.openSlash, defValue: true)) {
+      if (SpUtil.getBool(SpConstants.openSplash, defValue: true)) {
         /// 预先缓存图片，避免直接使用时因为首次加载造成闪动
         _guideList.forEach((image) {
           precacheImage(ImageUtils.getAssetImageProvider(image,path : 'assets/images/splash'), context);
@@ -37,8 +37,8 @@ class _SplashPageState extends State<SplashPage> {
 
       // 延时 1500 毫秒后或显示 splash 或跳转至 Login 页面
       Future.delayed(Duration(milliseconds: 1500),(){
-        if (SpUtil.getBool(SpConstants.openSlash, defValue: true)) {
-          SpUtil.putBool(SpConstants.openSlash, false);
+        if (SpUtil.getBool(SpConstants.openSplash, defValue: true)) {
+          SpUtil.putBool(SpConstants.openSplash, false);
 
           setState(() {
             _status = 1;    // 设置为 splash 显示状态

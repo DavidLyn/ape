@@ -19,6 +19,13 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     super.initState();
+
+  }
+
+  @override
+  void dispose() {
+
+    super.dispose();
   }
 
   @override
@@ -46,8 +53,8 @@ class _SettingPageState extends State<SettingPage> {
           children: <Widget>[
             SizedBox(height: 5),
             MySelectionItem(
-                title: '账号管理',
-                onTap: () => NavigatorUtils.push(context, '')
+                title: '个人信息',
+                onTap: () => NavigatorUtils.push(context, GlobalRouter.personalInformation)
             ),
             MySelectionItem(
                 title: '清除缓存',

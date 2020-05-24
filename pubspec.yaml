@@ -35,6 +35,9 @@ dependencies:
   # 路由框架 https://github.com/theyakka/fluro
   fluro: ^1.6.3
 
+  # 图片选取器
+  image_picker: ^0.6.6+4
+
   # 处理键盘事件 https://github.com/diegoveloper/flutter_keyboard_actions
   keyboard_actions: ^3.2.1
 

@@ -9,7 +9,10 @@ class Log {
   static const bool _inProduction  = const bool.fromEnvironment('dart.vm.product');
 
   static init() {
-    LogUtil.debuggable = !_inProduction;
+    //LogUtil.debuggable = !_inProduction;
+    LogUtil.init(
+        isDebug: !_inProduction,
+    );
   }
 
   static d(String msg, {tag: tag}) {

@@ -11,6 +11,7 @@ import 'package:ape/wode/message_page.dart';
 import 'package:ape/wode/setting_page.dart';
 import 'package:ape/wode/change_brightness_page.dart';
 import 'package:ape/wode/about_us_page.dart';
+import 'package:ape/wode/personal_infomation_page.dart';
 
 /// 定义全局 Router 和初始化方法
 ///
@@ -25,6 +26,7 @@ class GlobalRouter {
   static final message = '/message';
   static final changeBrightness = '/changeBrightness';
   static final aboutUs = '/aboutUs';
+  static final personalInformation = '/personalInformation';
 
   static final  router = Router();
 
@@ -49,6 +51,7 @@ class GlobalRouter {
     router.define(setting, handler: Handler(handlerFunc: (_,params){return SettingPage();}));
     router.define(changeBrightness, handler: Handler(handlerFunc: (_,params){return ChangeBrightnessPage();}));
     router.define(aboutUs, handler: Handler(handlerFunc: (_,params){return AboutUsPage();}));
+    router.define(personalInformation, handler: Handler(handlerFunc: (_,params){return PersonalInformationPage();}));
 
   }
 }

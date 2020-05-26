@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 import 'package:flustars/flustars.dart';
 
@@ -108,6 +112,44 @@ class DioManager {
     } on DioError catch(e) {
       error(createErrorEntity(e));
     }
+  }
+
+  // 上传头像
+  Future uploadAvatar( String urlPath,
+                       int uid,
+                       File image,
+                       { Function(String data,String msg) success,
+                         Function(RestErrorEntity) error }) async {
+    String path = image.path;
+    var name = path.substring(path.lastIndexOf("/") + 1, path.length);
+    var suffix = name.substring(name.lastIndexOf(".") + 1, name.length);
+
+    FormData formData = FormData.fromMap({
+      'uid': uid,
+      'file': MultipartFile.fromBytes(
+        image.readAsBytesSync(),
+        filename: name,
+        contentType: MediaType.parse("image/$suffix"),
+      ),
+    });
+
+    try {
+      Response response = await _dio.request(urlPath, data : formData, options: Options(method: 'post'));
+
+      if (response != null) {
+        RestResultBaseWrapper entity = RestResultBaseWrapper<String>.fromJson(response.data);
+        if (entity.code == 0) {
+          success(entity.data,entity.message);
+        } else {
+          error(RestErrorEntity(code: entity.code, message: entity.message));
+        }
+      } else {
+        error(RestErrorEntity(code: -1, message: "未知错误"));
+      }
+    } on DioError catch(e) {
+      error(createErrorEntity(e));
+    }
+
   }
 
   // 错误信息

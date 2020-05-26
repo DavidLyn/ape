@@ -1,9 +1,17 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flustars/flustars.dart' as FlutterStars;
 
 import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_selection_item.dart';
 import 'package:ape/util/other_utils.dart';
+import 'package:ape/common/constants.dart';
+import 'package:ape/util/log_utils.dart';
+import 'package:ape/network/dio_manager.dart';
+import 'package:ape/network/nw_api.dart';
 
 /// 个人信息 页面
 ///
@@ -58,9 +66,10 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 onTap: () async {
                   var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
                   Navigator.pop(context);
-                  if (imageFile == null) {
-                    OtherUtils.showToastMessage('camera cancel!');
-                  }
+//                  if (imageFile == null) {
+//                    OtherUtils.showToastMessage('camera cancel!');
+//                  }
+                  _saveImage(imageFile);
                 },
               ),
               ListTile(
@@ -69,11 +78,41 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 onTap: () async {
                   var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
                   Navigator.pop(context);
+                  _saveImage(imageFile);
                 },
               ),
             ],
           );
         }
     );
+  }
+
+  Future _saveImage(File imageFile) async {
+
+    if (imageFile == null) {
+      Log.e('无效的图像文件');
+      return;
+    }
+
+    // 根据 phone number 读取 uid
+    var mobile = FlutterStars.SpUtil.getString(SpConstants.phoneNumber);
+    var uid = FlutterStars.SpUtil.getInt(SpConstants.getMobileSpKey(mobile));
+
+    if (uid == null || uid == 0) {
+      Log.e('无效的 userID');
+    }
+
+    DioManager().uploadAvatar(
+      NWApi.uploadAvatar,
+      uid,
+      imageFile,
+      success : (data,message) {
+        Log.d('avatar upload success');
+      },
+      error : (error) {
+        Log.e("error code = ${error.code}, message = ${error.message}");
+      }
+    );
+
   }
 }

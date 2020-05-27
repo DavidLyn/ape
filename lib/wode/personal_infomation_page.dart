@@ -12,6 +12,7 @@ import 'package:ape/util/log_utils.dart';
 import 'package:ape/network/dio_manager.dart';
 import 'package:ape/network/nw_api.dart';
 import 'package:ape/util/file_utils.dart';
+import 'package:ape/common/widget/my_avatar.dart';
 
 /// 个人信息 页面
 ///
@@ -42,11 +43,21 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       body: Column(
         children: <Widget>[
           SizedBox(height: 5),
-          MySelectionItem(
-              title: '头像',
-              onTap: (){
-                _selectAvatar(context);
-              }
+          Stack(
+            children: <Widget>[
+              MySelectionItem(
+                  title: '头像',
+                  onTap: (){
+                    _selectAvatar(context);
+                  }
+              ),
+              Positioned(
+                top: 8.0,
+                bottom: 8.0,
+                right: 40.0,
+                child: MyAvatar(width: 34.0),
+              )
+            ],
           ),
         ],
       ),
@@ -127,12 +138,16 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     var name = path.substring(path.lastIndexOf("/") + 1, path.length);
     var suffix = name.substring(name.lastIndexOf(".") + 1, name.length);
 
-    var newFile = 'avatar.$suffix';
+    var newFile = '${ApplicationDocumentManager.documentsPath}/avatar.$suffix';
 
     ApplicationDocumentManager.writeFile(newFile, imageFile);
 
     // 记录新头像文件名
     FlutterStars.SpUtil.putString(SpConstants.userAvatar, newFile);
 
+    // 刷新界面
+    setState(() {
+
+    });
   }
 }

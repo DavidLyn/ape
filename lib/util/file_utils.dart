@@ -15,7 +15,7 @@ class ApplicationDocumentManager {
 
   // 写文件
   static writeFile(String fileName, File file) async {
-    File newFile = File('$documentsPath/$fileName');
+    File newFile = File(fileName);
 
     if(!newFile.existsSync()) {
       newFile.createSync();
@@ -26,7 +26,7 @@ class ApplicationDocumentManager {
 
   // 删除文件
   static deleteFile(String fileName) async {
-    File file = File('$documentsPath/$fileName');
+    File file = File(fileName);
     if(!file.existsSync()) {
       file.deleteSync();
     }

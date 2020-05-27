@@ -14,6 +14,7 @@ import 'package:ape/global/splash_page.dart';
 import 'package:ape/common/storage_manager.dart';
 import 'package:ape/common/sqlite_manager.dart';
 import 'package:ape/util/log_utils.dart';
+import 'package:ape/util/file_utils.dart';
 
 // 初始化 provider
 List<SingleChildWidget> _providers = [
@@ -45,6 +46,9 @@ void main() async {
 
   // 初始化 database
   await DbManager.initDB();
+
+  // 初始化 Application Documents Manager
+  await ApplicationDocumentManager.init();
 
   // 不加这句好像后面的 Provider 会报错
   Provider.debugCheckInvalidValueType = null;

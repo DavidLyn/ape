@@ -7,11 +7,11 @@ import 'package:flustars/flustars.dart' as FlutterStars;
 
 import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_selection_item.dart';
-import 'package:ape/util/other_utils.dart';
 import 'package:ape/common/constants.dart';
 import 'package:ape/util/log_utils.dart';
 import 'package:ape/network/dio_manager.dart';
 import 'package:ape/network/nw_api.dart';
+import 'package:ape/util/file_utils.dart';
 
 /// 个人信息 页面
 ///
@@ -102,6 +102,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       Log.e('无效的 userID');
     }
 
+    // 上传文件
     DioManager().uploadAvatar(
       NWApi.uploadAvatar,
       uid,
@@ -113,6 +114,25 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         Log.e("error code = ${error.code}, message = ${error.message}");
       }
     );
+
+    // 删除原有头像文件
+    var oldFile = FlutterStars.SpUtil.getString(SpConstants.userAvatar);
+
+    if (oldFile.isNotEmpty) {
+      ApplicationDocumentManager.deleteFile(oldFile);
+    }
+
+    // 保存当前头像文件
+    String path = imageFile.path;
+    var name = path.substring(path.lastIndexOf("/") + 1, path.length);
+    var suffix = name.substring(name.lastIndexOf(".") + 1, name.length);
+
+    var newFile = 'avatar.$suffix';
+
+    ApplicationDocumentManager.writeFile(newFile, imageFile);
+
+    // 记录新头像文件名
+    FlutterStars.SpUtil.putString(SpConstants.userAvatar, newFile);
 
   }
 }

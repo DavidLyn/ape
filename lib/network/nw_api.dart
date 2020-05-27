@@ -1,8 +1,8 @@
 /// 定义基本 Url 和 Rest 接口
 ///
 class NWApi {
-  //static final baseApi = 'http://192.168.1.104:8080/api/cat';
-  static final baseApi = 'http://172.16.40.36:8080/api/cat';
+  static final baseApi = 'http://192.168.1.101:8080/api/cat';
+  //static final baseApi = 'http://172.16.40.36:8080/api/cat';
 
   // 手机号、密码登录 Post
   static final login = '/user/login';

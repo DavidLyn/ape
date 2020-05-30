@@ -85,4 +85,65 @@
 
 ## android api 26 时，MyAppBar 上的点击事件不起作用！！！
 
-## 
+## 国际化及 showDatePicker 显示中文
+
+### 配置flutter_localizations依赖
+
+```
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+```
+
+### 在 main.dart 中导入国际化包
+
+```
+import 'package:flutter_localizations/flutter_localizations.dart';
+```
+
+### 设置国际化
+
+```
+void main() {
+  runApp(
+    new MaterialApp(
+      title: 'app',
+      theme: new ThemeData(
+        primaryColor: Colors.white,
+      ),
+      home: new MyLoginWidget(),
+      localizationsDelegates: [
+        //此处
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        //此处
+        const Locale('zh', 'CH'),
+        const Locale('en', 'US'),
+      ],
+    ),
+  );
+}
+```
+
+### 控件的中文设置
+
+```
+_showDatePicker() async{
+    var date =await showDatePicker(
+      context: context,
+      initialDate: _datetime,
+      firstDate:DateTime(1900),
+      lastDate:DateTime(2050),
+      locale: Locale('zh'),    
+    );
+    if(date==null) return;
+    print(date);
+    setState(() {
+       _datetime=date;
+    });
+}
+```

@@ -12,6 +12,7 @@ import 'package:ape/wode/setting_page.dart';
 import 'package:ape/wode/change_brightness_page.dart';
 import 'package:ape/wode/about_us_page.dart';
 import 'package:ape/wode/personal_infomation_page.dart';
+import 'package:ape/common/widget/my_text_edit_page.dart';
 
 /// 定义全局 Router 和初始化方法
 ///
@@ -27,6 +28,9 @@ class GlobalRouter {
   static final changeBrightness = '/changeBrightness';
   static final aboutUs = '/aboutUs';
   static final personalInformation = '/personalInformation';
+
+  // 通用功能：编辑 text 字段
+  static final textEdit = '/common/textEdit';
 
   static final  router = Router();
 
@@ -52,6 +56,25 @@ class GlobalRouter {
     router.define(changeBrightness, handler: Handler(handlerFunc: (_,params){return ChangeBrightnessPage();}));
     router.define(aboutUs, handler: Handler(handlerFunc: (_,params){return AboutUsPage();}));
     router.define(personalInformation, handler: Handler(handlerFunc: (_,params){return PersonalInformationPage();}));
+
+    router.define(textEdit, handler: Handler(handlerFunc: (_,Map<String, List<String>> params){
+
+      var title = params['params'][0];
+      var content = params['content'][0];
+      var hintText = params['hintText'][0];
+      var maxLines = int.parse(params['maxLines'][0]);
+      var maxLength = int.parse(params['maxLength'][0]);
+      var keyboardType = params['keyboardType'][0];
+
+      return MyTextEditPage(
+        title: title,
+        content: content,
+        hintText: hintText,
+        maxLines: maxLines,
+        maxLength: maxLength,
+        keyboardType: TextInputType.text,
+      );
+    }));
 
   }
 }

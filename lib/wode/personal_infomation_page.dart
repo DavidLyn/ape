@@ -36,29 +36,31 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   @override
   Widget build(BuildContext context) {
 
+    var item = MySelectionItem(
+      icon: Icon(Icons.access_time,color: Colors.green,),
+      title: 'test',
+      content: 'hello world',
+    );
+
+    item.onTap = () {
+      item.setContent('切换成功!');
+    };
+
     return Scaffold(
       appBar: MyAppBar(
         centerTitle: '个人信息',
       ),
       body: Column(
         children: <Widget>[
-          SizedBox(height: 5),
-          Stack(
-            children: <Widget>[
-              MySelectionItem(
-                  title: '头像',
-                  onTap: (){
-                    _selectAvatar(context);
-                  }
-              ),
-              Positioned(
-                top: 8.0,
-                bottom: 8.0,
-                right: 40.0,
-                child: MyAvatar(width: 34.0),
-              )
-            ],
+          MySelectionItem(
+            icon: Icon(Icons.title, color: Colors.green,),
+            title: '头像',
+            onTap: (){
+              _selectAvatar(context);
+            },
+            image: MyAvatar(width: 28.0,height: 28.0,),
           ),
+          item,
         ],
       ),
     );
@@ -77,9 +79,6 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 onTap: () async {
                   var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
                   Navigator.pop(context);
-//                  if (imageFile == null) {
-//                    OtherUtils.showToastMessage('camera cancel!');
-//                  }
                   _saveImage(imageFile);
                 },
               ),

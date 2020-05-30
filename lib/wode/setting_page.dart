@@ -53,24 +53,29 @@ class _SettingPageState extends State<SettingPage> {
           children: <Widget>[
             SizedBox(height: 5),
             MySelectionItem(
+                icon: Icon(Icons.add_circle, color: Colors.green,),
                 title: '个人信息',
                 onTap: () => NavigatorUtils.push(context, GlobalRouter.personalInformation)
             ),
             MySelectionItem(
+                icon: Icon(Icons.announcement, color: Colors.green,),
                 title: '清除缓存',
                 content: '23.5MB',
                 onTap: () {}
             ),
             MySelectionItem(
+                icon: Icon(Icons.android, color: Colors.green,),
                 title: '夜间模式',
                 content: themeMode,
                 onTap: () => NavigatorUtils.push(context, GlobalRouter.changeBrightness)
             ),
             MySelectionItem(
+                icon: Icon(Icons.account_box, color: Colors.green,),
                 title: '关于猩猩',
                 onTap: () => NavigatorUtils.push(context, GlobalRouter.aboutUs)
             ),
             MySelectionItem(
+              icon: Icon(Icons.airplay, color: Colors.green,),
               title: '退出当前账号',
               onTap: () => _showExitDialog(),
             ),

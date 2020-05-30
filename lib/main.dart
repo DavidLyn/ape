@@ -5,6 +5,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flustars/flustars.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:ape/global/global_provider.dart';
 import 'package:ape/global/theme_provider.dart';
@@ -82,7 +83,14 @@ class MyApp extends StatelessWidget {
                   themeMode: themeProvider.getThemeMode(),
                   home: home ?? SplashPage(),
                   onGenerateRoute: GlobalRouter.router.generator,
-
+                  localizationsDelegates: [
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                  ],
+                  supportedLocales: [
+                    const Locale('zh', 'CH'),
+                    const Locale('en', 'US'),
+                  ],
                 ),
               );
             }

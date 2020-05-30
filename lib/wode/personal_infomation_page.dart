@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flustars/flustars.dart' as FlutterStars;
+import 'package:intl/intl.dart';
 
 import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_selection_item.dart';
@@ -36,14 +37,38 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   @override
   Widget build(BuildContext context) {
 
-    var item = MySelectionItem(
-      icon: Icon(Icons.access_time,color: Colors.green,),
-      title: 'test',
-      content: 'hello world',
+    print('PersonalInformationPage is rebuild');
+
+    var itemAvatar = MySelectionItem(
+      icon: Icon(Icons.title, color: Colors.green,),
+      title: '头像',
+      image: MyAvatar(width: 28.0,height: 28.0,),
     );
 
-    item.onTap = () {
-      item.setContent('切换成功!');
+    itemAvatar.onTap = (){
+      _selectAvatar(context,itemAvatar);
+    };
+
+    var itemBirthday = MySelectionItem(
+      icon: Icon(Icons.access_time,color: Colors.green,),
+      title: '生日',
+      content: '2001-01-05',
+    );
+
+    itemBirthday.onTap = () async {
+      var date = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2050),
+        locale: Locale('zh'),
+      );
+
+      if (date != null) {
+        DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
+        itemBirthday.setContent(dateFormat.format(date));
+      }
     };
 
     return Scaffold(
@@ -52,21 +77,14 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       ),
       body: Column(
         children: <Widget>[
-          MySelectionItem(
-            icon: Icon(Icons.title, color: Colors.green,),
-            title: '头像',
-            onTap: (){
-              _selectAvatar(context);
-            },
-            image: MyAvatar(width: 28.0,height: 28.0,),
-          ),
-          item,
+          itemAvatar,
+          itemBirthday,
         ],
       ),
     );
   }
 
-  _selectAvatar(BuildContext context) {
+  _selectAvatar(BuildContext context,MySelectionItem item) {
     showModalBottomSheet(
       context: context,
         builder: (BuildContext context){
@@ -79,7 +97,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 onTap: () async {
                   var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
                   Navigator.pop(context);
-                  _saveImage(imageFile);
+                  _saveImage(imageFile, item);
                 },
               ),
               ListTile(
@@ -88,7 +106,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 onTap: () async {
                   var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
                   Navigator.pop(context);
-                  _saveImage(imageFile);
+                  _saveImage(imageFile, item);
                 },
               ),
             ],
@@ -97,7 +115,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     );
   }
 
-  Future _saveImage(File imageFile) async {
+  Future _saveImage(File imageFile, MySelectionItem item) async {
 
     if (imageFile == null) {
       Log.e('无效的图像文件');
@@ -145,8 +163,6 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     FlutterStars.SpUtil.putString(SpConstants.userAvatar, newFile);
 
     // 刷新界面
-    setState(() {
-
-    });
+    item.setImage(MyAvatar(width: 28.0,height: 28.0,));
   }
 }

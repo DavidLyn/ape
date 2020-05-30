@@ -31,6 +31,8 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
 
+    print('SettingPage is rebuild');
+
     var theme = flutter_stars.SpUtil.getString(SpConstants.appTheme);
     var themeMode;
     switch(theme) {

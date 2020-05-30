@@ -27,12 +27,18 @@ class MySelectionItem extends StatefulWidget {
   Icon icon;
   Widget image;
 
+  ValueNotifier redrawNote = ValueNotifier(false);
+
   void setContent(String content) {
     this.content = content;
+
+    redrawNote.value = !redrawNote.value;
   }
 
-  void setImage(Image image) {
+  void setImage(Widget image) {
     this.image = image;
+
+    redrawNote.value = !redrawNote.value;
   }
 
   @override
@@ -45,7 +51,6 @@ class _MySelectionItemState extends State<MySelectionItem> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -57,12 +62,13 @@ class _MySelectionItemState extends State<MySelectionItem> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-          widget.onTap();
-          setState(() {
-
-          });
-        },
+      onTap: widget.onTap,
+//          (){
+//          widget.onTap();
+//          setState(() {
+//
+//          });
+//        },
       child: Container(
         margin: const EdgeInsets.only(left: 15.0),
         padding: const EdgeInsets.fromLTRB(0, 15.0, 15.0, 15.0),
@@ -85,13 +91,23 @@ class _MySelectionItemState extends State<MySelectionItem> {
               icon: widget.icon,
               title: widget.title,
             ),
-            _RightComponent(
-              onTap: widget.onTap,
-              content: widget.content,
-              textAlign: widget.textAlign,
-              maxLines: widget.maxLines,
-              image: widget.image,
+            ValueListenableBuilder(
+                valueListenable: widget.redrawNote,
+                builder: (context, value, child) => _RightComponent(
+                  onTap: widget.onTap,
+                  content: widget.content,
+                  textAlign: widget.textAlign,
+                  maxLines: widget.maxLines,
+                  image: widget.image,
+                ),
             ),
+//            _RightComponent(
+//              onTap: widget.onTap,
+//              content: widget.content,
+//              textAlign: widget.textAlign,
+//              maxLines: widget.maxLines,
+//              image: widget.image,
+//            ),
           ],
         ),
       ),

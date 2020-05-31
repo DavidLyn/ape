@@ -59,12 +59,12 @@ class GlobalRouter {
 
     router.define(textEdit, handler: Handler(handlerFunc: (_, Map<String, List<String>> params){
 
-      var title = params['title'][0];
-      var content = params['content'][0];
-      var hintText = params['hintText'][0];
-      var maxLines = int.parse(params['maxLines'][0]);
-      var maxLength = int.parse(params['maxLength'][0]);
-      var keyboardType = params['keyboardType'][0];
+      var title = params['title']?.first;
+      var content = params['content']?.first;
+      var hintText = params['hintText']?.first;
+      var maxLines = int.parse(params['maxLines']?.first);
+      var maxLength = int.parse(params['maxLength']?.first);
+      var keyboardType = params['keyboardType']?.first;
 
       return MyTextEditPage(
         title: title,
@@ -82,14 +82,53 @@ class GlobalRouter {
 /// fluro的路由跳转工具类
 class NavigatorUtils {
 
+  // 对参数进行encode，解决参数中有特殊字符，影响fluro路由匹配(https://www.jianshu.com/p/e575787d173c)
   static push(BuildContext context, String path,
-      {bool replace = false, bool clearStack = false, TransitionType transition = TransitionType.native}) {
+      {Map<String, String> params, bool replace = false, bool clearStack = false, TransitionType transition = TransitionType.fadeIn}) {
+
+    var query = '';
+    if (params != null) {
+      int index = 0;
+      for (var key in params.keys) {
+        var value = Uri.encodeComponent(params[key]);
+        if (index == 0) {
+          query = "?";
+        } else {
+          query = query + "\&";
+        }
+        query += "$key=$value";
+        index++;
+      }
+    }
+    print('NavigatorUtils.push 传递的参数：$query');
+
+    path = path + query;
+
     FocusScope.of(context).unfocus();
     GlobalRouter.router.navigateTo(context, path, replace: replace, clearStack: clearStack, transition: transition);
   }
 
   static pushWaitingResult(BuildContext context, String path, Function(Object) function,
-      {bool replace = false, bool clearStack = false, TransitionType transition = TransitionType.native}) {
+      {Map<String, String> params, bool replace = false, bool clearStack = false, TransitionType transition = TransitionType.fadeIn}) {
+
+    var query = '';
+    if (params != null) {
+      int index = 0;
+      for (var key in params.keys) {
+        var value = Uri.encodeComponent(params[key]);
+        if (index == 0) {
+          query = "?";
+        } else {
+          query = query + "\&";
+        }
+        query += "$key=$value";
+        index++;
+      }
+    }
+    print('NavigatorUtils.pushWaitingResult 传递的参数：$query');
+
+    path = path + query;
+
     FocusScope.of(context).unfocus();
     GlobalRouter.router.navigateTo(context, path, replace: replace, clearStack: clearStack, transition: transition).then((result) {
       // 页面返回result为null
@@ -98,7 +137,7 @@ class NavigatorUtils {
       }
       function(result);
     }).catchError((error) {
-      print('$error');
+      print('NavigatorUtils.pushWaitingResult error = $error');
     });
   }
 

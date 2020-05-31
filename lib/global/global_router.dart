@@ -57,9 +57,9 @@ class GlobalRouter {
     router.define(aboutUs, handler: Handler(handlerFunc: (_,params){return AboutUsPage();}));
     router.define(personalInformation, handler: Handler(handlerFunc: (_,params){return PersonalInformationPage();}));
 
-    router.define(textEdit, handler: Handler(handlerFunc: (_,Map<String, List<String>> params){
+    router.define(textEdit, handler: Handler(handlerFunc: (_, Map<String, List<String>> params){
 
-      var title = params['params'][0];
+      var title = params['title'][0];
       var content = params['content'][0];
       var hintText = params['hintText'][0];
       var maxLines = int.parse(params['maxLines'][0]);

@@ -52,7 +52,7 @@ class _MyTextEditPageState extends State<MyTextEditPage> {
           multiline: widget.maxLines > 1,
           maxValueLength: widget.maxLength,
           child: TextField(
-            maxLength: 30,
+            maxLength: widget.maxLength,
             maxLines: widget.maxLines,
             autofocus: true,
             controller: _controller,

@@ -14,6 +14,7 @@ import 'package:ape/network/dio_manager.dart';
 import 'package:ape/network/nw_api.dart';
 import 'package:ape/util/file_utils.dart';
 import 'package:ape/common/widget/my_avatar.dart';
+import 'package:ape/global/global_router.dart';
 
 /// 个人信息 页面
 ///
@@ -23,6 +24,8 @@ class PersonalInformationPage extends StatefulWidget {
 }
 
 class _PersonalInformationPageState extends State<PersonalInformationPage> {
+
+  var nickname = '武哇哇';
 
   @override
   void initState() {
@@ -47,6 +50,34 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 
     itemAvatar.onTap = (){
       _selectAvatar(context,itemAvatar);
+    };
+
+    var itemNichname = MySelectionItem(
+      icon: Icon(Icons.add_to_photos,color: Colors.green,),
+      title: '昵称',
+      content: nickname,
+    );
+
+    itemNichname.onTap = (){
+      var title = '修改昵称';
+      var content = nickname;
+      var hintText = '昵称';
+      var maxLines = '1';
+      var maxLength = '50';
+      var keyboardType = 'text';
+
+      var path = '${GlobalRouter.textEdit}?title=${Uri.encodeComponent(title)}&'
+          'content=${Uri.encodeComponent(content)}&'
+          'hintText=${Uri.encodeComponent(hintText)}&'
+          'maxLines=${Uri.encodeComponent(maxLines)}&'
+          'maxLength=${Uri.encodeComponent(maxLength)}&'
+          'keyboardType=${Uri.encodeComponent(keyboardType)}';
+
+      NavigatorUtils.pushWaitingResult(context, path, (result){
+        nickname = result;
+
+        itemNichname.setContent(nickname);
+      });
     };
 
     var itemBirthday = MySelectionItem(
@@ -78,6 +109,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       body: Column(
         children: <Widget>[
           itemAvatar,
+          itemNichname,
           itemBirthday,
         ],
       ),

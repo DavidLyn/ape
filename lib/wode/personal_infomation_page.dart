@@ -20,12 +20,20 @@ import 'package:ape/global/global_router.dart';
 ///
 class PersonalInformationPage extends StatefulWidget {
   @override
-  _PersonalInformationPageState createState() => _PersonalInformationPageState();
+  _PersonalInformationPageState createState() =>
+      _PersonalInformationPageState();
 }
 
 class _PersonalInformationPageState extends State<PersonalInformationPage> {
-
   var nickname = '武哇哇';
+
+  // 创建 GlobalKey 实现对内部 state 的访问
+  GlobalKey<MySelectionItemState> _itemAvatarKey =
+      GlobalKey<MySelectionItemState>();
+  GlobalKey<MySelectionItemState> _itemNicknameKey =
+      GlobalKey<MySelectionItemState>();
+  GlobalKey<MySelectionItemState> _itemBirthdayKey =
+      GlobalKey<MySelectionItemState>();
 
   @override
   void initState() {
@@ -39,64 +47,76 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 
   @override
   Widget build(BuildContext context) {
-
     print('PersonalInformationPage is rebuild');
 
     var itemAvatar = MySelectionItem(
-      icon: Icon(Icons.title, color: Colors.green,),
+      key: _itemAvatarKey,
+      icon: Icon(
+        Icons.title,
+        color: Colors.green,
+      ),
       title: '头像',
-      image: MyAvatar(width: 28.0,height: 28.0,),
+      image: MyAvatar(
+        width: 28.0,
+        height: 28.0,
+      ),
     );
 
-    itemAvatar.onTap = (){
-      _selectAvatar(context,itemAvatar);
+    itemAvatar.onTap = () {
+      _selectAvatar(context);
     };
 
     var itemNickname = MySelectionItem(
-      icon: Icon(Icons.add_to_photos,color: Colors.green,),
+      key: _itemNicknameKey,
+      icon: Icon(
+        Icons.add_to_photos,
+        color: Colors.green,
+      ),
       title: '昵称',
       content: nickname,
+      onTap: () {
+        Map<String, String> params = {
+          'title': '修改昵称',
+          'content': nickname,
+          'hintText': '昵称',
+          'maxLines': '1',
+          'maxLength': '50',
+          'keyboardType': 'text',
+        };
+
+        NavigatorUtils.pushWaitingResult(context, GlobalRouter.textEdit,
+            (result) {
+          nickname = result;
+
+          _itemNicknameKey.currentState.setContent(nickname);
+        }, params: params);
+      },
     );
-
-    itemNickname.onTap = (){
-
-      Map<String,String> params = {
-        'title': '修改昵称',
-        'content': nickname,
-        'hintText': '昵称',
-        'maxLines': '1',
-        'maxLength': '50',
-        'keyboardType': 'text',
-      };
-
-      NavigatorUtils.pushWaitingResult(context, GlobalRouter.textEdit, (result){
-        nickname = result;
-
-        itemNickname.setContent(nickname);
-      }, params: params);
-    };
 
     var itemBirthday = MySelectionItem(
-      icon: Icon(Icons.access_time,color: Colors.green,),
+      key: _itemBirthdayKey,
+      icon: Icon(
+        Icons.access_time,
+        color: Colors.green,
+      ),
       title: '生日',
       content: '2001-01-05',
+      onTap: () async {
+        var date = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2050),
+          locale: Locale('zh'),
+        );
+
+        if (date != null) {
+          DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
+          _itemBirthdayKey.currentState.setContent(dateFormat.format(date));
+        }
+      },
     );
-
-    itemBirthday.onTap = () async {
-      var date = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2050),
-        locale: Locale('zh'),
-      );
-
-      if (date != null) {
-        DateFormat dateFormat = DateFormat("yyyy-MM-dd");
-
-        itemBirthday.setContent(dateFormat.format(date));
-      }
-    };
 
     return Scaffold(
       appBar: MyAppBar(
@@ -112,10 +132,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     );
   }
 
-  _selectAvatar(BuildContext context,MySelectionItem item) {
+  //_selectAvatar(BuildContext context,MySelectionItem item) {
+  _selectAvatar(BuildContext context) {
     showModalBottomSheet(
-      context: context,
-        builder: (BuildContext context){
+        context: context,
+        builder: (BuildContext context) {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -123,28 +144,28 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 leading: Icon(Icons.photo_camera),
                 title: Text('相机'),
                 onTap: () async {
-                  var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+                  var imageFile =
+                      await ImagePicker.pickImage(source: ImageSource.camera);
                   Navigator.pop(context);
-                  _saveImage(imageFile, item);
+                  _saveImage(imageFile);
                 },
               ),
               ListTile(
                 leading: Icon(Icons.photo_library),
                 title: Text('相册'),
                 onTap: () async {
-                  var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+                  var imageFile =
+                      await ImagePicker.pickImage(source: ImageSource.gallery);
                   Navigator.pop(context);
-                  _saveImage(imageFile, item);
+                  _saveImage(imageFile);
                 },
               ),
             ],
           );
-        }
-    );
+        });
   }
 
-  Future _saveImage(File imageFile, MySelectionItem item) async {
-
+  Future _saveImage(File imageFile) async {
     if (imageFile == null) {
       Log.e('无效的图像文件');
       return;
@@ -159,17 +180,12 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     }
 
     // 上传文件
-    DioManager().uploadAvatar(
-      NWApi.uploadAvatar,
-      uid,
-      imageFile,
-      success : (data,message) {
-        Log.d('avatar upload success');
-      },
-      error : (error) {
-        Log.e("error code = ${error.code}, message = ${error.message}");
-      }
-    );
+    DioManager().uploadAvatar(NWApi.uploadAvatar, uid, imageFile,
+        success: (data, message) {
+      Log.d('avatar upload success');
+    }, error: (error) {
+      Log.e("error code = ${error.code}, message = ${error.message}");
+    });
 
     // 删除原有头像文件
     var oldFile = FlutterStars.SpUtil.getString(SpConstants.userAvatar);
@@ -191,6 +207,9 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     FlutterStars.SpUtil.putString(SpConstants.userAvatar, newFile);
 
     // 刷新界面
-    item.setImage(MyAvatar(width: 28.0,height: 28.0,));
+    _itemAvatarKey.currentState.setImage(MyAvatar(
+      width: 28.0,
+      height: 28.0,
+    ));
   }
 }

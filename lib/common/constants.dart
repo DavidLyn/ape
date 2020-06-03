@@ -2,6 +2,9 @@
 /// 保存可能被多个模块引用的 Shared Preference 常量
 class SpConstants {
 
+  // 键盘高度
+  static const String keyboardHeight = 'keyboardHeight';
+
   // 当前 亮度模式 ，sysrem dark light
   static const String appTheme = 'appTheme';
 

@@ -27,26 +27,27 @@ class MySelectionItem extends StatefulWidget {
   Icon icon;
   Widget image;
 
-  ValueNotifier redrawNote = ValueNotifier(false);
-
-  void setContent(String content) {
-    this.content = content;
-
-    redrawNote.value = !redrawNote.value;
-  }
-
-  void setImage(Widget image) {
-    this.image = image;
-
-    redrawNote.value = !redrawNote.value;
-  }
+//  ValueNotifier redrawNote = ValueNotifier(false);
+//
+//  void setContent(String content) {
+//    this.content = content;
+//
+//    redrawNote.value = !redrawNote.value;
+//  }
+//
+//  void setImage(Widget image) {
+//    this.image = image;
+//
+//    redrawNote.value = !redrawNote.value;
+//  }
 
   @override
-  _MySelectionItemState createState() => _MySelectionItemState();
+  MySelectionItemState createState() => MySelectionItemState();
 
 }
 
-class _MySelectionItemState extends State<MySelectionItem> {
+/// 注意:为了实现在外部访问,本状态类被设置为 public
+class MySelectionItemState extends State<MySelectionItem> {
 
   @override
   void initState() {
@@ -59,16 +60,23 @@ class _MySelectionItemState extends State<MySelectionItem> {
     super.dispose();
   }
 
+  // 修改 content
+  void setContent(String content) {
+    widget.content = content;
+    setState(() {
+    });
+  }
+
+  void setImage(Widget image) {
+    widget.image = image;
+    setState(() {
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: widget.onTap,
-//          (){
-//          widget.onTap();
-//          setState(() {
-//
-//          });
-//        },
       child: Container(
         margin: const EdgeInsets.only(left: 15.0),
         padding: const EdgeInsets.fromLTRB(0, 15.0, 15.0, 15.0),
@@ -91,23 +99,23 @@ class _MySelectionItemState extends State<MySelectionItem> {
               icon: widget.icon,
               title: widget.title,
             ),
-            ValueListenableBuilder(
-                valueListenable: widget.redrawNote,
-                builder: (context, value, child) => _RightComponent(
-                  onTap: widget.onTap,
-                  content: widget.content,
-                  textAlign: widget.textAlign,
-                  maxLines: widget.maxLines,
-                  image: widget.image,
-                ),
-            ),
-//            _RightComponent(
-//              onTap: widget.onTap,
-//              content: widget.content,
-//              textAlign: widget.textAlign,
-//              maxLines: widget.maxLines,
-//              image: widget.image,
+//            ValueListenableBuilder(
+//                valueListenable: widget.redrawNote,
+//                builder: (context, value, child) => _RightComponent(
+//                  onTap: widget.onTap,
+//                  content: widget.content,
+//                  textAlign: widget.textAlign,
+//                  maxLines: widget.maxLines,
+//                  image: widget.image,
+//                ),
 //            ),
+            _RightComponent(
+              onTap: widget.onTap,
+              content: widget.content,
+              textAlign: widget.textAlign,
+              maxLines: widget.maxLines,
+              image: widget.image,
+            ),
           ],
         ),
       ),

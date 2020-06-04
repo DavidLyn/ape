@@ -26,6 +26,9 @@ dependencies:
   # 网络库 https://github.com/flutterchina/dio
   dio: ^3.0.9
 
+  # 支持特殊格式的文本编辑域  https://github.com/fluttercandies/extended_text_field:
+  extended_text_field: ^0.5.0
+
   # Flutter 常用工具类库 https://github.com/Sky24n/flustars
   flustars: 0.2.6+1
 

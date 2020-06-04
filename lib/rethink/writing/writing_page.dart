@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flustars/flustars.dart' as FlutterStars;
 import 'package:ape/rethink/writing/extend_textfield/my_special_text_span_builder.dart';
 import 'package:ape/common/constants.dart';
+import 'package:ape/emoji/emoji_widget.dart';
 
 /// 反思之 书写 页面
 class WritingPage extends StatefulWidget {
@@ -345,7 +346,21 @@ class _WritingPageState extends State<WritingPage> {
             Visibility(
               visible: isBottomLayoutShow,
               child: Container(
-
+                key: globalKey,
+                height: _softKeyHeight,
+                child: Visibility(
+                  visible: isEmojiLayoutShow,
+                  child: EmojiWidget(
+                    onEmojiClockBack: (value) {
+                      if (value == 0) {
+                        _detailController.clear();
+                      } else {
+                        _detailController.text =
+                            _detailController.text + "[/" + value.toString() + "]";
+                      }
+                    },
+                  ),
+                ),
               ),
             ),
           ],

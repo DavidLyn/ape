@@ -13,6 +13,7 @@ import 'package:ape/wode/change_brightness_page.dart';
 import 'package:ape/wode/about_us_page.dart';
 import 'package:ape/wode/personal_infomation_page.dart';
 import 'package:ape/common/widget/my_text_edit_page.dart';
+import 'package:ape/rethink/writing/writing_page.dart';
 
 /// 定义全局 Router 和初始化方法
 ///
@@ -31,6 +32,10 @@ class GlobalRouter {
 
   // 通用功能：编辑 text 字段
   static final textEdit = '/common/textEdit';
+
+  // 通用 记录 页
+  static final writing = '/common/writing';
+
 
   static final  router = Router();
 
@@ -75,6 +80,8 @@ class GlobalRouter {
         keyboardType: TextInputType.text,
       );
     }));
+
+    router.define(writing, handler: Handler(handlerFunc: (_,params){return WritingPage();}));
 
   }
 }

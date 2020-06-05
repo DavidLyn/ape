@@ -7,6 +7,7 @@ import 'package:flustars/flustars.dart' as FlutterStars;
 import 'package:ape/rethink/writing/extend_textfield/my_special_text_span_builder.dart';
 import 'package:ape/common/constants.dart';
 import 'package:ape/emoji/emoji_widget.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 /// 反思之 书写 页面
 class WritingPage extends StatefulWidget {
@@ -15,10 +16,9 @@ class WritingPage extends StatefulWidget {
 }
 
 class _WritingPageState extends State<WritingPage> {
-
   // 从 shared preference 中读取键盘高度
-  double _softKeyHeight = FlutterStars.SpUtil.getDouble(
-      SpConstants.keyboardHeight, defValue: 200);
+  double _softKeyHeight =
+      FlutterStars.SpUtil.getDouble(SpConstants.keyboardHeight, defValue: 200);
 
   // 已选中图片文件列表
   List<File> fileList = List();
@@ -33,7 +33,8 @@ class _WritingPageState extends State<WritingPage> {
   FocusNode focusNode = FocusNode();
 
   // 细节输入域特殊字符处理器
-  MySpecialTextSpanBuilder _mySpecialTextSpanBuilder = MySpecialTextSpanBuilder();
+  MySpecialTextSpanBuilder _mySpecialTextSpanBuilder =
+      MySpecialTextSpanBuilder();
 
   // 表情布局是否已显示
   bool isEmojiLayoutShow = false;
@@ -41,21 +42,53 @@ class _WritingPageState extends State<WritingPage> {
   // 底部布局是否已显示
   bool isBottomLayoutShow = false;
 
-  // 维底部布局创建 GlobalKey ,用于在外部访问其状态
-  final GlobalKey globalKey = GlobalKey();
+  // 创建键盘是否可见监听器
+  KeyboardVisibilityNotification _keyboardVisibility =
+      KeyboardVisibilityNotification();
 
   @override
   void initState() {
     super.initState();
+
+    _keyboardVisibility.addNewListener(
+      onChange: (bool visible) {
+        if (visible) {
+          isEmojiLayoutShow = false;
+
+          if (!isBottomLayoutShow) {
+            setState(() {
+              isBottomLayoutShow = true;
+            });
+          }
+        } else {
+          if (!isEmojiLayoutShow) {
+            setState(() {
+              isBottomLayoutShow = false;
+            });
+          }
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
+    _detailController.dispose();
+    _keyboardVisibility.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('keyboardHeight12345678 = $_softKeyHeight');
+
+    // 将刚选中的图片放置到列表中
+    if (selectedFile != null) {
+      fileList.add(selectedFile);
+    }
+    selectedFile = null;
+
     return SafeArea(
       child: WillPopScope(
         child: Scaffold(
@@ -98,7 +131,6 @@ class _WritingPageState extends State<WritingPage> {
               ),
             ),
           ),
-
           Align(
             alignment: Alignment.center,
             child: Container(
@@ -113,7 +145,6 @@ class _WritingPageState extends State<WritingPage> {
               ),
             ),
           ),
-
           Align(
             alignment: Alignment.centerRight,
             child: InkWell(
@@ -152,8 +183,8 @@ class _WritingPageState extends State<WritingPage> {
       child: ListView(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(
-                top: 10.0, left: 10.0, right: 10, bottom: 20),
+            padding:
+                EdgeInsets.only(top: 10.0, left: 10.0, right: 10, bottom: 20),
             constraints: BoxConstraints(minHeight: 50.0),
             child: ExtendedTextField(
               specialTextSpanBuilder: _mySpecialTextSpanBuilder,
@@ -166,81 +197,91 @@ class _WritingPageState extends State<WritingPage> {
                   hintStyle: TextStyle(color: Color(0xff919191), fontSize: 15)),
             ),
           ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                if (isBottomLayoutShow) {
+                  isBottomLayoutShow = false;
+                  isEmojiLayoutShow = false;
+                  _hideSoftKey();
+                }
+              });
+            },
+            child: GridView.count(
+              shrinkWrap: true,
+              primary: false,
+              crossAxisCount: 3,
+              children: List.generate(gridCount, (index) {
+                var content;
 
-          GridView.count(
-            shrinkWrap: true,
-            primary: false,
-            crossAxisCount: 3,
-            children: List.generate(gridCount, (index) {
-              var content;
+                if (index == fileList.length) {
+                  // 创建添加图片按钮
+                  var addCell = Center(
+                      child: Image.asset(
+                    'assets/images/common/add_image.png',
+                    width: double.infinity,
+                    height: double.infinity,
+                  ));
 
-              if (index == fileList.length) {
-                // 创建添加图片按钮
-                var addCell = Center(
-                    child: Image.asset('assets/images/common/add_image.png',
-                      width: double.infinity,
-                      height: double.infinity,
-                    ));
-
-                content = GestureDetector(
-                  child: addCell,
-                  onTap: () {
-                    // 如果已添加了9张图片，则提示不允许添加更多
-                    var size = fileList.length;
-                    if (size >= 9) {
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text("最多只能添加9张图片！"),
-                      ));
-                      return;
-                    }
-                    ImagePicker.pickImage(source: ImageSource.gallery)
-                        .then((result) {
-                      setState(() {
-                        selectedFile = result;
+                  content = GestureDetector(
+                    child: addCell,
+                    onTap: () {
+                      // 如果已添加了9张图片，则提示不允许添加更多
+                      var size = fileList.length;
+                      if (size >= 9) {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text("最多只能添加9张图片！"),
+                        ));
+                        return;
+                      }
+                      ImagePicker.pickImage(source: ImageSource.gallery)
+                          .then((result) {
+                        setState(() {
+                          selectedFile = result;
+                        });
                       });
-                    });
-                  },
-                );
-              } else {
-                // 创建被选中的图片,以及左上角的删除图标
-                content = Stack(
-                  children: <Widget>[
-                    Center(
-                      child: Image.file(
-                        fileList[index],
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: InkWell(
-                        onTap: () {
-                          fileList.removeAt(index);
-                          selectedFile = null;
-                          setState(() {});
-                        },
-                        child: Image.asset(
-                          'assets/images/common/delete_image.png',
-                          width: 20.0,
-                          height: 20.0,
+                    },
+                  );
+                } else {
+                  // 创建被选中的图片,以及左上角的删除图标
+                  content = Stack(
+                    children: <Widget>[
+                      Center(
+                        child: Image.file(
+                          fileList[index],
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ),
-                  ],
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          onTap: () {
+                            fileList.removeAt(index);
+                            selectedFile = null;
+                            setState(() {});
+                          },
+                          child: Image.asset(
+                            'assets/images/common/delete_image.png',
+                            width: 20.0,
+                            height: 20.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+
+                return Container(
+                  margin: const EdgeInsets.all(10.0),
+                  width: 80.0,
+                  height: 80.0,
+                  color: const Color(0xFFffffff),
+                  child: content,
                 );
-              }
-
-              return Container(
-                margin: const EdgeInsets.all(10.0),
-                width: 80.0,
-                height: 80.0,
-                color: const Color(0xFFffffff),
-                child: content,
-              );
-            }),
-
+              }),
+            ),
           ),
         ],
       ),
@@ -249,121 +290,139 @@ class _WritingPageState extends State<WritingPage> {
 
   // 底部布局
   Widget _bottomLayout() {
-      return Column(
-          children: <Widget>[
-            Container(
-              color: Color(0xffF9F9F9),
-              padding: EdgeInsets.only(left: 15, right: 5, top: 10, bottom: 10),
-              child: Row(
-                  children: <Widget>[
-                    // 选择图片按钮
-                    Expanded(
-                      flex: 1,
-                      child: InkWell(
-                        child: Image.asset('assets/images/common/select_image.webp', width: 25.0, height: 25.0,),
-                        onTap: () {
-                          ImagePicker.pickImage(source: ImageSource.gallery)
-                              .then((result) {
-                            setState(() {
-                              selectedFile = result;
-                            });
-                          });
-                        },
-                      ),
-                    ),
-
-                    // @ 按钮
-                    Expanded(
-                      flex: 1,
-                      child: InkWell(
-                        child: Image.asset('assets/images/common/at_others.png', width: 25.0, height: 25.0,),
-                        onTap: () {
-                          // To-do .......
-
-                        },
-                      ),
-                    ),
-
-                    // 选择主题按钮
-                    Expanded(
-                      flex: 1,
-                      child: InkWell(
-                        child: Image.asset('assets/images/common/select_topic.png', width: 25.0, height: 25.0,),
-                        onTap: () {
-                          // To-do .......
-
-                        },
-                      ),
-                    ),
-
-                    // 选择 gif
-                    Expanded(
-                      flex: 1,
-                      child: InkWell(
-                        child: Image.asset('assets/images/common/select_gif.png', width: 25.0, height: 25.0,),
-                        onTap: () {
-                          // To-do .......
-
-                        },
-                      ),
-                    ),
-
-                    // 选择表情
-                    Expanded(
-                      flex: 1,
-                      child: InkWell(
-                        child: Image.asset('assets/images/common/select_emotion.png', width: 25.0, height: 25.0,),
-                        onTap: () {
-                          setState(() {
-                            if (isEmojiLayoutShow) {
-                              isBottomLayoutShow = true;
-                              isEmojiLayoutShow = false;
-                              _showSoftKey();
-                            } else {
-                              isBottomLayoutShow = true;
-                              isEmojiLayoutShow = true;
-                              _hideSoftKey();
-                            }
-                          });
-                        },
-                      ),
-                    ),
-
-                    //
-                    Expanded(
-                      child: InkWell(
-                        child: Image.asset('assets/images/common/select_add.png', width: 25.0, height: 25.0,),
-                        onTap: () {
-                          // To-do .......
-
-                        },
-                      ),
-                    ),
-                  ],
-              ),
-            ),
-
-            Visibility(
-              visible: isBottomLayoutShow,
-              child: Container(
-                key: globalKey,
-                height: _softKeyHeight,
-                child: Visibility(
-                  visible: isEmojiLayoutShow,
-                  child: EmojiWidget(
-                    onEmojiClockBack: (value) {
-                      if (value == 0) {
-                        _detailController.clear();
-                      } else {
-                        _detailController.text =
-                            _detailController.text + "[/" + value.toString() + "]";
-                      }
-                    },
+    return Column(
+      children: <Widget>[
+        Container(
+          color: Color(0xffF9F9F9),
+          padding: EdgeInsets.only(left: 15, right: 5, top: 10, bottom: 10),
+          child: Row(
+            children: <Widget>[
+              // 选择图片按钮
+              Expanded(
+                flex: 1,
+                child: InkWell(
+                  child: Image.asset(
+                    'assets/images/common/select_image.webp',
+                    width: 25.0,
+                    height: 25.0,
                   ),
+                  onTap: () {
+                    ImagePicker.pickImage(source: ImageSource.gallery)
+                        .then((result) {
+                      setState(() {
+                        selectedFile = result;
+                      });
+                    });
+                  },
                 ),
               ),
+
+              // @ 按钮
+              Expanded(
+                flex: 1,
+                child: InkWell(
+                  child: Image.asset(
+                    'assets/images/common/at_others.png',
+                    width: 25.0,
+                    height: 25.0,
+                  ),
+                  onTap: () {
+                    // To-do .......
+                  },
+                ),
+              ),
+
+              // 选择主题按钮
+              Expanded(
+                flex: 1,
+                child: InkWell(
+                  child: Image.asset(
+                    'assets/images/common/select_topic.png',
+                    width: 25.0,
+                    height: 25.0,
+                  ),
+                  onTap: () {
+                    // To-do .......
+                  },
+                ),
+              ),
+
+              // 选择 gif
+              Expanded(
+                flex: 1,
+                child: InkWell(
+                  child: Image.asset(
+                    'assets/images/common/select_gif.png',
+                    width: 25.0,
+                    height: 25.0,
+                  ),
+                  onTap: () {
+                    // To-do .......
+                  },
+                ),
+              ),
+
+              // 选择表情
+              Expanded(
+                flex: 1,
+                child: InkWell(
+                  child: Image.asset(
+                    'assets/images/common/select_emotion.png',
+                    width: 25.0,
+                    height: 25.0,
+                  ),
+                  onTap: () {
+                    setState(() {
+                      if (isEmojiLayoutShow) {
+                        isBottomLayoutShow = true;
+                        isEmojiLayoutShow = false;
+                        _showSoftKey();
+                      } else {
+                        isBottomLayoutShow = true;
+                        isEmojiLayoutShow = true;
+                        _hideSoftKey();
+                      }
+                    });
+                  },
+                ),
+              ),
+
+              //
+              Expanded(
+                child: InkWell(
+                  child: Image.asset(
+                    'assets/images/common/select_add.png',
+                    width: 25.0,
+                    height: 25.0,
+                  ),
+                  onTap: () {
+                    // To-do .......
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: isBottomLayoutShow,
+          child: Container(
+            height: _softKeyHeight,
+            child: Visibility(
+              visible: isEmojiLayoutShow,
+              child: EmojiWidget(
+                onEmojiClockBack: (value) {
+                  if (value == 0) {
+                    _detailController.clear();
+                  } else {
+                    _detailController.text =
+                        _detailController.text + "[/" + value.toString() + "]";
+                  }
+                },
+              ),
             ),
-          ],
+          ),
+        ),
+      ],
     );
   }
 

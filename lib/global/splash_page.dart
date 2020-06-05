@@ -64,14 +64,6 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    // 获取并保存键盘高度
-    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    if (keyboardHeight != 0) {
-      print("键盘高度是:" + keyboardHeight.toString());
-      SpUtil.putDouble(SpConstants.keyboardHeight, keyboardHeight);
-    }
-
     return Material(
         color: ThemeUtils.getBackgroundColor(context),
         child: _status == 0 ? FractionallyAlignedSizedBox(

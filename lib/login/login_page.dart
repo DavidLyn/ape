@@ -93,6 +93,13 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 获取并保存键盘高度
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    if (keyboardHeight != 0) {
+      print("键盘高度是:" + keyboardHeight.toString());
+      FlutterStars.SpUtil.putDouble(SpConstants.keyboardHeight, keyboardHeight);
+    }
+
     return Scaffold(
       appBar: MyAppBar(
         isBack: false,

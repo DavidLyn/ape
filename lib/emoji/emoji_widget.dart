@@ -40,7 +40,6 @@ class _EmojiWidgetState extends State<EmojiWidget> {
   Widget getWrapByPage(Map<int, int> emojiPage) {
     List<Widget> emojis = new List();
     emojiPage.forEach((key, value) {
-      print('key: $key, value:$value');
       Widget item = getItem(key, value);
       emojis.add(item);
     });

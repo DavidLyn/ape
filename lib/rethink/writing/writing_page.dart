@@ -8,6 +8,7 @@ import 'package:ape/rethink/writing/extend_textfield/my_special_text_span_builde
 import 'package:ape/common/constants.dart';
 import 'package:ape/emoji/emoji_widget.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:ape/util/other_utils.dart';
 
 /// 反思之 书写 页面
 class WritingPage extends StatefulWidget {
@@ -81,8 +82,6 @@ class _WritingPageState extends State<WritingPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('keyboardHeight12345678 = $_softKeyHeight');
-
     // 将刚选中的图片放置到列表中
     if (selectedFile != null) {
       fileList.add(selectedFile);
@@ -150,6 +149,8 @@ class _WritingPageState extends State<WritingPage> {
             child: InkWell(
               onTap: () {
                 // To-do 保存数据
+                OtherUtils.showToastMessage('保存数据');
+                Navigator.pop(context);
               },
               child: Container(
                 margin: EdgeInsets.only(right: 15.0),
@@ -328,6 +329,7 @@ class _WritingPageState extends State<WritingPage> {
                   ),
                   onTap: () {
                     // To-do .......
+                    OtherUtils.showToastMessage('@ is tapped!');
                   },
                 ),
               ),
@@ -343,6 +345,7 @@ class _WritingPageState extends State<WritingPage> {
                   ),
                   onTap: () {
                     // To-do .......
+                    OtherUtils.showToastMessage('# is tapped!');
                   },
                 ),
               ),
@@ -358,6 +361,7 @@ class _WritingPageState extends State<WritingPage> {
                   ),
                   onTap: () {
                     // To-do .......
+                    OtherUtils.showToastMessage('Gif is tapped!');
                   },
                 ),
               ),
@@ -397,6 +401,7 @@ class _WritingPageState extends State<WritingPage> {
                   ),
                   onTap: () {
                     // To-do .......
+                    OtherUtils.showToastMessage('+ is tapped!');
                   },
                 ),
               ),

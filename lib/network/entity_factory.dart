@@ -9,7 +9,7 @@ class EntityFactory {
     }
     //可以在这里加入任何需要并且可以转换的类型，例如下面
     else if (T.toString() == "User") {
-    return User.fromJson(json) as T;
+      return User.fromJson(json) as T;
     }
     else {
       return json as T;

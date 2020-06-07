@@ -8,7 +8,10 @@ class XixiPage extends StatefulWidget {
   _XixiPageState createState() => _XixiPageState();
 }
 
-class _XixiPageState extends State<XixiPage> {
+class _XixiPageState extends State<XixiPage> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true; // 为实现 AutomaticKeepAliveClientMixin 的功能所必须
 
   @override
   void initState() {

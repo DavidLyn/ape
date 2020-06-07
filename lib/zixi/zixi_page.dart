@@ -4,6 +4,7 @@ import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/common/refresh_helper.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:ape/common/widget/refresh_header_footer.dart';
 
 /// 自习 页面
 ///
@@ -17,29 +18,10 @@ class _ZixiPageState extends State<ZixiPage>
   @override
   bool get wantKeepAlive => true; // 为实现 AutomaticKeepAliveClientMixin 的功能所必须
 
-  //RefreshHelper<String> refreshHelper;
-
   @override
   void initState() {
     super.initState();
 
-//    refreshHelper = RefreshHelper(
-//      loadData: ({int pageNum,int pageSize}){
-//        print('lalalalalala   pageNum=$pageNum;pageSize=$pageSize');
-//        var num = pageNum ?? 0;
-//
-//        List<String> list = [];
-//
-//        for (int i=0;i< pageSize;i++) {
-//          list.add('pageNum=$pageNum;pageSize=$pageSize');
-//        }
-//        return Future.value(list);
-//      }
-//    );
-//
-//    refreshHelper.refresh();
-//    setState(() {
-//    });
   }
 
   @override
@@ -54,7 +36,7 @@ class _ZixiPageState extends State<ZixiPage>
         ChangeNotifierProvider(
             create: (_) =>
                 RefreshHelper(loadData: ({int pageNum, int pageSize}) {
-                  print('lalalalalala   pageNum=$pageNum;pageSize=$pageSize');
+                  //print('lalalalalala   pageNum=$pageNum;pageSize=$pageSize');
                   var num = pageNum ?? 0;
 
                   List<String> list = [];
@@ -86,10 +68,8 @@ class _ZixiPageState extends State<ZixiPage>
               80 + MediaQuery.of(context).padding.top / 3, // 触发下拉刷新的距离
           child: SmartRefresher(
             controller: refreshHelper.refreshController,
-            header: WaterDropHeader(
-              waterDropColor: Colors.yellow,
-            ),
-            footer: ClassicFooter(),
+            header: MyWaterDropHeader(),
+            footer: MyClassicFooter(),
             enablePullDown: true,
             enablePullUp: true,
             onRefresh: () async {

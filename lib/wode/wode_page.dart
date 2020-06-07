@@ -11,7 +11,10 @@ class WodePage extends StatefulWidget {
   _WodePageState createState() => _WodePageState();
 }
 
-class _WodePageState extends State<WodePage> {
+class _WodePageState extends State<WodePage> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true; // 为实现 AutomaticKeepAliveClientMixin 的功能所必须
 
   @override
   void initState() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:badges/badges.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/common/widget/loaded_image_widgets.dart';
 import 'package:ape/util/theme_utils.dart';
@@ -11,8 +12,8 @@ class WodePage extends StatefulWidget {
   _WodePageState createState() => _WodePageState();
 }
 
-class _WodePageState extends State<WodePage> with AutomaticKeepAliveClientMixin {
-
+class _WodePageState extends State<WodePage>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true; // 为实现 AutomaticKeepAliveClientMixin 的功能所必须
 
@@ -27,9 +28,15 @@ class _WodePageState extends State<WodePage> with AutomaticKeepAliveClientMixin 
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('我的',
-          style: TextStyle(fontSize: 18,
-            color: Colours.app_main,
+        title: Badge(
+          badgeContent: Text('3'),
+          badgeColor: Colors.yellow,
+          child: Text(
+            '我的',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colours.app_main,
+            ),
           ),
         ),
         centerTitle: true,
@@ -61,12 +68,10 @@ class _WodePageState extends State<WodePage> with AutomaticKeepAliveClientMixin 
             ),
           )
         ],
-
       ),
       body: Container(
         child: Text('hello wode'),
       ),
     );
   }
-
 }

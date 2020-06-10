@@ -37,6 +37,13 @@ class User {
   // 状态
   int status;
 
+  // 性别 1 - male, 2 - female, 0 - unknown
+  int gender;
+
+  // 简介
+  String desc;
+
+
   User({ this.uid,
     this.name,
     this.nickname,
@@ -49,6 +56,8 @@ class User {
     this.createAt,
     this.updateAt,
     this.status,
+    this.gender,
+    this.desc,
   });
 
   User.fromJson(json)
@@ -63,7 +72,9 @@ class User {
         avatar = json["avatar"],
         createAt = json["createAt"],
         updateAt = json["updateAt"],
-        status = json["status"];
+        status = json["status"],
+        gender = json['gender'],
+        desc = json['desc'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -80,6 +91,8 @@ class User {
     data['createAt'] = createAt;
     data['updateAt'] = updateAt;
     data['status'] = status;
+    data['gender'] = gender;
+    data['desc'] = desc;
 
     return data;
   }

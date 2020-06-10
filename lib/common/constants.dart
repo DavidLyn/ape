@@ -1,3 +1,5 @@
+import 'package:flustars/flustars.dart' as flutter_stars;
+import 'package:ape/entity/user.dart';
 
 /// 保存可能被多个模块引用的 Shared Preference 常量
 class SpConstants {
@@ -27,4 +29,69 @@ class SpConstants {
   static String getMobileSpKey(String mobile) => 'user_mobile_' + mobile.trim();
 }
 
-/// 其他常量类型
+/// 当前用户信息
+///
+class UserInfo {
+
+  static User user = getLocalUser ();
+
+  static User getLocalUser () {
+    User user = User();
+
+    user.uid = flutter_stars.SpUtil.getInt('sp_uid');
+    user.name = flutter_stars.SpUtil.getString('sp_name');
+    user.nickname = flutter_stars.SpUtil.getString('sp_nickname');
+    user.birthday = flutter_stars.SpUtil.getString('sp_birthday');
+    user.mobile = flutter_stars.SpUtil.getString('sp_mobile');
+    user.email = flutter_stars.SpUtil.getString('sp_email');
+    user.password = flutter_stars.SpUtil.getString('sp_password');
+    user.salt = flutter_stars.SpUtil.getString('sp_salt');
+    user.avatar = flutter_stars.SpUtil.getString('sp_avatar');
+    user.createAt = DateTime.parse(flutter_stars.SpUtil.getString('sp_createAt'));
+    user.updateAt = DateTime.parse(flutter_stars.SpUtil.getString('sp_updateAt'));
+    user.status = flutter_stars.SpUtil.getInt('sp_status');
+    user.gender = flutter_stars.SpUtil.getInt('sp_gender');
+    user.desc = flutter_stars.SpUtil.getString('sp_desc');
+
+    return user;
+
+  }
+
+  static void saveUserToLocal(User user) {
+    flutter_stars.SpUtil.putInt('sp_uid',user.uid);
+    flutter_stars.SpUtil.putString('sp_name',user.name);
+    flutter_stars.SpUtil.putString('sp_nickname',user.nickname);
+    flutter_stars.SpUtil.putString('sp_birthday',user.birthday);
+    flutter_stars.SpUtil.putString('sp_mobile',user.mobile);
+    flutter_stars.SpUtil.putString('sp_email',user.email);
+    flutter_stars.SpUtil.putString('sp_password',user.password);
+    flutter_stars.SpUtil.putString('sp_salt',user.salt);
+    flutter_stars.SpUtil.putString('sp_avatar',user.avatar);
+    flutter_stars.SpUtil.putString('sp_createAt',user.createAt.toString());
+    flutter_stars.SpUtil.putString('sp_createAt',user.updateAt.toString());
+    flutter_stars.SpUtil.putInt('sp_status',user.status);
+    flutter_stars.SpUtil.putInt('sp_gender',user.gender);
+    flutter_stars.SpUtil.putString('sp_desc',user.desc);
+  }
+
+  static void setNickname(String nickname) {
+    user.nickname = nickname;
+    flutter_stars.SpUtil.putString('sp_nickname',user.nickname);
+  }
+
+  static void setBirthday(String birthday) {
+    user.birthday = birthday;
+    flutter_stars.SpUtil.putString('sp_birthday',user.birthday);
+  }
+
+  static void setGender(int gender) {
+    user.gender = gender;
+    flutter_stars.SpUtil.putInt('sp_gender',user.gender);
+  }
+
+  static void setDesc(String desc) {
+    user.desc = desc;
+    flutter_stars.SpUtil.putString('sp_desc',user.desc);
+  }
+
+}

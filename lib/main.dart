@@ -86,11 +86,13 @@ class MyApp extends StatelessWidget {
                   localizationsDelegates: [
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
+                    RefreshLocalizations.delegate, // pull_to_refresh 的国际化
                   ],
                   supportedLocales: [
                     const Locale('zh', 'CH'),
                     const Locale('en', 'US'),
                   ],
+                  locale: Locale('zh'),
                 ),
               );
             }

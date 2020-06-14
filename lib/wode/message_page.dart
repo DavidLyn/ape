@@ -16,8 +16,10 @@ class _MessagePageState extends State<MessagePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('Message Page'),
+    return Scaffold(
+      body: Center(
+        child: Text('Message Page'),
+      ),
     );
   }
 

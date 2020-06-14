@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flustars/flustars.dart' as FlutterStars;
 import 'package:intl/intl.dart';
@@ -26,6 +27,7 @@ class PersonalInformationPage extends StatefulWidget {
 
 class _PersonalInformationPageState extends State<PersonalInformationPage> {
   var nickname = '武哇哇';
+  var gender = '男';
 
   // 创建 GlobalKey 实现对内部 state 的访问
   GlobalKey<MySelectionItemState> _itemAvatarKey =
@@ -33,6 +35,8 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   GlobalKey<MySelectionItemState> _itemNicknameKey =
       GlobalKey<MySelectionItemState>();
   GlobalKey<MySelectionItemState> _itemBirthdayKey =
+      GlobalKey<MySelectionItemState>();
+  GlobalKey<MySelectionItemState> _itemGenderKey =
       GlobalKey<MySelectionItemState>();
 
   @override
@@ -118,6 +122,80 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       },
     );
 
+    var _itemGender = MySelectionItem(
+      key: _itemGenderKey,
+      icon: Icon(
+        Icons.airline_seat_individual_suite,
+        color: Colors.green,
+      ),
+      title: '性别',
+      content: gender,
+      onTap: () async {
+        var result = await showCupertinoModalPopup(
+          context: context,
+          builder: (context) {
+            return CupertinoActionSheet(
+              //title: Text('提示'),
+              //message: Text('选择性别'),
+              actions: <Widget>[
+                CupertinoActionSheetAction(
+                  child: Text('保密'),
+                  onPressed: () {
+                    Navigator.of(context).pop('0');
+                  },
+                  isDefaultAction: gender == '保密',
+                ),
+                CupertinoActionSheetAction(
+                  child: Text('男'),
+                  onPressed: () {
+                    Navigator.of(context).pop('1');
+                  },
+                  isDefaultAction: gender == '男',
+                  //isDestructiveAction: true,
+                ),
+                CupertinoActionSheetAction(
+                  child: Text('女'),
+                  onPressed: () {
+                    Navigator.of(context).pop('2');
+                  },
+                  isDefaultAction: gender == '女',
+                  //isDestructiveAction: true,
+                ),
+              ],
+              cancelButton: CupertinoActionSheetAction(
+                child: Text('取消'),
+                onPressed: () {
+                  Navigator.of(context).pop('9');
+                },
+              ),
+            );
+          },
+        );
+
+        var gs;
+        if (result != '9') {
+          switch (result) {
+            case '0': {
+              gs = '保密';
+            }
+            break;
+            case '1': {
+              gs = '男';
+            }
+            break;
+            case '2': {
+              gs = '女';
+            }
+          }
+        }
+
+        if (gs != null) {
+          _itemGenderKey.currentState.setContent(gs);
+          gender = gs;
+        }
+      },
+    );
+
     return Scaffold(
       appBar: MyAppBar(
         centerTitle: '个人信息',
@@ -127,6 +205,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
           itemAvatar,
           itemNickname,
           itemBirthday,
+          _itemGender,
         ],
       ),
     );

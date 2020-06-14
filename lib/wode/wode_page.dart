@@ -70,7 +70,9 @@ class _WodePageState extends State<WodePage>
         ],
       ),
       body: Container(
-        child: Text('hello wode'),
+        child: Center(
+          child: Text('Hello Wode',style: TextStyle(color: Colors.black,fontSize: 30),),
+        ),
       ),
     );
   }

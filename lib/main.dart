@@ -84,8 +84,9 @@ class MyApp extends StatelessWidget {
                   home: home ?? SplashPage(),
                   onGenerateRoute: GlobalRouter.router.generator,
                   localizationsDelegates: [
-                    GlobalMaterialLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,   //
                     GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
                     RefreshLocalizations.delegate, // pull_to_refresh 的国际化
                   ],
                   supportedLocales: [

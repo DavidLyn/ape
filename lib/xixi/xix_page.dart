@@ -16,12 +16,15 @@ class _XixiPageState extends State<XixiPage>
   @override
   bool get wantKeepAlive => true; // 为实现 AutomaticKeepAliveClientMixin 的功能所必须
 
+  var _webview;
+
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
   @override
   void initState() {
     super.initState();
+
   }
 
   @override
@@ -31,12 +34,8 @@ class _XixiPageState extends State<XixiPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MyAppBar(
-        centerTitle: '习习',
-        isBack: false,
-      ),
-      body: WebView(
+    if (_webview == null) {
+      _webview = WebView(
         initialUrl: 'https://www.hao123.com',
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {
@@ -64,7 +63,15 @@ class _XixiPageState extends State<XixiPage>
           print('error : $error');
         },
         gestureNavigationEnabled: true,
+      );
+    }
+
+    return Scaffold(
+      appBar: MyAppBar(
+        centerTitle: '习习',
+        isBack: false,
       ),
+      body: _webview,
       floatingActionButton: favoriteButton(),
     );
   }

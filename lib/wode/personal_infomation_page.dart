@@ -139,19 +139,12 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
               //message: Text('选择性别'),
               actions: <Widget>[
                 CupertinoActionSheetAction(
-                  child: Text('保密'),
-                  onPressed: () {
-                    Navigator.of(context).pop('0');
-                  },
-                  isDefaultAction: gender == '保密',
-                ),
-                CupertinoActionSheetAction(
                   child: Text('男'),
                   onPressed: () {
                     Navigator.of(context).pop('1');
                   },
                   isDefaultAction: gender == '男',
-                  //isDestructiveAction: true,
+                  isDestructiveAction: gender != '男',
                 ),
                 CupertinoActionSheetAction(
                   child: Text('女'),
@@ -159,7 +152,15 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                     Navigator.of(context).pop('2');
                   },
                   isDefaultAction: gender == '女',
-                  //isDestructiveAction: true,
+                  isDestructiveAction: gender != '女',
+                ),
+                CupertinoActionSheetAction(
+                  child: Text('保密'),
+                  onPressed: () {
+                    Navigator.of(context).pop('0');
+                  },
+                  isDefaultAction: gender == '保密',
+                  isDestructiveAction: gender != '保密',
                 ),
               ],
               cancelButton: CupertinoActionSheetAction(

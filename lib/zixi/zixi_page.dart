@@ -35,13 +35,12 @@ class _ZixiPageState extends State<ZixiPage>
         ChangeNotifierProvider(
             create: (_) =>
                 RefreshHelper(loadData: ({int pageNum, int pageSize}) {
-                  //print('lalalalalala   pageNum=$pageNum;pageSize=$pageSize');
-                  var num = pageNum ?? 0;
+                  //var num = pageNum ?? 0;
 
                   List<String> list = [];
 
                   for (int i = 0; i < pageSize; i++) {
-                    list.add('pageNum=$pageNum;pageSize=$pageSize');
+                    list.add('i=$i;pageNum=$pageNum;pageSize=$pageSize');
                   }
                   return Future.value(list);
                 })),
@@ -71,14 +70,8 @@ class _ZixiPageState extends State<ZixiPage>
             footer: ClassicFooter(),
             enablePullDown: true,
             enablePullUp: true,
-            onRefresh: () async {
-              await refreshHelper.refresh();
-              setState(() {});
-            },
-            onLoading: () async {
-              await refreshHelper.loadMore();
-              setState(() {});
-            },
+            onRefresh: () => refreshHelper.refresh(),
+            onLoading: () => refreshHelper.loadMore(),
             child: CustomScrollView(
               //controller:,
               slivers: <Widget>[

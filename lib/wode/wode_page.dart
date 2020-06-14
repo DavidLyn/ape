@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/common/widget/loaded_image_widgets.dart';
-import 'package:ape/util/theme_utils.dart';
 
 /// 我的 页面
 ///
@@ -24,7 +23,6 @@ class _WodePageState extends State<WodePage>
 
   @override
   Widget build(BuildContext context) {
-    final Color _iconColor = ThemeUtils.getIconColor(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,7 +33,7 @@ class _WodePageState extends State<WodePage>
             '我的',
             style: TextStyle(
               fontSize: 18,
-              color: Colours.app_main,
+              color: Colors.black,
             ),
           ),
         ),
@@ -51,7 +49,7 @@ class _WodePageState extends State<WodePage>
               key: const Key('message'),
               width: 24.0,
               height: 24.0,
-              color: _iconColor,
+              color: Colors.black,
             ),
           ),
           IconButton(
@@ -64,7 +62,7 @@ class _WodePageState extends State<WodePage>
               key: const Key('setting'),
               width: 24.0,
               height: 24.0,
-              color: _iconColor,
+              color: Colors.black,
             ),
           )
         ],

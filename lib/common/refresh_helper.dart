@@ -37,9 +37,6 @@ class RefreshHelper<T>  with ChangeNotifier {
     refresh();
   }
 
-  // 加载数据
-  //Future<List<T>> loadData({int pageNum});
-
   /// 下拉刷新
   Future refresh() async {
     busy = true;

@@ -64,6 +64,9 @@ dependencies:
   # 本地json对象存储  https://github.com/lesnitsky/flutter_localstorage
   localstorage: ^3.0.0
 
+  # MQTT https://github.com/shamblett/mqtt_client
+  mqtt_client: ^7.2.1
+
   # Toast 插件 https://github.com/OpenFlutter/flutter_oktoast
   oktoast: ^2.3.2
 

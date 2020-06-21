@@ -106,6 +106,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.9"
+  event_bus:
+    dependency: transitive
+    description:
+      name: event_bus
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.1"
   extended_text_field:
     dependency: "direct main"
     description:
@@ -287,6 +294,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.8"
+  mqtt_client:
+    dependency: "direct main"
+    description:
+      name: mqtt_client
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "7.2.1"
   nested:
     dependency: transitive
     description:

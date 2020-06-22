@@ -10,7 +10,8 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 ///
 class MQTTProvider extends ChangeNotifier {
 
-  static const mqttServer = '192.168.1.103:1883';
+  // tcp://192.168.1.101 or 192.168.1.101:1883 all are error!!!
+  static const mqttServer = '192.168.1.101';
   //static const mqttServer = '172.16.40.36:1883';
 
   static const int keepAlivePeriod = 30;
@@ -52,23 +53,6 @@ class MQTTProvider extends ChangeNotifier {
 
     client.connectionMessage = connMess;
 
-    // listen to to get notifications of published updates to each subscribed topic
-    client.updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
-      final MqttPublishMessage recMess = c[0].payload;
-      final pt =
-      MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-
-      print(
-          'MQTT::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
-      print('');
-    });
-
-    // listen for published messages that have completed the publishing handshake which is Qos dependant
-    client.published.listen((MqttPublishMessage message) {
-      print(
-          'MQTT::Published notification:: topic is ${message.variableHeader.topicName}, with Qos ${message.header.qos}');
-    });
-
   }
 
   /// connect server
@@ -80,6 +64,25 @@ class MQTTProvider extends ChangeNotifier {
     // Connect the server
     try {
       await client.connect();
+
+      // listen to to get notifications of published updates to each subscribed topic
+//      client.updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+//        final MqttPublishMessage recMess = c[0].payload;
+//        final pt =
+//        MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+//
+//        print(
+//            'MQTT::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
+//        print('');
+//      });
+
+      // 注意 : 只能在 connect 后才能 listen
+      // listen for published messages that have completed the publishing handshake which is Qos dependant
+      client.published.listen((MqttPublishMessage message) {
+        var pt = MqttPublishPayload.bytesToStringAsString(message.payload.message);
+        print(
+            'MQTT::Published notification:: topic is ${message.variableHeader.topicName}, with Qos ${message.header.qos}, payload is $pt');
+      });
     } on Exception catch (e) {
       print('MQTT::client exception - $e');
       client.disconnect();
@@ -96,6 +99,8 @@ class MQTTProvider extends ChangeNotifier {
       client.disconnect();
       isConnected = false;
     }
+
+    subscribe('test');
   }
 
   /// publish message

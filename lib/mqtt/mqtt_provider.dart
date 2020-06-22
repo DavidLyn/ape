@@ -10,9 +10,9 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 ///
 class MQTTProvider extends ChangeNotifier {
 
-  // tcp://192.168.1.101 or 192.168.1.101:1883 all are error!!!
+  // note : tcp://192.168.1.101 or 192.168.1.101:1883 all are error!!!
   static const mqttServer = '192.168.1.101';
-  //static const mqttServer = '172.16.40.36:1883';
+  //static const mqttServer = '172.16.40.36';
 
   static const int keepAlivePeriod = 30;
 
@@ -65,6 +65,7 @@ class MQTTProvider extends ChangeNotifier {
     try {
       await client.connect();
 
+      // 注意 : 只能在 connect 后才能 updates.listen
       // listen to to get notifications of published updates to each subscribed topic
 //      client.updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
 //        final MqttPublishMessage recMess = c[0].payload;
@@ -76,7 +77,7 @@ class MQTTProvider extends ChangeNotifier {
 //        print('');
 //      });
 
-      // 注意 : 只能在 connect 后才能 listen
+      // 注意 : 只能在 connect 后才能 published.listen
       // listen for published messages that have completed the publishing handshake which is Qos dependant
       client.published.listen((MqttPublishMessage message) {
         var pt = MqttPublishPayload.bytesToStringAsString(message.payload.message);

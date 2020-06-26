@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
     return DoubleTapBackExitApp(
       child: Scaffold(
           bottomNavigationBar:  BottomNavigationBar(
-              backgroundColor: ThemeUtils.getBackgroundColor(context),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,   //ThemeUtils.getBackgroundColor(context),
               items: _buildBottomNavigationBarItem(),
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,

@@ -135,6 +135,8 @@ class _RegisterPageState extends State<RegisterPage> {
         getVCode: () async {
           if (_nameController.text.length == 11) {
 
+            print('-----------------------------> send message!');
+
             // 通过后台向手机发短信
             DioManager().request<String>(
                 NWMethod.GET,

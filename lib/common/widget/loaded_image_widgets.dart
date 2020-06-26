@@ -11,7 +11,7 @@ class LoadedImageWidget extends StatelessWidget {
     Key key,
     this.width, 
     this.height,
-    this.fit: BoxFit.cover, 
+    this.fit: BoxFit.fill,
     this.format: 'png',
     this.holderImg: 'img_none',
     this.path : 'assets/images'

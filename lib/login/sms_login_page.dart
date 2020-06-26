@@ -125,7 +125,7 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
             DioManager().request<String>(
                 NWMethod.GET,
                 NWApi.sendSms,
-                params : {'mobile':_phoneController.text},
+                params : <String,dynamic>{'mobile':_phoneController.text},
                 success: (data,message) {
                   Log.d("success data = $data");
 

@@ -37,15 +37,15 @@ class _SplashPageState extends State<SplashPage> {
 
       // 延时 1500 毫秒后或显示 splash 或跳转至 Login 页面
       Future.delayed(Duration(milliseconds: 1500),(){
-        if (SpUtil.getBool(SpConstants.openSplash, defValue: true)) {
-          SpUtil.putBool(SpConstants.openSplash, false);
-
-          setState(() {
-            _status = 1;    // 设置为 splash 显示状态
-          });
-        } else {
+//        if (SpUtil.getBool(SpConstants.openSplash, defValue: true)) {
+//          SpUtil.putBool(SpConstants.openSplash, false);
+//
+//          setState(() {
+//            _status = 1;    // 设置为 splash 显示状态
+//          });
+//        } else {
           _gotoLogin();     // 跳转至 Login 页面
-        }
+//        }
 
       });
     });
@@ -58,8 +58,8 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _gotoLogin() {
-    //NavigatorUtils.push(context, GlobalRouter.login, replace: true);
-    NavigatorUtils.push(context, GlobalRouter.home, replace: true);
+    NavigatorUtils.push(context, GlobalRouter.login, replace: true);
+    //NavigatorUtils.push(context, GlobalRouter.home, replace: true);
   }
 
   @override

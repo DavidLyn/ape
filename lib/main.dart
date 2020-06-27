@@ -71,9 +71,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  //final Widget home;
-
-  //MyApp({this.home});
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +86,7 @@ class MyApp extends StatelessWidget {
                   theme: themeProvider.themeData(),
                   darkTheme: themeProvider.themeData(isDarkMode: true),
                   themeMode: themeProvider.getThemeMode(),
-                  //home: home ?? SplashPage(),
-                  home: SplashPage(),
+                  initialRoute: GlobalRouter.splash,     // initialRoute 只能用 '/' ???
                   onGenerateRoute: GlobalRouter.router.generator,
                   localizationsDelegates: [
                     GlobalMaterialLocalizations.delegate,   //

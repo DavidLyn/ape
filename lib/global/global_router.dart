@@ -18,7 +18,7 @@ import 'package:ape/rethink/writing/writing_page.dart';
 
 /// 定义全局 Router 和初始化方法
 class GlobalRouter {
-  static final splash = '/splash';
+  static final splash = '/';
   static final home = '/home';
   static final login = '/login';
   static final register = '/login/register';
@@ -36,7 +36,6 @@ class GlobalRouter {
 
   // 通用 记录 页
   static final writing = '/common/writing';
-
 
   static final  router = Router();
 
@@ -88,7 +87,7 @@ class GlobalRouter {
   }
 }
 
-/// fluro的路由跳转工具类
+/// fluro 路由跳转工具类
 class NavigatorUtils {
 
   // 对参数进行encode，解决参数中有特殊字符，影响fluro路由匹配(https://www.jianshu.com/p/e575787d173c)
@@ -109,7 +108,7 @@ class NavigatorUtils {
         index++;
       }
     }
-    print('NavigatorUtils.push 传递的参数：$query');
+    //print('NavigatorUtils.push 传递的参数：$query');
 
     path = path + query;
 
@@ -134,7 +133,7 @@ class NavigatorUtils {
         index++;
       }
     }
-    print('NavigatorUtils.pushWaitingResult 传递的参数：$query');
+    //print('NavigatorUtils.pushWaitingResult 传递的参数：$query');
 
     path = path + query;
 
@@ -162,11 +161,4 @@ class NavigatorUtils {
     Navigator.pop(context, result);
   }
 
-  // 跳到WebView页
-//  static goWebViewPage(BuildContext context, String title, String url) {
-//    //fluro 不支持传中文,需转换
-//    push(context, '${Routes.webViewPage}?title=${Uri.encodeComponent(title)}&url=${Uri.encodeComponent(url)}');
-//  }
-
-  // 参考：https://www.jianshu.com/p/e575787d173c
 }

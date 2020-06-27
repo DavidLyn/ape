@@ -97,4 +97,18 @@ class User {
     return data;
   }
 
+  /**
+   * 取得字符型性别
+   */
+  String getGenderInChar() {
+    switch (this.gender) {
+      case 1 :
+        return '男';
+      case 2 :
+        return '女';
+      default :
+        return '保密';
+    }
+  }
+
 }

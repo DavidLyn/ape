@@ -18,7 +18,6 @@ import 'package:ape/common/widget/my_avatar.dart';
 import 'package:ape/global/global_router.dart';
 
 /// 个人信息 页面
-///
 class PersonalInformationPage extends StatefulWidget {
   @override
   _PersonalInformationPageState createState() =>
@@ -26,8 +25,8 @@ class PersonalInformationPage extends StatefulWidget {
 }
 
 class _PersonalInformationPageState extends State<PersonalInformationPage> {
-  var nickname = '武哇哇';
-  var gender = '男';
+  var nickname = UserInfo.user.nickname ?? '';
+  var gender = UserInfo.user.getGenderInChar();
 
   // 创建 GlobalKey 实现对内部 state 的访问
   GlobalKey<MySelectionItemState> _itemAvatarKey =
@@ -51,7 +50,6 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('PersonalInformationPage is rebuild');
 
     var itemAvatar = MySelectionItem(
       key: _itemAvatarKey,
@@ -91,6 +89,8 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         NavigatorUtils.pushWaitingResult(context, GlobalRouter.textEdit,
             (result) {
           nickname = result;
+
+          UserInfo.setNickname(nickname);
 
           _itemNicknameKey.currentState.setContent(nickname);
         }, params: params);
@@ -141,7 +141,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 CupertinoActionSheetAction(
                   child: Text('男'),
                   onPressed: () {
-                    Navigator.of(context).pop('1');
+                    Navigator.of(context).pop(1);
                   },
                   isDefaultAction: gender == '男',
                   isDestructiveAction: gender != '男',
@@ -149,7 +149,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 CupertinoActionSheetAction(
                   child: Text('女'),
                   onPressed: () {
-                    Navigator.of(context).pop('2');
+                    Navigator.of(context).pop(2);
                   },
                   isDefaultAction: gender == '女',
                   isDestructiveAction: gender != '女',
@@ -157,7 +157,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                 CupertinoActionSheetAction(
                   child: Text('保密'),
                   onPressed: () {
-                    Navigator.of(context).pop('0');
+                    Navigator.of(context).pop(0);
                   },
                   isDefaultAction: gender == '保密',
                   isDestructiveAction: gender != '保密',
@@ -166,33 +166,17 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
               cancelButton: CupertinoActionSheetAction(
                 child: Text('取消'),
                 onPressed: () {
-                  Navigator.of(context).pop('9');
+                  Navigator.of(context).pop(9);
                 },
               ),
             );
           },
         );
 
-        var gs;
-        if (result != '9') {
-          switch (result) {
-            case '0': {
-              gs = '保密';
-            }
-            break;
-            case '1': {
-              gs = '男';
-            }
-            break;
-            case '2': {
-              gs = '女';
-            }
-          }
-        }
-
-        if (gs != null) {
-          _itemGenderKey.currentState.setContent(gs);
-          gender = gs;
+        if (result != 9) {
+          UserInfo.setGender(result);
+          gender = UserInfo.user.getGenderInChar();
+          _itemGenderKey.currentState.setContent(gender);
         }
       },
     );

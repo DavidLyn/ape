@@ -27,24 +27,24 @@ class _SplashPageState extends State<SplashPage> {
 
     // Frame build 结束回调下述方法
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (SpUtil.getBool(SpConstants.openSplash, defValue: true)) {
+      if (SpUtil.getBool(SpConstants.isNotLogin, defValue: true)) {
         /// 预先缓存图片，避免直接使用时因为首次加载造成闪动
         _guideList.forEach((image) {
           precacheImage(ImageUtils.getAssetImageProvider(image,path : 'assets/images/splash'), context);
         });
       }
 
-      // 延时 1500 毫秒后或显示 splash 或跳转至 Login 页面
+      // 延时 1500 毫秒后或显示 splash 或跳转至 Home 页面
       Future.delayed(Duration(milliseconds: 1500),(){
-//        if (SpUtil.getBool(SpConstants.openSplash, defValue: true)) {
-//          SpUtil.putBool(SpConstants.openSplash, false);
-//
-//          setState(() {
-//            _status = 1;    // 设置为 splash 显示状态
-//          });
-//        } else {
-          _gotoLogin();     // 跳转至 Login 页面
-//        }
+        if (SpUtil.getBool(SpConstants.isNotLogin, defValue: true)) {
+
+          setState(() {
+            _status = 1;    // 设置为 splash 显示状态
+          });
+
+        } else {
+          NavigatorUtils.push(context, GlobalRouter.home, replace: true);
+        }
 
       });
     });
@@ -54,11 +54,6 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void _gotoLogin() {
-    NavigatorUtils.push(context, GlobalRouter.login, replace: true);
-    //NavigatorUtils.push(context, GlobalRouter.home, replace: true);
   }
 
   @override
@@ -88,7 +83,7 @@ class _SplashPageState extends State<SplashPage> {
           },
           onTap: (index) {
             if (index == _guideList.length - 1) {
-              _gotoLogin();
+              NavigatorUtils.push(context, GlobalRouter.login, replace: true);
             }
           },
         )

@@ -4,7 +4,6 @@ import 'package:flustars/flustars.dart' as flutter_stars;
 import 'package:ape/global/global_router.dart';
 import 'package:ape/common/constants.dart';
 import 'package:ape/common/widget/my_app_bar.dart';
-import 'package:ape/common/widget/base_dialog.dart';
 import 'package:ape/common/widget/my_selection_item.dart';
 
 /// 设置 页面
@@ -30,8 +29,6 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    print('SettingPage is rebuild');
 
     var theme = flutter_stars.SpUtil.getString(SpConstants.appTheme);
     var themeMode;
@@ -89,20 +86,21 @@ class _SettingPageState extends State<SettingPage> {
   void _showExitDialog() {
     showDialog(
         context: context,
-        builder: (_) => BaseDialog(
-          title: '提示',
-          child: const Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: const Text(
-                '您确定要退出登录吗？',
-                style: TextStyle(
-                  fontSize: 16,
-                )),
-          ),
-          onPressed: () {
-            NavigatorUtils.push(context, GlobalRouter.login, clearStack: true);
-          },
-        )
+        builder: (context) {
+          return AlertDialog(
+            title: Text('提示'),
+            content: Text('您确定要退出登录吗？'),
+            actions: <Widget>[
+              FlatButton(child: Text('取消'),onPressed: (){
+                Navigator.pop(context);
+              },),
+              FlatButton(child: Text('确认'),onPressed: (){
+                flutter_stars.SpUtil.putBool(SpConstants.isNotLogin, true);
+                NavigatorUtils.push(context, GlobalRouter.splash, clearStack: true);
+              },),
+            ],
+          );
+        },
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
 
+import 'package:ape/global/splash_page.dart';
 import 'package:ape/global/home_page.dart';
 import 'package:ape/login/login_page.dart';
 import 'package:ape/login/register_page.dart';
@@ -16,8 +17,8 @@ import 'package:ape/common/widget/my_text_edit_page.dart';
 import 'package:ape/rethink/writing/writing_page.dart';
 
 /// 定义全局 Router 和初始化方法
-///
 class GlobalRouter {
+  static final splash = '/splash';
   static final home = '/home';
   static final login = '/login';
   static final register = '/login/register';
@@ -49,6 +50,7 @@ class GlobalRouter {
         }
     );
 
+    router.define(splash, handler: Handler(handlerFunc: (_,params){return SplashPage();}));
     router.define(home, handler: Handler(handlerFunc: (_,params){return HomePage();}));
 
     router.define(login, handler: Handler(handlerFunc: (_,params){return LoginPage();}));

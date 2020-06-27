@@ -10,8 +10,8 @@ class SpConstants {
   // 当前 亮度模式 ，system dark light
   static const String appTheme = 'appTheme';
 
-  // 是否已启动 splash
-  static const openSplash = "openSplash";
+  // 是否已 login
+  static const isNotLogin = "isNotLogin";
 
   // 用户头像文件名
   static const userAvatar = 'userAvatar';

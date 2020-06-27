@@ -73,13 +73,11 @@ class _LoginPageState extends State<LoginPage> {
       success: (data,message) {
         Log.d("Login success! user = $data");
 
-        // 在 shared preference 中保存基本信息
-//        FlutterStars.SpUtil.putString(SpConstants.accessToken, data.password);
-//        FlutterStars.SpUtil.putString(SpConstants.accessSalt, data.salt);
-//        FlutterStars.SpUtil.putInt(SpConstants.getMobileSpKey(data.mobile), data.uid);
-
         // 将 user 保存到本地
         UserInfo.saveUserToLocal(data);
+
+        // 保存已登录状态
+        FlutterStars.SpUtil.putBool(SpConstants.isNotLogin, false);
 
         // 切换到 home 页面
         NavigatorUtils.push(context, GlobalRouter.home, clearStack: true);

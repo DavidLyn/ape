@@ -35,7 +35,8 @@ class _LoginPageState extends State<LoginPage> {
     //监听输入改变
     _nameController.addListener(_verify);
     _passwordController.addListener(_verify);
-    _nameController.text = FlutterStars.SpUtil.getString(SpConstants.phoneNumber);
+    //_nameController.text = FlutterStars.SpUtil.getString(SpConstants.phoneNumber);
+    _nameController.text = UserInfo.user.mobile ?? '';
   }
 
   void _verify() {
@@ -58,10 +59,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login() {
-    FlutterStars.SpUtil.putString(SpConstants.phoneNumber, _nameController.text);
+    //FlutterStars.SpUtil.putString(SpConstants.phoneNumber, _nameController.text);
 
     // 约定 app 端以电话号码作为 key 的一部分保存 userid
-    var userid = FlutterStars.SpUtil.getInt(SpConstants.getMobileSpKey(_nameController.text));
+    //var userid = FlutterStars.SpUtil.getInt(SpConstants.getMobileSpKey(_nameController.text));
+
+    // 如果电话号码与 UserInfo 中的一致,则使用 UserInfo 中的 uid,否则设置为 null
+    var userid = _nameController.text == UserInfo.user.mobile ? UserInfo.user.uid : null;
 
     var user = User( mobile: _nameController.text,
                      password: _passwordController.text,
@@ -72,18 +76,21 @@ class _LoginPageState extends State<LoginPage> {
       NWApi.login,
       data : user.toJson(),
       success: (data,message) {
-        Log.d("success data = $data");
+        Log.d("Login success! user = $data");
 
         // 在 shared preference 中保存基本信息
-        FlutterStars.SpUtil.putString(SpConstants.accessToken, data.password);
-        FlutterStars.SpUtil.putString(SpConstants.accessSalt, data.salt);
-        FlutterStars.SpUtil.putInt(SpConstants.getMobileSpKey(data.mobile), data.uid);
+//        FlutterStars.SpUtil.putString(SpConstants.accessToken, data.password);
+//        FlutterStars.SpUtil.putString(SpConstants.accessSalt, data.salt);
+//        FlutterStars.SpUtil.putInt(SpConstants.getMobileSpKey(data.mobile), data.uid);
+
+        // 将 user 保存到本地
+        UserInfo.saveUserToLocal(data);
 
         // 切换到 home 页面
         NavigatorUtils.push(context, GlobalRouter.home, clearStack: true);
       },
       error: (error) {
-        Log.e("error code = ${error.code}, message = ${error.message}");
+        Log.e("Login error! code = ${error.code}, message = ${error.message}");
 
         OtherUtils.showToastMessage('登录失败!');
       }

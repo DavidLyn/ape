@@ -6,7 +6,6 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flustars/flustars.dart';
 import 'package:ape/common/widget/loaded_image_widgets.dart';
 import 'package:ape/global/global_router.dart';
-import 'package:ape/util/theme_utils.dart';
 import 'package:ape/common/constants.dart';
 
 class SplashPage extends StatefulWidget {
@@ -65,7 +64,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: ThemeUtils.getBackgroundColor(context),
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: _status == 0 ? FractionallyAlignedSizedBox(
             heightFactor: 0.33,
             widthFactor: 0.33,

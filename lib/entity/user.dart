@@ -41,7 +41,7 @@ class User {
   int gender;
 
   // 简介
-  String desc;
+  String profile;
 
 
   User({ this.uid,
@@ -57,7 +57,7 @@ class User {
     this.updateAt,
     this.status,
     this.gender,
-    this.desc,
+    this.profile,
   });
 
   User.fromJson(json)
@@ -74,7 +74,7 @@ class User {
         updateAt = json["updateAt"],
         status = json["status"],
         gender = json['gender'],
-        desc = json['desc'];
+        profile = json['profile'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -92,7 +92,7 @@ class User {
     data['updateAt'] = updateAt;
     data['status'] = status;
     data['gender'] = gender;
-    data['desc'] = desc;
+    data['profile'] = profile;
 
     return data;
   }

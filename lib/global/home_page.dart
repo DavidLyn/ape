@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:ape/zixi/zixi_page.dart';
 import 'package:ape/xixi/xix_page.dart';
 import 'package:ape/wode/wode_page.dart';
-import 'package:ape/util/theme_utils.dart';
 import 'package:ape/common/widget/double_tap_back_exit_app.dart';
 
 /// Home 页面
@@ -77,7 +76,7 @@ class _HomePageState extends State<HomePage> {
     return DoubleTapBackExitApp(
       child: Scaffold(
           bottomNavigationBar:  BottomNavigationBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,   //ThemeUtils.getBackgroundColor(context),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               items: _buildBottomNavigationBarItem(),
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,
@@ -86,7 +85,7 @@ class _HomePageState extends State<HomePage> {
               selectedFontSize: 12.0,
               selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
               unselectedFontSize: 10.0,
-              selectedItemColor: Colors.green,     //Theme.of(context).primaryColor,
+              selectedItemColor: Colors.green,
               unselectedItemColor: Color(0xffbfbfbf),
               onTap: (index) => _pageController.jumpToPage(index),
           ),

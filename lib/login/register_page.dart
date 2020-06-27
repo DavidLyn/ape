@@ -74,12 +74,15 @@ class _RegisterPageState extends State<RegisterPage> {
         NWApi.register,
         data: user.toJson(),
         success: (data,message) {
-          Log.d("success data = $data");
+          Log.d("Register success! data = $data");
 
           // 将 token uid 等保存到 shared preference 中
-          FlutterStars.SpUtil.putInt(SpConstants.getMobileSpKey(data.mobile), data.uid);
-          FlutterStars.SpUtil.putString(SpConstants.accessSalt, data.salt);
-          FlutterStars.SpUtil.putString(SpConstants.accessToken, message);
+//          FlutterStars.SpUtil.putInt(SpConstants.getMobileSpKey(data.mobile), data.uid);
+//          FlutterStars.SpUtil.putString(SpConstants.accessSalt, data.salt);
+//          FlutterStars.SpUtil.putString(SpConstants.accessToken, message);
+
+          // 将 user 保存到本地
+          UserInfo.saveUserToLocal(data);
 
           // 返回上级页面
           NavigatorUtils.goBack(context);
@@ -134,8 +137,6 @@ class _RegisterPageState extends State<RegisterPage> {
         keyboardType: TextInputType.number,
         getVCode: () async {
           if (_nameController.text.length == 11) {
-
-            print('-----------------------------> send message!');
 
             // 通过后台向手机发短信
             DioManager().request<String>(

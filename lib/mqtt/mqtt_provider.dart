@@ -11,7 +11,8 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 class MQTTProvider extends ChangeNotifier {
 
   // note : tcp://192.168.1.101 or 192.168.1.101:1883 all are error!!!
-  static const mqttServer = '192.168.1.101';
+  static const mqttServer = '47.94.248.253';
+  //static const mqttServer = '192.168.1.101';
   //static const mqttServer = '172.16.40.36';
 
   static const int keepAlivePeriod = 30;
@@ -40,7 +41,7 @@ class MQTTProvider extends ChangeNotifier {
     client.onSubscribed = _onSubscribed;
 
     // Add a ping received callback
-    client.pongCallback = _pong;
+    // client.pongCallback = _pong;
 
     // Create a connection message to use
     final connMess = MqttConnectMessage()

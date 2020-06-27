@@ -88,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
           NavigatorUtils.goBack(context);
         },
         error: (error) {
-          Log.e("error code = ${error.code}, message = ${error.message}");
+          Log.e("Register error! code = ${error.code}, message = ${error.message}");
 
           OtherUtils.showToastMessage('注册失败!');
         }
@@ -144,12 +144,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 NWApi.sendSms,
                 params: <String,dynamic>{"mobile":_nameController.text},
                 success: (data,message) {
-                  Log.d("success data = $data");
+                  Log.d("Send sms success! data = $data");
 
                   return true;
                 },
                 error: (error) {
-                  Log.e("error code = ${error.code}, message = ${error.message}");
+                  Log.e("Send sms error! code = ${error.code}, message = ${error.message}");
 
                   OtherUtils.showToastMessage('短信发送失败!');
                   return false;

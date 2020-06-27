@@ -19,7 +19,7 @@ class User {
   // email
   String email;
 
-  // 密码摘要
+  // 密码摘要:实际用于存放 token
   String password;
 
   // 盐

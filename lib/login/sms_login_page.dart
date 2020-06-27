@@ -11,7 +11,6 @@ import 'package:ape/entity/user.dart';
 import 'package:ape/network/nw_api.dart';
 import 'package:ape/network/rest_result_wrapper.dart';
 import 'package:ape/network/dio_manager.dart';
-import 'package:flustars/flustars.dart' as flustars;
 import 'package:ape/common/constants.dart';
 
 /// 短信验证登录页面
@@ -33,6 +32,8 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
     super.initState();
     _phoneController.addListener(_verify);
     _vCodeController.addListener(_verify);
+
+    _phoneController.text = UserInfo.user.mobile ?? '';
   }
 
   void _verify() {
@@ -53,10 +54,9 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
   }
 
   void _login() {
-    flustars.SpUtil.putString(SpConstants.phoneNumber, _phoneController.text);
 
-    // 约定 app 端以电话号码作为 key 的一部分保存 userid
-    var userid = flustars.SpUtil.getInt(SpConstants.getMobileSpKey(_phoneController.text));
+    // 如果电话号码与 UserInfo 中的一致,则使用 UserInfo 中的 uid,否则设置为 null
+    var userid = _phoneController.text == UserInfo.user.mobile ? UserInfo.user.uid : null;
 
     var user = User( mobile: _phoneController.text,
                      salt: _vCodeController.text,
@@ -67,13 +67,16 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
         NWApi.smslogin,
         data: user.toJson(),
         success: (data,message) {
-          Log.d("success data = $data");
+          Log.d("SMS Login success! data = $data");
+
+          // 将 user 保存到本地
+          UserInfo.saveUserToLocal(data);
 
           // 切换到 home 页面
           NavigatorUtils.push(context, GlobalRouter.home, clearStack: true);
         },
         error: (error) {
-          Log.e("error code = ${error.code}, message = ${error.message}");
+          Log.e("SMS Login error! code = ${error.code}, message = ${error.message}");
 
           OtherUtils.showToastMessage('登录失败!');
         }
@@ -127,12 +130,12 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
                 NWApi.sendSms,
                 params : <String,dynamic>{'mobile':_phoneController.text},
                 success: (data,message) {
-                  Log.d("success data = $data");
+                  Log.d("Send sms success! data = $data");
 
                   return true;
                 },
                 error: (error) {
-                  Log.e("error code = ${error.code}, message = ${error.message}");
+                  Log.e("Send sms error! code = ${error.code}, message = ${error.message}");
 
                   OtherUtils.showToastMessage('短信发送失败!');
                   return false;

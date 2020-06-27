@@ -251,9 +251,8 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       return;
     }
 
-    // 根据 phone number 读取 uid
-    var mobile = FlutterStars.SpUtil.getString(SpConstants.phoneNumber);
-    var uid = FlutterStars.SpUtil.getInt(SpConstants.getMobileSpKey(mobile));
+    var mobile = UserInfo.user.mobile;
+    var uid = UserInfo.user.uid;
 
     if (uid == null || uid == 0) {
       Log.e('无效的 userID');
@@ -262,9 +261,12 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     // 上传文件
     DioManager().uploadAvatar(NWApi.uploadAvatar, uid, imageFile,
         success: (data, message) {
-      Log.d('avatar upload success');
+      Log.d('Avatar upload success! data = ' + data);
+
+      UserInfo.setAvatar(data);
+
     }, error: (error) {
-      Log.e("error code = ${error.code}, message = ${error.message}");
+      Log.e("Avatar upload error! code = ${error.code}, message = ${error.message}");
     });
 
     // 删除原有头像文件

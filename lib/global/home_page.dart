@@ -6,7 +6,6 @@ import 'package:ape/wode/wode_page.dart';
 import 'package:ape/common/widget/double_tap_back_exit_app.dart';
 
 /// Home 页面
-///
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();

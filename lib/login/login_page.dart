@@ -35,7 +35,6 @@ class _LoginPageState extends State<LoginPage> {
     //监听输入改变
     _nameController.addListener(_verify);
     _passwordController.addListener(_verify);
-    //_nameController.text = FlutterStars.SpUtil.getString(SpConstants.phoneNumber);
     _nameController.text = UserInfo.user.mobile ?? '';
   }
 
@@ -59,10 +58,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login() {
-    //FlutterStars.SpUtil.putString(SpConstants.phoneNumber, _nameController.text);
-
-    // 约定 app 端以电话号码作为 key 的一部分保存 userid
-    //var userid = FlutterStars.SpUtil.getInt(SpConstants.getMobileSpKey(_nameController.text));
 
     // 如果电话号码与 UserInfo 中的一致,则使用 UserInfo 中的 uid,否则设置为 null
     var userid = _nameController.text == UserInfo.user.mobile ? UserInfo.user.uid : null;

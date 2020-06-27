@@ -38,6 +38,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     _nameController.addListener(_verify);
     _vCodeController.addListener(_verify);
     _passwordController.addListener(_verify);
+
+    _nameController.text = UserInfo.user.mobile ?? '';
   }
 
   void _verify() {
@@ -63,8 +65,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   
   void _reset() {
 
-    // 约定 app 端以电话号码作为 key 的一部分保存 userid
-    var userid = flustars.SpUtil.getInt(SpConstants.getMobileSpKey(_nameController.text));
+    // 如果电话号码与 UserInfo 中的一致,则使用 UserInfo 中的 uid,否则设置为 null
+    var userid = _nameController.text == UserInfo.user.mobile ? UserInfo.user.uid : null;
 
     // 用 salt 存储短信验证码
     var user = User( mobile: _nameController.text,
@@ -77,10 +79,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         NWApi.resetpassword,
         data: user.toJson(),
         success: (data,message) {
-          Log.d("success data = $data");
+          Log.d("Reset password success! data = $data");
 
-          flustars.SpUtil.putString(SpConstants.accessSalt, data.salt);
-          flustars.SpUtil.putString(SpConstants.accessToken, message);
+          // 将 user 保存到本地
+          UserInfo.saveUserToLocal(data);
 
           OtherUtils.showToastMessage('重置密码成功!');
 
@@ -88,7 +90,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           NavigatorUtils.goBack(context);
         },
         error: (error) {
-          Log.e("error code = ${error.code}, message = ${error.message}");
+          Log.e("Reset password error! code = ${error.code}, message = ${error.message}");
 
           OtherUtils.showToastMessage('重置密码失败!');
         }
@@ -143,12 +145,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 NWApi.sendSms,
                 params : <String,dynamic>{'mobile':_nameController.text},
                 success: (data,message) {
-                  Log.d("success data = $data");
+                  Log.d("Send sms success! data = $data");
 
                   return true;
                 },
                 error: (error) {
-                  Log.e("error code = ${error.code}, message = ${error.message}");
+                  Log.e("Send sms error! code = ${error.code}, message = ${error.message}");
 
                   OtherUtils.showToastMessage('短信发送失败!');
                   return false;

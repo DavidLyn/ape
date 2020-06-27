@@ -13,20 +13,9 @@ class SpConstants {
   // 是否已启动 splash
   static const openSplash = "openSplash";
 
-  // 当前用户的电话号码
-  static const phoneNumber = 'phoneNumber';
-
-  // 当前用户的 jwt token
-  static const accessToken = 'accessToken';
-
-  // 当前用户的 salt
-  static const accessSalt = 'accessSalt';
-
   // 用户头像文件名
   static const userAvatar = 'userAvatar';
 
-  /// 根据电话号码返回相应的 sp key，该 key 存储这个电话号码对应的 userid
-  static String getMobileSpKey(String mobile) => 'user_mobile_' + mobile.trim();
 }
 
 /// 当前用户信息
@@ -111,9 +100,14 @@ class UserInfo {
     flutter_stars.SpUtil.putInt('sp_gender',user.gender);
   }
 
-  static void setDesc(String desc) {
-    user.profile = desc;
+  static void setProfile(String profile) {
+    user.profile = profile;
     flutter_stars.SpUtil.putString('sp_profile',user.profile);
+  }
+
+  static void setAvatar(String avatar) {
+    user.avatar = avatar;
+    flutter_stars.SpUtil.putString('sp_avatar',user.avatar);
   }
 
 }

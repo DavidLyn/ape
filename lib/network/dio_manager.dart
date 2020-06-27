@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
-import 'package:flustars/flustars.dart';
 
 import 'package:ape/network/nw_api.dart';
 import 'package:ape/network/rest_result_wrapper.dart';
@@ -194,7 +193,8 @@ class _AuthenticationInterceptor extends Interceptor {
 
   @override
   onRequest(RequestOptions options) {
-    String token = SpUtil.getString(SpConstants.accessToken);
+    // token 放在 user.password 中
+    String token = UserInfo.user.password;
     if (token.isNotEmpty) {
       //options.headers['Authorization'] = 'Bearer $token';
       //options.headers.putIfAbsent('token', () => token);

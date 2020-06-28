@@ -16,6 +16,8 @@ import 'package:ape/network/nw_api.dart';
 import 'package:ape/util/file_utils.dart';
 import 'package:ape/common/widget/my_avatar.dart';
 import 'package:ape/global/global_router.dart';
+import 'package:ape/network/rest_result_wrapper.dart';
+import 'package:ape/util/other_utils.dart';
 
 /// 个人信息 页面
 class PersonalInformationPage extends StatefulWidget {
@@ -26,7 +28,9 @@ class PersonalInformationPage extends StatefulWidget {
 
 class _PersonalInformationPageState extends State<PersonalInformationPage> {
   var nickname = UserInfo.user.nickname ?? '';
+  var profile = UserInfo.user.profile ?? '';
   var gender = UserInfo.user.getGenderInChar();
+  var birthday = UserInfo.user.birthday;
 
   // 创建 GlobalKey 实现对内部 state 的访问
   GlobalKey<MySelectionItemState> _itemAvatarKey =
@@ -36,6 +40,8 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   GlobalKey<MySelectionItemState> _itemBirthdayKey =
       GlobalKey<MySelectionItemState>();
   GlobalKey<MySelectionItemState> _itemGenderKey =
+      GlobalKey<MySelectionItemState>();
+  GlobalKey<MySelectionItemState> _itemProfileKey =
       GlobalKey<MySelectionItemState>();
 
   @override
@@ -97,6 +103,35 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       },
     );
 
+    var itemProfile = MySelectionItem(
+      key: _itemProfileKey,
+      icon: Icon(
+        Icons.add_to_photos,
+        color: Colors.green,
+      ),
+      title: '个性签名',
+      content: profile,
+      onTap: () {
+        Map<String, String> params = {
+          'title': '修改个性签名',
+          'content': profile,
+          'hintText': '个性签名',
+          'maxLines': '1',
+          'maxLength': '50',
+          'keyboardType': 'text',
+        };
+
+        NavigatorUtils.pushWaitingResult(context, GlobalRouter.textEdit, (result) {
+            profile = result;
+
+            UserInfo.setProfile(profile);
+
+            _itemProfileKey.currentState.setContent(profile);
+          }, params: params);
+      },
+    );
+
+
     var itemBirthday = MySelectionItem(
       key: _itemBirthdayKey,
       icon: Icon(
@@ -104,7 +139,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         color: Colors.green,
       ),
       title: '生日',
-      content: '2001-01-05',
+      content: birthday,
       onTap: () async {
         var date = await showDatePicker(
           context: context,
@@ -117,7 +152,26 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         if (date != null) {
           DateFormat dateFormat = DateFormat("yyyy-MM-dd");
 
-          _itemBirthdayKey.currentState.setContent(dateFormat.format(date));
+          String dateStr = dateFormat.format(date);
+
+          DioManager().request<String>(
+              NWMethod.POST,
+              NWApi.updateUser,
+              data: {'uid': UserInfo.user.uid.toString(),'fieldName': 'birthday','value': dateStr},
+              success: (data,message) {
+                Log.d("Update birthday success! data = $data");
+
+                birthday = dateStr;
+                UserInfo.setBirthday(dateStr);
+                _itemBirthdayKey.currentState.setContent(dateStr);
+
+              },
+              error: (error) {
+                Log.e("Update birthday error! code = ${error.code}, message = ${error.message}");
+
+                OtherUtils.showToastMessage(error.message ?? 'save failed！');
+              }
+          );
         }
       },
     );
@@ -174,9 +228,24 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         );
 
         if (result != 9) {
-          UserInfo.setGender(result);
-          gender = UserInfo.user.getGenderInChar();
-          _itemGenderKey.currentState.setContent(gender);
+          DioManager().request<String>(
+              NWMethod.POST,
+              NWApi.updateUser,
+              data: {'uid': UserInfo.user.uid.toString(),'fieldName': 'gender','value': result.toString()},
+              success: (data,message) {
+                Log.d("Update gender success! data = $data");
+
+                gender = UserInfo.user.getGenderInChar();
+                UserInfo.setGender(result);
+                _itemGenderKey.currentState.setContent(gender);
+
+              },
+              error: (error) {
+                Log.e("Update gender error! code = ${error.code}, message = ${error.message}");
+
+                OtherUtils.showToastMessage(error.message ?? 'save failed！');
+              }
+          );
         }
       },
     );
@@ -189,6 +258,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
         children: <Widget>[
           itemAvatar,
           itemNickname,
+          itemProfile,
           itemBirthday,
           _itemGender,
         ],

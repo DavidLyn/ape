@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:flustars/flustars.dart' as FlutterStars;
 import 'package:ape/global/global_router.dart';
 import 'package:ape/common/widget/my_scroll_view.dart';
 import 'package:ape/common/widget/my_app_bar.dart';
@@ -75,11 +74,6 @@ class _RegisterPageState extends State<RegisterPage> {
         data: user.toJson(),
         success: (data,message) {
           Log.d("Register success! data = $data");
-
-          // 将 token uid 等保存到 shared preference 中
-//          FlutterStars.SpUtil.putInt(SpConstants.getMobileSpKey(data.mobile), data.uid);
-//          FlutterStars.SpUtil.putString(SpConstants.accessSalt, data.salt);
-//          FlutterStars.SpUtil.putString(SpConstants.accessToken, message);
 
           // 将 user 保存到本地
           UserInfo.saveUserToLocal(data);

@@ -19,6 +19,9 @@ class NWApi {
   // Get 给手机号发短信 /user/sendSms?mobile=13301133157
   static final sendSms = '/user/sendSms';
 
+  // Post 修改用户基本信息
+  static final updateUser = '/user/update';
+
   // 上传头像
   static final uploadAvatar = '/user/uploadAvatar';
 

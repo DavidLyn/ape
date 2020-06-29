@@ -49,6 +49,8 @@ void main() async {
 
   // 初始化 database
   await DbManager.initDB();
+  await DbManager.testDB();
+  //await DbManager.deleteDB();
 
   // 初始化 Application Documents Manager
   await ApplicationDocumentManager.init();

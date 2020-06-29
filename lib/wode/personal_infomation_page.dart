@@ -235,8 +235,8 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
               success: (data,message) {
                 Log.d("Update gender success! data = $data");
 
-                gender = UserInfo.user.getGenderInChar();
                 UserInfo.setGender(result);
+                gender = UserInfo.user.getGenderInChar();
                 _itemGenderKey.currentState.setContent(gender);
 
               },

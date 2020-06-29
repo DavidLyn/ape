@@ -27,20 +27,6 @@ class MySelectionItem extends StatefulWidget {
   Icon icon;
   Widget image;
 
-//  ValueNotifier redrawNote = ValueNotifier(false);
-//
-//  void setContent(String content) {
-//    this.content = content;
-//
-//    redrawNote.value = !redrawNote.value;
-//  }
-//
-//  void setImage(Widget image) {
-//    this.image = image;
-//
-//    redrawNote.value = !redrawNote.value;
-//  }
-
   @override
   MySelectionItemState createState() => MySelectionItemState();
 

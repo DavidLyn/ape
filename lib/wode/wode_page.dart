@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/common/widget/loaded_image_widgets.dart';
+import 'package:ape/wode/message_page.dart';
 
 /// 我的 页面
 ///
@@ -42,7 +43,8 @@ class _WodePageState extends State<WodePage>
           IconButton(
             tooltip: '消息',
             onPressed: () {
-              NavigatorUtils.push(context, GlobalRouter.message);
+              //NavigatorUtils.push(context, GlobalRouter.message);
+              showSearch(context: context, delegate: SearchBarDelegate());
             },
             icon: LoadedAssetImageWidget(
               'wode/message',

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ape/util/other_utils.dart';
 
 /// 消息 页面
-///
 class MessagePage extends StatefulWidget {
   @override
   _MessagePageState createState() => _MessagePageState();

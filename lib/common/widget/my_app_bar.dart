@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ape/util/theme_utils.dart';
@@ -31,7 +30,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     Color _backgroundColor;
 
     if (backgroundColor == null) {
-      _backgroundColor = ThemeUtils.getBackgroundColor(context);
+      _backgroundColor = Theme.of(context).scaffoldBackgroundColor;   //ThemeUtils.getBackgroundColor(context);
     } else {
       _backgroundColor = backgroundColor;
     }
@@ -64,7 +63,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         child: FlatButton(
           child: Text(actionName, key: const Key('actionName')),
-          textColor: ThemeUtils.isDark(context) ? Colours.dark_text : Colours.text,
+          textColor: Colours.text,      //ThemeUtils.isDark(context) ? Colours.dark_text : Colours.text,
           highlightColor: Colors.transparent,
           onPressed: onPressed,
         ),

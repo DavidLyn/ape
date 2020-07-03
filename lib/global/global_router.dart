@@ -16,6 +16,8 @@ import 'package:ape/wode/personal_infomation_page.dart';
 import 'package:ape/common/widget/my_text_edit_page.dart';
 import 'package:ape/rethink/writing/writing_page.dart';
 
+import 'package:ape/social/friend_management.dart';
+
 /// 定义全局 Router 和初始化方法
 class GlobalRouter {
   static final splash = '/';
@@ -30,6 +32,8 @@ class GlobalRouter {
   static final changeBrightness = '/changeBrightness';
   static final aboutUs = '/aboutUs';
   static final personalInformation = '/personalInformation';
+
+  static final friendManagement = '/social/friendManagement';
 
   // 通用功能：编辑 text 字段
   static final textEdit = '/common/textEdit';
@@ -83,6 +87,8 @@ class GlobalRouter {
     }));
 
     router.define(writing, handler: Handler(handlerFunc: (_,params){return WritingPage();}));
+
+    router.define(friendManagement, handler: Handler(handlerFunc: (_,params){return FriendManagement();}));
 
   }
 }

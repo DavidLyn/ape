@@ -41,14 +41,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     var back = isBack ? IconButton(
       onPressed: () {
         FocusScope.of(context).unfocus();
-        //Navigator.maybePop(context);
         NavigatorUtils.goBack(context);
       },
       tooltip: 'Back',
       padding: const EdgeInsets.all(12.0),
       icon: Image.asset(
         backImg,
-        color: ThemeUtils.getIconColor(context),
+        //color: ThemeUtils.getIconColor(context),
       ),
     ) : SizedBox.shrink();
 

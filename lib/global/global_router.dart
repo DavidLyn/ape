@@ -17,6 +17,8 @@ import 'package:ape/common/widget/my_text_edit_page.dart';
 import 'package:ape/rethink/writing/writing_page.dart';
 
 import 'package:ape/social/friend_management.dart';
+import 'package:ape/social/friend_setting.dart';
+import 'package:ape/social/friend_adding.dart';
 
 /// 定义全局 Router 和初始化方法
 class GlobalRouter {
@@ -34,6 +36,8 @@ class GlobalRouter {
   static final personalInformation = '/personalInformation';
 
   static final friendManagement = '/social/friendManagement';
+  static final friendSetting = '/social/friendSetting';
+  static final friendAdding = '/social/friendAdding';
 
   // 通用功能：编辑 text 字段
   static final textEdit = '/common/textEdit';
@@ -44,52 +48,85 @@ class GlobalRouter {
   static final  router = Router();
 
   static initRouters() {
-
     //找不到路由
     router.notFoundHandler = new Handler(
-        handlerFunc: (BuildContext context,Map<String,List<String>> params){
-          print('ERROR====>ROUTE WAS NOT FONUND!!!');
-          return null;
+        handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+          return Text('ERROR!!! ROUTE WAS NOT FONUND');
         }
     );
 
-    router.define(splash, handler: Handler(handlerFunc: (_,params){return SplashPage();}));
-    router.define(home, handler: Handler(handlerFunc: (_,params){return HomePage();}));
-
-    router.define(login, handler: Handler(handlerFunc: (_,params){return LoginPage();}));
-    router.define(register, handler: Handler(handlerFunc: (_,params){return RegisterPage();}));
-    router.define(smsLogin, handler: Handler(handlerFunc: (_,params){return SMSLoginPage();}));
-    router.define(resetPassword, handler: Handler(handlerFunc: (_,params){return ResetPasswordPage();}));
-
-    router.define(message, handler: Handler(handlerFunc: (_,params){return MessagePage();}));
-    router.define(setting, handler: Handler(handlerFunc: (_,params){return SettingPage();}));
-    router.define(changeBrightness, handler: Handler(handlerFunc: (_,params){return ChangeBrightnessPage();}));
-    router.define(aboutUs, handler: Handler(handlerFunc: (_,params){return AboutUsPage();}));
-    router.define(personalInformation, handler: Handler(handlerFunc: (_,params){return PersonalInformationPage();}));
-
-    router.define(textEdit, handler: Handler(handlerFunc: (_, Map<String, List<String>> params){
-
-      var title = params['title']?.first;
-      var content = params['content']?.first;
-      var hintText = params['hintText']?.first;
-      var maxLines = int.parse(params['maxLines']?.first);
-      var maxLength = int.parse(params['maxLength']?.first);
-      var keyboardType = params['keyboardType']?.first;
-
-      return MyTextEditPage(
-        title: title,
-        content: content,
-        hintText: hintText,
-        maxLines: maxLines,
-        maxLength: maxLength,
-        keyboardType: TextInputType.text,
-      );
+    router.define(splash, handler: Handler(handlerFunc: (_, params) {
+      return SplashPage();
+    }));
+    router.define(home, handler: Handler(handlerFunc: (_, params) {
+      return HomePage();
     }));
 
-    router.define(writing, handler: Handler(handlerFunc: (_,params){return WritingPage();}));
+    router.define(login, handler: Handler(handlerFunc: (_, params) {
+      return LoginPage();
+    }));
+    router.define(register, handler: Handler(handlerFunc: (_, params) {
+      return RegisterPage();
+    }));
+    router.define(smsLogin, handler: Handler(handlerFunc: (_, params) {
+      return SMSLoginPage();
+    }));
+    router.define(resetPassword, handler: Handler(handlerFunc: (_, params) {
+      return ResetPasswordPage();
+    }));
 
-    router.define(friendManagement, handler: Handler(handlerFunc: (_,params){return FriendManagement();}));
+    router.define(message, handler: Handler(handlerFunc: (_, params) {
+      return MessagePage();
+    }));
+    router.define(setting, handler: Handler(handlerFunc: (_, params) {
+      return SettingPage();
+    }));
+    router.define(changeBrightness, handler: Handler(handlerFunc: (_, params) {
+      return ChangeBrightnessPage();
+    }));
+    router.define(aboutUs, handler: Handler(handlerFunc: (_, params) {
+      return AboutUsPage();
+    }));
+    router.define(
+        personalInformation, handler: Handler(handlerFunc: (_, params) {
+      return PersonalInformationPage();
+    }));
 
+    router.define(textEdit,
+        handler: Handler(handlerFunc: (_, Map<String, List<String>> params) {
+          var title = params['title']?.first;
+          var content = params['content']?.first;
+          var hintText = params['hintText']?.first;
+          var maxLines = int.parse(params['maxLines']?.first);
+          var maxLength = int.parse(params['maxLength']?.first);
+          var keyboardType = params['keyboardType']?.first;
+
+          return MyTextEditPage(
+            title: title,
+            content: content,
+            hintText: hintText,
+            maxLines: maxLines,
+            maxLength: maxLength,
+            keyboardType: TextInputType.text,
+          );
+        }));
+
+    router.define(writing, handler: Handler(handlerFunc: (_, params) {
+      return WritingPage();
+    }));
+
+    router.define(friendManagement, handler: Handler(handlerFunc: (_, params) {
+      return FriendManagement();
+    }));
+
+    router.define(friendSetting,
+        handler: Handler(handlerFunc: (_, Map<String, List<String>> params) {
+          var uid = int.parse(params['uid']?.first);
+
+          return FriendSetting(uid: uid);
+        }));
+
+    router.define(friendAdding, handler: Handler(handlerFunc: (_,params){return FriendAdding();}));
   }
 }
 

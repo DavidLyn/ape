@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:ape/global/global_router.dart';
+
 /// 好友管理
 class FriendManagement extends StatefulWidget {
   @override
@@ -63,7 +65,11 @@ class _FriendManagementState extends State<FriendManagement> {
                 ),
 
                 onTap: () {
-                  print('ListTile is tapped!');
+                  Map<String, String> params = {
+                    'uid': '123456',
+                  };
+
+                  NavigatorUtils.push(context, GlobalRouter.friendSetting,params: params);
                 },
               );
 

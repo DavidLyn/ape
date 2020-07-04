@@ -25,4 +25,7 @@ class NWApi {
   // 上传头像
   static final uploadAvatar = '/user/uploadAvatar';
 
+  // 搜索用户
+  static final searchUserByMobileOrName = '/user/searchByMobileOrName';
+
 }

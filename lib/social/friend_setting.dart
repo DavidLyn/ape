@@ -44,7 +44,11 @@ class _FriendSettingState extends State<FriendSetting> {
                 },),
               ],
             ),
-            body: Text('资料设置'),
+            body: Column(
+              children: <Widget>[
+                Text('Hello world!'),
+              ],
+            ),
           ),
           onWillPop: () {
             return Future.value(true);

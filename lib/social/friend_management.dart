@@ -39,7 +39,7 @@ class _FriendManagementState extends State<FriendManagement> {
             centerTitle: true,
             actions: <Widget>[
               IconButton(icon: Icon(Icons.add),onPressed: (){
-
+                NavigatorUtils.push(context, GlobalRouter.friendAdding);
               },),
             ],
           ),

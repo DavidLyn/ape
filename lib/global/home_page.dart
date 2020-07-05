@@ -4,6 +4,8 @@ import 'package:ape/zixi/zixi_page.dart';
 import 'package:ape/xixi/xix_page.dart';
 import 'package:ape/wode/wode_page.dart';
 import 'package:ape/common/widget/double_tap_back_exit_app.dart';
+import 'package:ape/mqtt/mqtt_provider.dart';
+import 'package:ape/common/constants.dart';
 
 /// Home 页面
 class HomePage extends StatefulWidget {
@@ -61,6 +63,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    // 启动 mqtt
+    MQTTProvider.connect(clientId: UserInfo.user.uid.toString());
   }
 
   @override

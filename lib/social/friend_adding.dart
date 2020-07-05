@@ -1,13 +1,19 @@
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/network/dio_manager.dart';
 import 'package:ape/network/nw_api.dart';
 import 'package:ape/network/rest_result_wrapper.dart';
 import 'package:ape/util/log_utils.dart';
-import 'package:ape/util/other_utils.dart';
 import 'package:ape/entity/user.dart';
+
+enum PageStatus {
+  busy,
+  error,
+  ok,
+}
 
 /// 添加好友
 class FriendAdding extends StatefulWidget {
@@ -136,7 +142,9 @@ class _SearchFriendDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return SizedBox.shrink();
+    return Center(
+      child: Text('输入搜索关键字',style: TextStyle(fontSize: 28,color: Colors.grey),),
+    );
   }
 
   @override
@@ -156,6 +164,8 @@ class _SearchFriendDelegate extends SearchDelegate<String> {
 }
 
 class FriendSearchByMobile extends StatefulWidget {
+  PageStatus status = PageStatus.busy;
+
   String mobile;
 
   FriendSearchByMobile({this.mobile});
@@ -190,16 +200,17 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
 
           List list = convert.jsonDecode(data);
 
-          userList = list.map((json) => User.fromJson(json)).toList();
-
           setState(() {
+            userList = list.map((json) => User.fromJson(json)).toList();
+            widget.status = PageStatus.ok;
           });
         },
         error: (error) {
           Log.e("Send user error! code = ${error.code}, message = ${error.message}");
 
-          OtherUtils.showToastMessage('查询请求发送失败!');
-
+          setState(() {
+            widget.status = PageStatus.error;
+          });
         }
     );
 
@@ -207,10 +218,60 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
 
   @override
   Widget build(BuildContext context) {
-    if (userList == null || userList.length == null) {
+
+    if (widget.status == PageStatus.busy) {
       return Center(
-        child: Text('查不到记录!',style: TextStyle(color: Colors.redAccent,fontSize: 32),),
+        child: Shimmer.fromColors(
+          baseColor: Colors.green,
+          highlightColor: Colors.blue,
+          child: Text(
+            '正在查询数据......',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 40.0,
+              fontWeight:
+              FontWeight.bold,
+            ),
+          ),
+        )
       );
+    }
+
+    if (widget.status == PageStatus.error) {
+      return Center(
+          child: Shimmer.fromColors(
+            baseColor: Colors.yellow,
+            highlightColor: Colors.red,
+            child: Text(
+              '查询数据出错!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 40.0,
+                fontWeight:
+                FontWeight.bold,
+              ),
+            ),
+          )
+      );
+    }
+
+    if (userList == null || userList.length == 0) {
+      return Center(
+          child: Shimmer.fromColors(
+            baseColor: Colors.blue,
+            highlightColor: Colors.green,
+            child: Text(
+              '查询不到数据!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 40.0,
+                fontWeight:
+                FontWeight.bold,
+              ),
+            ),
+          )
+      );
+
     }
 
     return ListView.separated(
@@ -231,7 +292,14 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
             ),
             title: Text(userList[index].nickname),
             subtitle: Text(userList[index].profile),
-            trailing: Icon(Icons.sort),
+            ///trailing: Icon(Icons.sort),
+            trailing: RaisedButton(
+              textColor: Colors.green,
+              onPressed: (){
+
+              },
+              child: Text('请求加友'),
+            ),
           ),
 
           onTap: () {

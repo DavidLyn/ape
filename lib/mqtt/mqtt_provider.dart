@@ -4,22 +4,33 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:ape/common/constants.dart';
 
-///
 /// MQTT provider
-///
 class MQTTProvider extends ChangeNotifier {
+
+  // 向后台发送消息的 topic
+  static const topicOfCatEars = 'cat/ears';
+
+  // 本地监听 topic 的前缀,完整 topic = topicPrefixToListen + uid
+  static const topicPrefixToListen = 'cat/msg/';
 
   // note : tcp://192.168.1.101 or 192.168.1.101:1883 all are error!!!
   static const mqttServer = '47.94.248.253';
   //static const mqttServer = '192.168.1.101';
-  //static const mqttServer = '172.16.40.36';
 
   static const int keepAlivePeriod = 30;
 
   static MqttServerClient client;
 
+  // 是否需要进行连接,当用户处于登录状态时需要进行连接
+  static bool isNeedToConnect = false;
+
+  // 当前连接状态
   static bool isConnected = false;
+
+  // 重连任务 定时器
+  static Timer timer;
 
   /// create client
   static void _createClient() {
@@ -42,10 +53,10 @@ class MQTTProvider extends ChangeNotifier {
 
     // Add a ping received callback
     // client.pongCallback = _pong;
-
+    
     // Create a connection message to use
     final connMess = MqttConnectMessage()
-        .withClientIdentifier('Mqtt_MyClientUniqueId')
+        .withClientIdentifier(UserInfo.user.uid.toString())
         .keepAliveFor(keepAlivePeriod) // Must agree with the keep alive set above or not set
         .withWillTopic('willtopic')    // If you set this you must set a will message
         .withWillMessage('My Will message')
@@ -57,10 +68,11 @@ class MQTTProvider extends ChangeNotifier {
   }
 
   /// connect server
-  static void connect() async {
-    if (client == null) {
-      _createClient();
-    }
+  static void connect({String clientId : 'testClient'}) async {
+
+    isNeedToConnect = true;
+
+    _createClient();
 
     // Connect the server
     try {
@@ -92,7 +104,6 @@ class MQTTProvider extends ChangeNotifier {
 
     /// Check we are connected
     if (client.connectionStatus.state == MqttConnectionState.connected) {
-      print('MQTT::broker is connected');
       isConnected = true;
     } else {
       /// Use status here rather than state if you also want the broker return code.
@@ -100,20 +111,55 @@ class MQTTProvider extends ChangeNotifier {
           'MQTT::ERROR broker connection failed - disconnecting, status is ${client.connectionStatus}');
       client.disconnect();
       isConnected = false;
+
+      // 启动重连机制
+      _reconnect();
     }
 
-    subscribe('test');
+    // 订阅 cat/msg/{uid} 主题, cat 将向该主题发送消息
+    subscribe('$topicPrefixToListen${UserInfo.user.uid}');
+  }
+
+  /// reconnect
+  static void _reconnect() {
+    if (!isNeedToConnect) {
+      return;
+    }
+
+    if (isConnected) {
+      return;
+    }
+
+    if (timer == null || !timer.isActive) {
+      timer = Timer(Duration(milliseconds: 1000), () {
+        if (isConnected || !isNeedToConnect) {
+          timer.cancel();
+        }
+        print('------------------------> MQTT reconnect timer is running!!!');
+        connect();
+      },);
+    }
+  }
+
+  /// 外部调用,关闭连接并设置为不必重连
+  static void disconnect() {
+    isNeedToConnect = false;
+    isConnected = false;
+
+    client?.disconnect();
   }
 
   /// publish message
-  static void publish({@required String topic, @required String message, MqttQos qos : MqttQos.atLeastOnce}) {
+  static bool publish({String topic : topicPrefixToListen, @required String message, MqttQos qos : MqttQos.atLeastOnce}) {
     if (!isConnected || topic.isEmpty ||  message.isEmpty) {
-      return;
+      return false;
     }
 
     final builder = MqttClientPayloadBuilder();
     builder.addString(message);
     client.publishMessage(topic, qos, builder.payload);
+
+    return true;
   }
 
   /// subscribe topic
@@ -136,23 +182,26 @@ class MQTTProvider extends ChangeNotifier {
 
   /// The subscribed callback
   static void _onSubscribed(String topic) {
-    print('MQTT::Subscription confirmed for topic $topic');
+    print('MQTT topic $topic is subscripted!');
   }
 
   /// The unsolicited disconnect callback
   static void _onDisconnected() {
-    print('MQTT::OnDisconnected client callback - Client disconnection');
+    print('MQTT broker is disconnected!');
     if (client.connectionStatus.disconnectionOrigin ==
         MqttDisconnectionOrigin.solicited) {
       print('MQTT::OnDisconnected callback is solicited, this is correct');
     }
     isConnected = false;
+
+    // 启动重连机制
+    _reconnect();
   }
 
   /// The successful connect callback
   static void _onConnected() {
     print(
-        'MQTT::OnConnected client callback - Client connection was sucessful');
+        'MQTT Client connect to broker sucessful!');
   }
 
   /// Pong callback

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flustars/flustars.dart' as FlutterStars;
 import 'package:ape/global/global_router.dart';
 import 'package:ape/common/widget/my_scroll_view.dart';
 import 'package:ape/common/widget/my_app_bar.dart';
@@ -71,6 +72,9 @@ class _SMSLoginPageState extends State<SMSLoginPage> {
 
           // 将 user 保存到本地
           UserInfo.saveUserToLocal(data);
+
+          // 保存已登录状态
+          FlutterStars.SpUtil.putBool(SpConstants.isNotLogin, false);
 
           // 切换到 home 页面
           NavigatorUtils.push(context, GlobalRouter.home, clearStack: true);

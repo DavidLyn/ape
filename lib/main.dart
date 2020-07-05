@@ -10,13 +10,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ape/global/global_provider.dart';
 import 'package:ape/global/theme_provider.dart';
 import 'package:ape/global/global_router.dart';
-import 'package:ape/global/home_page.dart';
-import 'package:ape/global/splash_page.dart';
 import 'package:ape/common/storage_manager.dart';
 import 'package:ape/common/sqlite_manager.dart';
 import 'package:ape/util/log_utils.dart';
 import 'package:ape/util/file_utils.dart';
-import 'package:ape/mqtt/mqtt_provider.dart';
 import 'package:ape/common/constants.dart';
 
 // 初始化 provider
@@ -54,9 +51,6 @@ void main() async {
 
   // 初始化 Application Documents Manager
   await ApplicationDocumentManager.init();
-
-  // 初始化 mqtt client
-  await MQTTProvider.connect();
 
   // 初始化 UserInfo
   UserInfo.init();

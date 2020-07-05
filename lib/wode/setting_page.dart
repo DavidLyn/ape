@@ -5,9 +5,9 @@ import 'package:ape/global/global_router.dart';
 import 'package:ape/common/constants.dart';
 import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_selection_item.dart';
+import 'package:ape/mqtt/mqtt_provider.dart';
 
 /// 设置 页面
-///
 class SettingPage extends StatefulWidget {
   @override
   _SettingPageState createState() => _SettingPageState();
@@ -100,7 +100,12 @@ class _SettingPageState extends State<SettingPage> {
                 Navigator.pop(context);
               },),
               FlatButton(child: Text('确认'),onPressed: (){
+                // 设置 未登录 标志
                 flutter_stars.SpUtil.putBool(SpConstants.isNotLogin, true);
+
+                // 关闭 mqtt
+                MQTTProvider.disconnect();
+
                 NavigatorUtils.push(context, GlobalRouter.splash, clearStack: true);
               },),
             ],

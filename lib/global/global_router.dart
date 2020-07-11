@@ -19,6 +19,7 @@ import 'package:ape/rethink/writing/writing_page.dart';
 import 'package:ape/social/friend_management.dart';
 import 'package:ape/social/friend_setting.dart';
 import 'package:ape/social/friend_adding.dart';
+import 'package:ape/social/friend_ask_for.dart';
 
 /// 定义全局 Router 和初始化方法
 class GlobalRouter {
@@ -38,6 +39,7 @@ class GlobalRouter {
   static final friendManagement = '/social/friendManagement';
   static final friendSetting = '/social/friendSetting';
   static final friendAdding = '/social/friendAdding';
+  static final friendAskFor = '/social/friendAskFor';
 
   // 通用功能：编辑 text 字段
   static final textEdit = '/common/textEdit';
@@ -127,6 +129,13 @@ class GlobalRouter {
         }));
 
     router.define(friendAdding, handler: Handler(handlerFunc: (_,params){return FriendAdding();}));
+
+    router.define(friendAskFor, handler: Handler(handlerFunc: (_,Map<String, List<String>> params){
+      var friendId = int.parse(params['friendId']?.first);
+
+      return FriendAskFor(friendId:friendId,);
+    }));
+
   }
 }
 

@@ -97,9 +97,7 @@ class User {
     return data;
   }
 
-  /**
-   * 取得字符型性别
-   */
+   /// 取得字符型性别
   String getGenderInChar() {
     switch (this.gender) {
       case 1 :

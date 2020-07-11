@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -8,6 +9,8 @@ import 'package:ape/common/constants.dart';
 
 /// MQTT provider
 class MQTTProvider extends ChangeNotifier {
+
+  static const commandMakeFriend = 'makeFriend';     // 申请加好友
 
   // 向后台发送消息的 topic
   static const topicOfCatEars = 'cat/ears';
@@ -93,7 +96,9 @@ class MQTTProvider extends ChangeNotifier {
       // 注意 : 只能在 connect 后才能 published.listen
       // listen for published messages that have completed the publishing handshake which is Qos dependant
       client.published.listen((MqttPublishMessage message) {
-        var pt = MqttPublishPayload.bytesToStringAsString(message.payload.message);
+        //var pt = MqttPublishPayload.bytesToStringAsString(message.payload.message);
+        // 必须如下处理,不然会存在中文乱码  2020-07-11 Lvvv
+        var pt = Utf8Decoder().convert(message.payload.message);
         print(
             'MQTT::Published notification:: topic is ${message.variableHeader.topicName}, with Qos ${message.header.qos}, payload is $pt');
       });
@@ -150,13 +155,15 @@ class MQTTProvider extends ChangeNotifier {
   }
 
   /// publish message
-  static bool publish({String topic : topicPrefixToListen, @required String message, MqttQos qos : MqttQos.atLeastOnce}) {
+  static bool publish({String topic : topicOfCatEars, @required String message, MqttQos qos : MqttQos.atLeastOnce}) {
     if (!isConnected || topic.isEmpty ||  message.isEmpty) {
       return false;
     }
 
     final builder = MqttClientPayloadBuilder();
-    builder.addString(message);
+    //builder.addString(message);
+    // 必须如下处理,不然存在中文时后台无法正常解析Json 2020-07-11 Lvvv
+    builder.addUTF8String(message);
     client.publishMessage(topic, qos, builder.payload);
 
     return true;

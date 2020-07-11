@@ -228,7 +228,7 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
             '正在查询数据......',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 40.0,
+              fontSize: 32.0,
               fontWeight:
               FontWeight.bold,
             ),
@@ -246,7 +246,7 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
               '查询数据出错!',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 40.0,
+                fontSize: 32.0,
                 fontWeight:
                 FontWeight.bold,
               ),
@@ -264,7 +264,7 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
               '查询不到数据!',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 40.0,
+                fontSize: 32.0,
                 fontWeight:
                 FontWeight.bold,
               ),
@@ -296,6 +296,13 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
             trailing: RaisedButton(
               textColor: Colors.green,
               onPressed: (){
+                Map<String,String> params = {
+                  'friendId': userList[index].uid.toString(),
+                };
+
+                NavigatorUtils.pushWaitingResult(context, GlobalRouter.friendAskFor,(_){
+                  // To-do 还想好怎么处理
+                }, params:params);
 
               },
               child: Text('请求加友'),

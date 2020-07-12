@@ -100,7 +100,7 @@ class MQTTProvider extends ChangeNotifier {
         // 必须如下处理,不然会存在中文乱码  2020-07-11 Lvvv
         var pt = Utf8Decoder().convert(message.payload.message);
         print(
-            'MQTT::Published notification:: topic is ${message.variableHeader.topicName}, with Qos ${message.header.qos}, payload is $pt');
+            'MQTT -------> topic = ${message.variableHeader.topicName}, Qos = ${message.header.qos}, payload = $pt');
       });
     } on Exception catch (e) {
       print('MQTT::client exception - $e');
@@ -162,7 +162,7 @@ class MQTTProvider extends ChangeNotifier {
 
     final builder = MqttClientPayloadBuilder();
     //builder.addString(message);
-    // 必须如下处理,不然存在中文时后台无法正常解析Json 2020-07-11 Lvvv
+    // 必须如下处理,不然存在后台无法正常解析Json中中文的问题 2020-07-11 Lvvv
     builder.addUTF8String(message);
     client.publishMessage(topic, qos, builder.payload);
 

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 /// MQTT 消息对象
 class MQTTMessage {
   int type;           // 0 - request  1 - response   2 - relay
@@ -9,11 +11,11 @@ class MQTTMessage {
   String payload;     // 负载
 
   MQTTMessage({
-    this.type,
+    this.type: 0,
     this.command,
     this.msgId,
     this.senderId,
-    this.receiverId,
+    this.receiverId: 0,
     this.sendTime,
     this.payload,
   });
@@ -24,7 +26,7 @@ class MQTTMessage {
         msgId = json['msgId'],
         senderId = json['senderId'],
         receiverId = json['receiverId'],
-        sendTime = json['sendTime'],
+        sendTime = json['sendTime'],     //DateTime.parse(json['sendTime']),
         payload = json['payload'];
 
   Map<String, dynamic> toJson() {
@@ -35,7 +37,7 @@ class MQTTMessage {
     data['msgId'] = msgId;
     data['senderId'] = senderId;
     data['receiverId'] = receiverId;
-    //data['sendTime'] = sendTime.toString();
+    data['sendTime'] = DateFormat("yyyy-MM-dd HH:mm:ss").format(sendTime);
     data['payload'] = payload;
 
     return data;

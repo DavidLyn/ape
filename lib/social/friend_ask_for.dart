@@ -79,6 +79,7 @@ class _FriendAskForState extends State<FriendAskFor> {
     message.type = 0;
     message.command = MQTTProvider.commandMakeFriend;
     message.senderId = UserInfo.user.uid;
+    message.receiverId = 0;     // 0 代表 后台
     message.sendTime = DateTime.now();
 
     Map<String,String> map = {'friendId':widget.friendId.toString(),

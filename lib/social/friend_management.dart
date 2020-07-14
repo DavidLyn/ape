@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:ape/global/global_router.dart';
+import 'package:ape/entity/friend_entity.dart';
 
 /// 好友管理
 class FriendManagement extends StatefulWidget {
@@ -10,17 +11,29 @@ class FriendManagement extends StatefulWidget {
 }
 
 class _FriendManagementState extends State<FriendManagement> {
-  var friends = [1,2,3];
+
+  List<FriendEntity> _friends = List<FriendEntity>();
 
   @override
   void initState() {
     super.initState();
+
+    _getFriends();
   }
 
   @override
   void dispose() {
 
     super.dispose();
+  }
+
+  _getFriends() async {
+
+    _friends = await FriendEntity.getFriendList();
+
+    setState(() {
+    });
+
   }
 
   @override
@@ -54,19 +67,19 @@ class _FriendManagementState extends State<FriendManagement> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: CachedNetworkImageProvider('https://lvlv-oss-001.oss-cn-beijing.aliyuncs.com/4e90e8e6f88f4649a72d110d0266396d.jpg'),
+                        image: CachedNetworkImageProvider(_friends[index].avatar),
                         fit: BoxFit.fill,
                       ),
                     ),
                   ),
-                  title: Text('呢称'),
-                  subtitle: Text('一枚有态度的程序员'),
+                  title: Text(_friends[index].nickname),
+                  subtitle: Text(_friends[index].profile),
                   trailing: Icon(Icons.sort),
                 ),
 
                 onTap: () {
                   Map<String, String> params = {
-                    'uid': '123456',
+                    'uid': _friends[index].friendId.toString(),
                   };
 
                   NavigatorUtils.push(context, GlobalRouter.friendSetting,params: params);
@@ -77,7 +90,7 @@ class _FriendManagementState extends State<FriendManagement> {
             separatorBuilder: (BuildContext context, int index) {
               return Divider();
             },
-            itemCount: friends.length,
+            itemCount: _friends.length,
           ),
         ),
         onWillPop: () {

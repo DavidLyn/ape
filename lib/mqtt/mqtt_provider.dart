@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -7,8 +6,8 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:ape/common/constants.dart';
 
-/// MQTT provider
-class MQTTProvider extends ChangeNotifier {
+/// MQTT provider   去掉 extends ChangeNotifier
+class MQTTProvider {
 
   static const commandMakeFriend = 'makeFriend';     // 申请加好友
 

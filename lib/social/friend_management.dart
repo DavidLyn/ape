@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 
 import 'package:ape/global/global_router.dart';
 import 'package:ape/entity/friend_entity.dart';
+import 'package:ape/provider/friend_provider.dart';
 
 /// 好友管理
 class FriendManagement extends StatefulWidget {
@@ -12,28 +14,16 @@ class FriendManagement extends StatefulWidget {
 
 class _FriendManagementState extends State<FriendManagement> {
 
-  List<FriendEntity> _friends = List<FriendEntity>();
-
   @override
   void initState() {
     super.initState();
 
-    _getFriends();
   }
 
   @override
   void dispose() {
 
     super.dispose();
-  }
-
-  _getFriends() async {
-
-    _friends = await FriendEntity.getFriendList();
-
-    setState(() {
-    });
-
   }
 
   @override
@@ -67,19 +57,19 @@ class _FriendManagementState extends State<FriendManagement> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: CachedNetworkImageProvider(_friends[index].avatar),
+                        image: CachedNetworkImageProvider(Provider.of<FriendProvider>(context).friends[index].avatar),
                         fit: BoxFit.fill,
                       ),
                     ),
                   ),
-                  title: Text(_friends[index].nickname),
-                  subtitle: Text(_friends[index].profile),
+                  title: Text(Provider.of<FriendProvider>(context).friends[index].nickname),
+                  subtitle: Text(Provider.of<FriendProvider>(context).friends[index].profile),
                   trailing: Icon(Icons.sort),
                 ),
 
                 onTap: () {
                   Map<String, String> params = {
-                    'uid': _friends[index].friendId.toString(),
+                    'uid': Provider.of<FriendProvider>(context).friends[index].friendId.toString(),
                   };
 
                   NavigatorUtils.push(context, GlobalRouter.friendSetting,params: params);
@@ -90,7 +80,7 @@ class _FriendManagementState extends State<FriendManagement> {
             separatorBuilder: (BuildContext context, int index) {
               return Divider();
             },
-            itemCount: _friends.length,
+            itemCount: Provider.of<FriendProvider>(context).friends.length,   //_friends.length,
           ),
         ),
         onWillPop: () {

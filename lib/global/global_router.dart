@@ -132,8 +132,11 @@ class GlobalRouter {
 
     router.define(friendAskFor, handler: Handler(handlerFunc: (_,Map<String, List<String>> params){
       var friendId = int.parse(params['friendId']?.first);
+      var nickname = params['nickname']?.first;
+      var avatar = params['avatar']?.first;
+      var profile = params['profile']?.first;
 
-      return FriendAskFor(friendId:friendId,);
+      return FriendAskFor(friendId:friendId,nickname:nickname,avatar:avatar,profile:profile,);
     }));
 
   }

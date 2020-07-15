@@ -298,6 +298,9 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
               onPressed: (){
                 Map<String,String> params = {
                   'friendId': userList[index].uid.toString(),
+                  'nickname': userList[index].nickname,
+                  'avatar': userList[index].avatar,
+                  'profile': userList[index].profile,
                 };
 
                 NavigatorUtils.pushWaitingResult(context, GlobalRouter.friendAskFor,(_){

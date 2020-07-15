@@ -74,7 +74,7 @@ class FriendEntity {
   }
 
   // 新增 Friend 记录
-  Future<int> insert(FriendEntity friend) async {
+  static Future<int> insert(FriendEntity friend) async {
     int res = await DbManager.db.insert("$tableName", friend.toMap());
     return res;
   }

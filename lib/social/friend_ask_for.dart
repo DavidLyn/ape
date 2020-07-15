@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:ape/mqtt/mqtt_message.dart';
 import 'package:ape/mqtt/mqtt_provider.dart';
 import 'package:ape/common/constants.dart';
+import 'package:ape/entity/friend_entity.dart';
 
 /// 发出加好友请求
 class FriendAskFor extends StatefulWidget {
 
   final int friendId;
+  final String nickname;
+  final String avatar;
+  final String profile;
 
-  FriendAskFor({this.friendId});
+  FriendAskFor({this.friendId,this.nickname,this.avatar,this.profile,});
 
   @override
   _FriendAskForState createState() => _FriendAskForState();
@@ -88,6 +92,18 @@ class _FriendAskForState extends State<FriendAskFor> {
     message.payload = jsonEncode(map);
 
     if (MQTTProvider.publish(message: jsonEncode(message))) {
+      // 向 Friend 表写入记录
+      var friend = FriendEntity();
+      friend.uid = UserInfo.user.uid;
+      friend.friendId = widget.friendId;
+      friend.nickname = widget.nickname;
+      friend.avatar = widget.avatar;
+      friend.profile = widget.profile;
+      friend.isValid = 1;
+      friend.state = 0;           // Todo  需要修改
+
+      FriendEntity.insert(friend);
+
       Navigator.pop(context,true);
     } else {
       Navigator.pop(context,false);

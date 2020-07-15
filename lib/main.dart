@@ -7,7 +7,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flustars/flustars.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:ape/global/global_provider.dart';
 import 'package:ape/global/theme_provider.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/common/storage_manager.dart';
@@ -15,16 +14,17 @@ import 'package:ape/common/sqlite_manager.dart';
 import 'package:ape/util/log_utils.dart';
 import 'package:ape/util/file_utils.dart';
 import 'package:ape/common/constants.dart';
+import 'package:ape/provider/friend_provider.dart';
 
 // 初始化 provider
 List<SingleChildWidget> _providers = [
-  ChangeNotifierProvider<GlobalProvider>(
-    create: (context) => GlobalProvider(),
-  ),
-
   ChangeNotifierProvider<ThemeProvider>(
     create: (context) => ThemeProvider(),
-  )
+  ),
+
+  ChangeNotifierProvider<FriendProvider>(
+    create: (context) => FriendProvider(),
+  ),
 ];
 
 void main() async {
@@ -73,8 +73,8 @@ class MyApp extends StatelessWidget {
     return OKToast(
       child: MultiProvider(
         providers: _providers,
-        child: Consumer2<GlobalProvider,ThemeProvider>(
-            builder: (context, globalProvider,themeProvider, child) {
+        child: Consumer2<ThemeProvider,FriendProvider>(
+            builder: (context, themeProvider, friendProvider,child) {
               return RefreshConfiguration(
                 hideFooterWhenNotFull: true,      //列表数据不满一页,不触发加载更多
                 child: MaterialApp(

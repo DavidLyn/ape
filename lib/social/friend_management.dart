@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 
 import 'package:ape/global/global_router.dart';
-import 'package:ape/entity/friend_entity.dart';
 import 'package:ape/provider/friend_provider.dart';
 
 /// 好友管理
@@ -69,7 +68,7 @@ class _FriendManagementState extends State<FriendManagement> {
 
                 onTap: () {
                   Map<String, String> params = {
-                    'uid': Provider.of<FriendProvider>(context).friends[index].friendId.toString(),
+                    'uid': Provider.of<FriendProvider>(context,listen: false).friends[index].friendId.toString(),
                   };
 
                   NavigatorUtils.push(context, GlobalRouter.friendSetting,params: params);

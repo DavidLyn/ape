@@ -40,8 +40,8 @@ class FriendEntity {
     map['avatar'] = avatar;
     map['profile'] = profile;
     map['state'] = state;
-    map['friendTime'] = friendTime.millisecondsSinceEpoch;
-    map['deleteTime'] = deleteTime.millisecondsSinceEpoch;
+    map['friendTime'] = friendTime?.millisecondsSinceEpoch;
+    map['deleteTime'] = deleteTime?.millisecondsSinceEpoch;
     return map;
   }
 
@@ -54,8 +54,8 @@ class FriendEntity {
     friend.avatar = map['avatar'];
     friend.profile = map['profile'];
     friend.state = map['state'];
-    friend.friendTime = DateTime.fromMillisecondsSinceEpoch(map['friendTime']);
-    friend.deleteTime = DateTime.fromMillisecondsSinceEpoch(map['deleteTime']);
+    friend.friendTime = map['friendTime'] != null ? DateTime.fromMillisecondsSinceEpoch(map['friendTime']) : null;
+    friend.deleteTime = map['deleteTime'] != null ? DateTime.fromMillisecondsSinceEpoch(map['deleteTime']) : null;
     return friend;
   }
 

@@ -4,7 +4,8 @@ import 'package:ape/entity/friend_entity.dart';
 /// 保存 好友 信息的 provider
 class FriendProvider extends ChangeNotifier {
 
-  List<FriendEntity> _friends;
+  // 注意下述方法创建无固定长度 list
+  List<FriendEntity> _friends = List<FriendEntity>();
 
   List<FriendEntity> get friends => _friends;
 
@@ -14,11 +15,20 @@ class FriendProvider extends ChangeNotifier {
 
   // 从本地 DB 中读取 friend 信息
   _getFriendsFromDB() async {
-    _friends = await FriendEntity.getFriendList();
+    var dbList = await FriendEntity.getFriendList();
 
-    if (_friends == null) {
-      _friends = List<FriendEntity>();
+    for (var obj in dbList) {
+      _friends.add(obj);
     }
+  }
+
+  // 增加新朋友
+  void addFriend(FriendEntity friend) {
+    _friends.add(friend);
+
+    FriendEntity.insert(friend);
+
+    notifyListeners();
   }
 
 }

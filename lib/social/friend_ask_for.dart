@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:ape/mqtt/mqtt_message.dart';
 import 'package:ape/mqtt/mqtt_provider.dart';
 import 'package:ape/common/constants.dart';
 import 'package:ape/entity/friend_entity.dart';
+import 'package:ape/provider/friend_provider.dart';
 
 /// 发出加好友请求
 class FriendAskFor extends StatefulWidget {
@@ -51,7 +53,7 @@ class _FriendAskForState extends State<FriendAskFor> {
           centerTitle: true,
           actions: <Widget>[
             IconButton(icon: Icon(Icons.send),onPressed: (){
-              _sendAskFor();
+              _sendAskFor(context);
             },),
           ],
         ),
@@ -77,7 +79,7 @@ class _FriendAskForState extends State<FriendAskFor> {
   }
 
   // 发送加友申请
-  _sendAskFor() {
+  _sendAskFor(BuildContext context) {
 
     var message = MQTTMessage();
     message.type = 0;
@@ -102,7 +104,8 @@ class _FriendAskForState extends State<FriendAskFor> {
       friend.isValid = 1;
       friend.state = 0;           // Todo  需要修改
 
-      FriendEntity.insert(friend);
+      // 注意:修改 Provider 数据 listen 为 false
+      Provider.of<FriendProvider>(context,listen: false).addFriend(friend);
 
       Navigator.pop(context,true);
     } else {

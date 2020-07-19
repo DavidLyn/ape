@@ -27,6 +27,9 @@ List<SingleChildWidget> _providers = [
   ),
 ];
 
+// 全局 context,为全局 Provider 获取 context 使用
+BuildContext appContext;
+
 void main() async {
 
   // 不加这句，SpUtil.getInstance()将报错
@@ -70,11 +73,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return OKToast(
       child: MultiProvider(
         providers: _providers,
         child: Consumer2<ThemeProvider,FriendProvider>(
             builder: (context, themeProvider, friendProvider,child) {
+              // 设置全局 context, 必须放在这儿,不然 mqtt_provider 中使用 Provider.of(conetxt) 无法正常执行
+              appContext = context;
+
               return RefreshConfiguration(
                 hideFooterWhenNotFull: true,      //列表数据不满一页,不触发加载更多
                 child: MaterialApp(

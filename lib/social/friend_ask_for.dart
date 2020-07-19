@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ape/mqtt/mqtt_message.dart';
 import 'package:ape/mqtt/mqtt_provider.dart';
 import 'package:ape/common/constants.dart';
-import 'package:ape/entity/friend_entity.dart';
+import 'package:ape/entity/friend_askfor_entity.dart';
 import 'package:ape/provider/friend_provider.dart';
 
 /// 发出加好友请求
@@ -94,18 +94,18 @@ class _FriendAskForState extends State<FriendAskFor> {
     message.payload = jsonEncode(map);
 
     if (MQTTProvider.publish(message: jsonEncode(message))) {
-      // 向 Friend 表写入记录
-      var friend = FriendEntity();
-      friend.uid = UserInfo.user.uid;
-      friend.friendId = widget.friendId;
-      friend.nickname = widget.nickname;
-      friend.avatar = widget.avatar;
-      friend.profile = widget.profile;
-      friend.isValid = 1;
-      friend.state = 0;           // Todo  需要修改
+      // 向 FriendAskfor 表写入记录
+      var friendAskfor = FriendAskforEntity();
+      friendAskfor.uid = UserInfo.user.uid;
+      friendAskfor.friendId = widget.friendId;
+      friendAskfor.nickname = widget.nickname;
+      friendAskfor.avatar = widget.avatar;
+      friendAskfor.profile = widget.profile;
+      friendAskfor.askforTime = DateTime.now();
+      friendAskfor.leavingWords = _controller.text;
 
       // 注意:修改 Provider 数据 listen 为 false
-      Provider.of<FriendProvider>(context,listen: false).addFriend(friend);
+      Provider.of<FriendProvider>(context,listen: false).addFriendAskfor(friendAskfor);
 
       Navigator.pop(context,true);
     } else {

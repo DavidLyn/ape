@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:provider/provider.dart';
 
+import 'package:ape/main.dart';
 import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:ape/common/constants.dart';
 import 'package:ape/mqtt/mqtt_message.dart';
+import 'package:ape/entity/friend_inviting_entity.dart';
+import 'package:ape/provider/friend_provider.dart';
 
 /// MQTT provider   去掉 extends ChangeNotifier
 class MQTTProvider {
@@ -230,7 +234,19 @@ class MQTTProvider {
   }
 
   static void makeFriend(MQTTMessage message) {
-    print('###################### recieve commandMakeFriend');
+
+    Map<String,dynamic> map = json.decode(message.payload);
+
+    var friendInviting = FriendInvitingEntity();
+    friendInviting.uid = UserInfo.user.uid;
+    friendInviting.friendId = int.parse(map['friendId']);
+    friendInviting.nickname = map['nickname'];
+    friendInviting.avatar = map['avatar'];
+    friendInviting.profile = map['profile'];
+    friendInviting.leavingWords = map['leavingWords'];
+    friendInviting.recieveTime = DateTime.now();
+
+    Provider.of<FriendProvider>(appContext,listen: false).addFriendInviting(friendInviting);
 
   }
 }

@@ -27,9 +27,9 @@ class FriendInvitingEntity {
     this.profile,
     this.leavingWords,
     this.recieveTime,
-    this.state,
+    this.state : 0,
     this.dealTime,
-    this.isValid,
+    this.isValid : 1,
     this.deleteTime,
   });
 

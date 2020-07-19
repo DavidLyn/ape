@@ -25,7 +25,7 @@ class FriendEntity {
     this.avatar,
     this.profile,
     this.state,
-    this.isValid,
+    this.isValid : 1,
     this.rejectTime,
     this.friendTime,
     this.deleteTime,

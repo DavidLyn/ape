@@ -27,9 +27,9 @@ class FriendAskforEntity {
     this.profile,
     this.leavingWords,
     this.askforTime,
-    this.state,
+    this.state : 0,
     this.responseTime,
-    this.isValid,
+    this.isValid : 1,
     this.deleteTime,
   });
 

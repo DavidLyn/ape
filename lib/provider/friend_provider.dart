@@ -52,4 +52,22 @@ class FriendProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // 增加 加友申请
+  void addFriendAskfor(FriendAskforEntity friendAskfor) {
+    _friendsAskfor.insert(0, friendAskfor);
+
+    FriendAskforEntity.insert(friendAskfor);
+
+    notifyListeners();
+  }
+
+  // 增加 加友邀约
+  void addFriendInviting(FriendInvitingEntity friendInviting) {
+    _friendsInviting.insert(0, friendInviting);
+
+    FriendInvitingEntity.insert(friendInviting);
+
+    notifyListeners();
+  }
+
 }

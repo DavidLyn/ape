@@ -30,19 +30,52 @@ class DbManager {
           await db.execute(
               'CREATE TABLE Test (xid INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)');
 
-          // 好友表
+          // 好友申请表 - FriendAskfor
           // id - 自增序号,主键
           // uid - 当前 App 用户id
           // friendId - 好友用户id
           // nickname - 好友昵称
           // avatar - 好友头像
           // profile - 好友简介
-          // state - 0:好友  9:拉黑  2:发出加友请求等待对方确认  3:收到的加友请求尚未处理  4:拒绝收到的加友请求
+          // leavingWords - 留言
+          // askforTime - 请求时间
+          // state - 当前状态  0 - 发出请求尚未收到响应  1 - 对方已响应且已接受成为好友 2 - 对方已响应且已拒绝成为好友
+          // responseTime - 收到响应时间
           // isValid - 1:有效 0:删除
-          // friendTime - 成为好友时间
           // deleteTime - 删除时间
           await db.execute(
-              'CREATE TABLE Friend (id INTEGER PRIMARY KEY, uid INTEGER, friendId INTEGER, nickname TEXT, avatar TEXT, profile TEXT, state INTEGER, isValid INTEGER, friendTime INTEGER, deleteTime INTEGER)');
+              'CREATE TABLE FriendAskfor (id INTEGER PRIMARY KEY, uid INTEGER, friendId INTEGER, nickname TEXT, avatar TEXT, profile TEXT, leavingWords TEXT, askforTime INTEGER, state INTEGER, responseTime INTEGER, isValid INTEGER, deleteTime INTEGER)');
+
+          // 好友邀约表 - FriendInviting
+          // id - 自增序号,主键
+          // uid - 当前 App 用户id
+          // friendId - 好友用户id
+          // nickname - 好友昵称
+          // avatar - 好友头像
+          // profile - 好友简介
+          // leavingWords - 留言
+          // recieveTime - 收到时间
+          // state - 状态 0 - 收到未处理 1 - 接受成为好友 2 - 拒绝成为好友
+          // dealTime - 处理时间
+          // isValid - 1:有效 0:删除
+          // deleteTime - 删除时间
+          await db.execute(
+              'CREATE TABLE FriendInviting (id INTEGER PRIMARY KEY, uid INTEGER, friendId INTEGER, nickname TEXT, avatar TEXT, profile TEXT, leavingWords TEXT, recieveTime INTEGER, state INTEGER, dealTime INTEGER, isValid INTEGER, deleteTime INTEGER)');
+
+          // 好友表 - Friend
+          // id - 自增序号,主键
+          // uid - 当前 App 用户id
+          // friendId - 好友用户id
+          // nickname - 好友昵称
+          // avatar - 好友头像
+          // profile - 好友简介
+          // state - 1:好友  0:拉黑
+          // isValid - 1:有效 0:删除
+          // friendTime - 成为好友时间
+          // rejectTime - 拉黑时间
+          // deleteTime - 删除时间
+          await db.execute(
+              'CREATE TABLE Friend (id INTEGER PRIMARY KEY, uid INTEGER, friendId INTEGER, nickname TEXT, avatar TEXT, profile TEXT, state INTEGER, isValid INTEGER, friendTime INTEGER, rejectTime INTEGER, deleteTime INTEGER)');
         },
         onUpgrade: (Database db, int oldVersion, int newVersion) async {
           print('DB onUpgrade oldVersion:$oldVersion, newVersion=$newVersion');

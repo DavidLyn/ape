@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:ape/common/constants.dart';
+import 'package:ape/mqtt/mqtt_message.dart';
 
 /// MQTT provider   去掉 extends ChangeNotifier
 class MQTTProvider {
@@ -100,6 +101,10 @@ class MQTTProvider {
         var pt = Utf8Decoder().convert(message.payload.message);
         print(
             'MQTT -------> topic = ${message.variableHeader.topicName}, Qos = ${message.header.qos}, payload = $pt');
+
+        var msg = MQTTMessage.fromJson(json.decode(pt));
+
+        dealMQTTMessage(message.variableHeader.topicName,msg);
       });
     } on Exception catch (e) {
       print('MQTT::client exception - $e');
@@ -213,5 +218,19 @@ class MQTTProvider {
   /// Pong callback
   static void _pong() {
     print('MQTT::Ping response client callback invoked');
+  }
+
+  /// ------------------------  MQTT 消息处理  ------------------------
+  static void dealMQTTMessage(String topic, MQTTMessage message) {
+
+    if (message.command == commandMakeFriend) {
+      makeFriend(message);
+    }
+
+  }
+
+  static void makeFriend(MQTTMessage message) {
+    print('###################### recieve commandMakeFriend');
+
   }
 }

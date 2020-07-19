@@ -20,7 +20,7 @@ class MQTTMessage {
     this.payload,
   });
 
-  MQTTMessage.fromJson(json) :
+  MQTTMessage.fromJson(Map<String, dynamic> json) :
         type = json['type'],
         command = json['command'],
         msgId = json['msgId'],
@@ -37,7 +37,7 @@ class MQTTMessage {
     data['msgId'] = msgId;
     data['senderId'] = senderId;
     data['receiverId'] = receiverId;
-    data['sendTime'] = DateFormat("yyyy-MM-dd HH:mm:ss").format(sendTime);
+    data['sendTime'] = sendTime != null ? DateFormat("yyyy-MM-dd HH:mm:ss").format(sendTime) : null;
     data['payload'] = payload;
 
     return data;

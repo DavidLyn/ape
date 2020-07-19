@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:ape/entity/friend_entity.dart';
+import 'package:ape/entity/friend_askfor_entity.dart';
+import 'package:ape/entity/friend_inviting_entity.dart';
 
 /// 保存 好友 信息的 provider
 class FriendProvider extends ChangeNotifier {
 
   // 注意下述方法创建无固定长度 list
+  // 朋友列表
   List<FriendEntity> _friends = List<FriendEntity>();
-
   List<FriendEntity> get friends => _friends;
+
+  // 朋友请求 列表
+  List<FriendAskforEntity> _friendsAskfor = List<FriendAskforEntity>();
+  List<FriendAskforEntity> get friendsAskfor => _friendsAskfor;
+
+  // 朋友邀约 列表
+  List<FriendInvitingEntity> _friendsInviting = List<FriendInvitingEntity>();
+  List<FriendInvitingEntity> get friendsInviting => _friendsInviting;
 
   FriendProvider() {
     _getFriendsFromDB();
@@ -20,6 +30,17 @@ class FriendProvider extends ChangeNotifier {
     for (var obj in dbList) {
       _friends.add(obj);
     }
+
+    var askforList = await FriendAskforEntity.getFriendAskforList();
+    for (var obj in askforList) {
+      _friendsAskfor.add(obj);
+    }
+
+    var invitingList = await FriendInvitingEntity.getFriendInvitingList();
+    for (var obj in invitingList) {
+      _friendsInviting.add(obj);
+    }
+
   }
 
   // 增加新朋友

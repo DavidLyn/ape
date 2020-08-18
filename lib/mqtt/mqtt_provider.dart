@@ -203,10 +203,10 @@ class MQTTProvider {
   /// The unsolicited disconnect callback
   static void _onDisconnected() {
     print('MQTT broker is disconnected!');
-    if (client.connectionStatus.disconnectionOrigin ==
-        MqttDisconnectionOrigin.solicited) {
-      print('MQTT::OnDisconnected callback is solicited, this is correct');
-    }
+//    if (client.connectionStatus.disconnectionOrigin ==
+//        MqttDisconnectionOrigin.solicited) {
+//      print('MQTT::OnDisconnected callback is solicited, this is correct');
+//    }
     isConnected = false;
 
     // 启动重连机制

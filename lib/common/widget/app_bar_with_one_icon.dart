@@ -4,15 +4,16 @@ import 'package:ape/util/theme_utils.dart';
 import 'package:ape/global/global_router.dart';
 
 /// 自定义 AppBar
-class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
+class AppBarWithOneIcon extends StatelessWidget implements PreferredSizeWidget {
 
-  const MyAppBar({
+  const AppBarWithOneIcon({
     Key key,
     this.backgroundColor,
     this.title: '',
     this.centerTitle: '',
-    this.actionName: '',
     this.backImg: 'assets/images/common/back_arrow_black.png',
+    this.actionName: '',
+    this.actionIcon,
     this.onPressed,
     this.isBack: true
   }): super(key: key);
@@ -21,6 +22,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String centerTitle;
   final String backImg;
+  final Icon actionIcon;
   final String actionName;
   final VoidCallback onPressed;
   final bool isBack;
@@ -38,6 +40,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     SystemUiOverlayStyle _overlayStyle = ThemeData.estimateBrightnessForColor(_backgroundColor) == Brightness.dark
         ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
 
+    // 构造 back widget
     var back = isBack ? IconButton(
       onPressed: () {
         FocusScope.of(context).unfocus();
@@ -47,28 +50,20 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       padding: const EdgeInsets.all(12.0),
       icon: Image.asset(
         backImg,
-        //color: ThemeUtils.getIconColor(context),
       ),
     ) : SizedBox.shrink();
 
-    var action = actionName.isNotEmpty ? Positioned(
+    // 构造 action icon widget
+    var action = actionIcon != null ? Positioned(
       right: 0.0,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-            buttonTheme: ButtonThemeData(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              minWidth: 60.0,
-            )
-        ),
-        child: FlatButton(
-          child: Text(actionName, key: const Key('actionName')),
-          textColor: Colours.text,
-          highlightColor: Colors.transparent,
-          onPressed: onPressed,
-        ),
+      child: IconButton(
+        icon: actionIcon,
+        onPressed: onPressed,
+        tooltip: actionName,
       ),
     ) : SizedBox.shrink();
 
+    // 构造 标题 widget
     var titleWidget = Semantics(
       namesRoute: true,
       header: true,
@@ -76,13 +71,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         alignment: centerTitle.isEmpty ? Alignment.centerLeft : Alignment.center,
         width: double.infinity,
         child: Text(
-            title.isEmpty ? centerTitle : title,
-            style: TextStyle(fontSize: 18),
+          title.isEmpty ? centerTitle : title,
+          style: TextStyle(fontSize: 18),
         ),
         margin: const EdgeInsets.symmetric(horizontal: 48.0),
       ),
     );
-    
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: _overlayStyle,
       child: Material(
@@ -99,8 +94,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
     );
+
   }
 
   @override
   Size get preferredSize => Size.fromHeight(48.0);
 }
+

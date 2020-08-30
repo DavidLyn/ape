@@ -75,13 +75,16 @@ class FriendInvitingEntity {
 
   // 获取当前用户的好友邀约列表
   static Future<List> getFriendInvitingList() async {
-    var result = await DbManager.db.rawQuery('select * from $tableName where uid=${UserInfo.user.uid} and state=1 order by recieveTime desc');
+    var result = await DbManager.db.rawQuery('select * from $tableName where uid=${UserInfo.user.uid} and isValid=1 order by recieveTime desc');
     return fromMapList(result.toList());
   }
 
-  // 新增 FriendInvitingEntity 记录
+  // 新增 FriendInviting 记录
   static Future<int> insert(FriendInvitingEntity friend) async {
     int res = await DbManager.db.insert("$tableName", friend.toMap());
+
+    print('FriendInviting new record id = $res');
+
     return res;
   }
 

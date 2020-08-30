@@ -71,7 +71,7 @@ class FriendEntity {
 
   // 获取当前用户的好友列表
   static Future<List> getFriendList() async {
-    var result = await DbManager.db.rawQuery('select * from $tableName where uid=${UserInfo.user.uid} and state=1');
+    var result = await DbManager.db.rawQuery('select * from $tableName where uid=${UserInfo.user.uid} and isValid=1');
     return fromMapList(result.toList());
   }
 

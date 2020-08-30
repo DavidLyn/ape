@@ -103,6 +103,8 @@ class _FriendAskForState extends State<FriendAskFor> {
       friendAskfor.profile = widget.profile;
       friendAskfor.askforTime = DateTime.now();
       friendAskfor.leavingWords = _controller.text;
+      friendAskfor.isValid = 1;   // 未删除
+      friendAskfor.state = 0;     // 发出请求尚未收到响应
 
       // 注意:修改 Provider 数据 listen 为 false
       Provider.of<FriendProvider>(context,listen: false).addFriendAskfor(friendAskfor);

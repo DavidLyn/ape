@@ -46,6 +46,7 @@ class _SettingPageState extends State<SettingPage> {
 
     return Scaffold(
       appBar: const MyAppBar(
+        backgroundColor: Colors.green,
         centerTitle: '设置',
       ),
       body: Column(

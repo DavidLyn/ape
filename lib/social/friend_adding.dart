@@ -8,6 +8,7 @@ import 'package:ape/network/nw_api.dart';
 import 'package:ape/network/rest_result_wrapper.dart';
 import 'package:ape/util/log_utils.dart';
 import 'package:ape/entity/user.dart';
+import 'package:ape/common/widget/app_bar_with_one_icon.dart';
 
 enum PageStatus {
   busy,
@@ -35,44 +36,32 @@ class _FriendAddingState extends State<FriendAdding> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: WillPopScope(
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0.5,
-            brightness: Brightness.light,
-            backgroundColor: Colors.white,
-            iconTheme: IconThemeData(color: Colors.black),
-            textTheme: TextTheme(title: TextStyle(color: Colors.black,fontSize: 18)),
-            leading: BackButton(),
-            title: Text('添加吾友'),
-            centerTitle: true,
-            actions: <Widget>[
-              IconButton(icon: Icon(Icons.add),onPressed: (){
-              },),
-            ],
-          ),
-          body: Column(
-            children: <Widget>[
-              _searchItem(),
-            ],
-          ),
-        ),
-        onWillPop: () {
-          return Future.value(true);
+    return Scaffold(
+      appBar: AppBarWithOneIcon(
+        backgroundColor: Colors.green,
+        centerTitle: '添加吾友',
+        actionIcon: Icon(Icons.add),
+        actionName: '添加',
+        onPressed: (){
         },
       ),
+      body: Column(
+        children: <Widget>[
+          _searchItem(),
+        ],
+      ),
     );
+
   }
 
   Widget _searchItem() {
     return GestureDetector(
       child: Padding(
-        padding: EdgeInsets.only(left: 10,right: 10,),
+        padding: EdgeInsets.only(left: 1,right: 1,top: 1,),
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(color:Colors.grey,width: 1.0,),
-            color: Colors.black12,
+            color: Colors.white10,
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
           alignment: Alignment.center,
@@ -151,8 +140,10 @@ class _SearchFriendDelegate extends SearchDelegate<String> {
   ThemeData appBarTheme(BuildContext context) {
     var theme = Theme.of(context);
     return super.appBarTheme(context).copyWith(
-        primaryColor: theme.scaffoldBackgroundColor,
-        primaryColorBrightness: theme.brightness);
+//        primaryColor: theme.scaffoldBackgroundColor,
+        primaryColor: Colors.green,
+        primaryColorBrightness: theme.brightness,
+    );
   }
 
   @override

@@ -31,15 +31,21 @@ class FriendProvider extends ChangeNotifier {
       _friends.add(obj);
     }
 
+    print('_friends length = ${_friends.length}');
+
     var askforList = await FriendAskforEntity.getFriendAskforList();
     for (var obj in askforList) {
       _friendsAskfor.add(obj);
     }
 
+    print('_friendsAskfor length = ${_friendsAskfor.length}');
+
     var invitingList = await FriendInvitingEntity.getFriendInvitingList();
     for (var obj in invitingList) {
       _friendsInviting.add(obj);
     }
+
+    print('_friendsInviting length = ${_friendsInviting.length}');
 
   }
 

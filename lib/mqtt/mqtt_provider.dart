@@ -245,6 +245,8 @@ class MQTTProvider {
     friendInviting.profile = map['profile'];
     friendInviting.leavingWords = map['leavingWords'];
     friendInviting.recieveTime = DateTime.now();
+    friendInviting.isValid = 1;     // 有效标志
+    friendInviting.state = 0;       // 收到未处理
 
     Provider.of<FriendProvider>(appContext,listen: false).addFriendInviting(friendInviting);
 

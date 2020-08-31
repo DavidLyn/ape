@@ -7,6 +7,7 @@ class FriendEntity {
 
   static String tableName = 'Friend';
 
+  int id;           // 主键
   int uid;          // 本 App 用户id
   int friendId;     // 好友 用户id
   String nickname;  // 昵称
@@ -19,6 +20,7 @@ class FriendEntity {
   DateTime deleteTime;  // 删除时间
 
   FriendEntity({
+    this.id,
     this.uid,
     this.friendId,
     this.nickname,
@@ -33,6 +35,7 @@ class FriendEntity {
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
+    map['id'] = id;
     map['uid'] = uid;
     map['friendId'] = friendId;
     map['nickname'] = nickname;
@@ -48,6 +51,7 @@ class FriendEntity {
 
   static FriendEntity fromMap(Map<String, dynamic> map) {
     FriendEntity friend = new FriendEntity();
+    friend.id = map['id'];
     friend.uid = map['uid'];
     friend.friendId = map['friendId'];
     friend.nickname = map['nickname'];
@@ -77,8 +81,11 @@ class FriendEntity {
 
   // 新增 Friend 记录
   static Future<int> insert(FriendEntity friend) async {
-    int res = await DbManager.db.insert("$tableName", friend.toMap());
-    return res;
+    int id = await DbManager.db.insert("$tableName", friend.toMap());
+
+    friend.id = id;
+
+    return id;
   }
 
 }

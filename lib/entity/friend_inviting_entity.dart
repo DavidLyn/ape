@@ -7,6 +7,7 @@ class FriendInvitingEntity {
 
   static String tableName = 'FriendInviting';
 
+  int id;                 // 主键
   int uid;                // 本 App 用户id
   int friendId;           // 好友 用户id
   String nickname;        // 昵称
@@ -20,6 +21,7 @@ class FriendInvitingEntity {
   DateTime deleteTime;    // 删除时间
 
   FriendInvitingEntity({
+    this.id,
     this.uid,
     this.friendId,
     this.nickname,
@@ -35,6 +37,7 @@ class FriendInvitingEntity {
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
+    map['id'] = id;
     map['uid'] = uid;
     map['friendId'] = friendId;
     map['nickname'] = nickname;
@@ -51,6 +54,7 @@ class FriendInvitingEntity {
 
   static FriendInvitingEntity fromMap(Map<String, dynamic> map) {
     FriendInvitingEntity friendInviting = new FriendInvitingEntity();
+    friendInviting.id = map['id'];
     friendInviting.uid = map['uid'];
     friendInviting.friendId = map['friendId'];
     friendInviting.nickname = map['nickname'];
@@ -81,11 +85,22 @@ class FriendInvitingEntity {
 
   // 新增 FriendInviting 记录
   static Future<int> insert(FriendInvitingEntity friend) async {
-    int res = await DbManager.db.insert("$tableName", friend.toMap());
+    int id = await DbManager.db.insert("$tableName", friend.toMap());
 
-    print('FriendInviting new record id = $res');
+    friend.id = id;
 
-    return res;
+    return id;
+  }
+
+  // 修改记录状态
+  static Future<int> updateState(int id,int state) async {
+    var dealTime = DateTime.now().millisecondsSinceEpoch;
+
+    var count = await DbManager.db.rawUpdate('update $tableName set state = ?, dealTime = ? where id = ?',[state, dealTime, id]);
+
+    print('count = $count');
+
+    return count;
   }
 
 }

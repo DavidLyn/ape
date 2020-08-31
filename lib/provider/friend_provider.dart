@@ -50,30 +50,56 @@ class FriendProvider extends ChangeNotifier {
   }
 
   // 增加新朋友
-  void addFriend(FriendEntity friend) {
+//  void addFriend(FriendEntity friend) async {
+//    await FriendEntity.insert(friend);
+//
+//    _friends.add(friend);
+//
+//    notifyListeners();
+//  }
+  void addFriend(int index) async {
+    FriendInvitingEntity invitingEntity = _friendsInviting[index];
+
+    FriendEntity friend = FriendEntity();
+
+    friend.uid = invitingEntity.uid;
+    friend.friendId = invitingEntity.friendId;
+    friend.nickname = invitingEntity.nickname;
+    friend.avatar = invitingEntity.avatar;
+    friend.profile = invitingEntity.profile;
+    friend.state = 1;
+    friend.isValid = 1;
+    friend.friendTime = DateTime.now();
+
+    // 添加好友记录
+    await FriendEntity.insert(friend);
     _friends.add(friend);
 
-    FriendEntity.insert(friend);
+    // 修改邀请记录状态
+    FriendInvitingEntity.updateState(invitingEntity.id, 1);
 
     notifyListeners();
   }
 
   // 增加 加友申请
-  void addFriendAskfor(FriendAskforEntity friendAskfor) {
-    _friendsAskfor.insert(0, friendAskfor);
+  void addFriendAskfor(FriendAskforEntity friendAskfor) async {
+    await FriendAskforEntity.insert(friendAskfor);
 
-    FriendAskforEntity.insert(friendAskfor);
+    _friendsAskfor.insert(0, friendAskfor);
 
     notifyListeners();
   }
 
   // 增加 加友邀约
-  void addFriendInviting(FriendInvitingEntity friendInviting) {
-    _friendsInviting.insert(0, friendInviting);
+  void addFriendInviting(FriendInvitingEntity friendInviting) async {
 
-    FriendInvitingEntity.insert(friendInviting);
+    await FriendInvitingEntity.insert(friendInviting);
+
+    _friendsInviting.insert(0, friendInviting);
 
     notifyListeners();
   }
+
+  // 增加 好友
 
 }

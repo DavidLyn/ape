@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 
 import 'package:ape/global/global_router.dart';
 import 'package:ape/provider/friend_provider.dart';
 import 'package:ape/common/widget/app_bar_with_one_icon.dart';
+import 'package:ape/entity/friend_inviting_entity.dart';
 
 /// 好友管理
 class FriendManagement extends StatefulWidget {
@@ -270,39 +272,80 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
   Widget build(BuildContext context) {
     return ListView.separated(
       itemBuilder: (BuildContext context, int index) {
-        return GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          child: ListTile(
-            leading: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(Provider
-                      .of<FriendProvider>(context)
-                      .friendsInviting[index].avatar),
-                  fit: BoxFit.fill,
-                ),
+        return ListTile(
+          leading: Container(
+            height: 45,
+            width: 45,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: CachedNetworkImageProvider(Provider
+                    .of<FriendProvider>(context)
+                    .friendsInviting[index].avatar),
+                fit: BoxFit.fill,
               ),
             ),
-            title: Text(Provider
-                .of<FriendProvider>(context)
-                .friendsInviting[index].nickname),
-            subtitle: Text(Provider
-                .of<FriendProvider>(context)
-                .friendsInviting[index].profile),
-            trailing: Icon(Icons.sort),
           ),
+          title: Text(Provider
+              .of<FriendProvider>(context)
+              .friendsInviting[index].nickname),
+          subtitle: Text(Provider
+              .of<FriendProvider>(context)
+              .friendsInviting[index].leavingWords),
+          trailing: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            child: Icon(Icons.more_vert),
+            onTap: () async {
+              var result = await showCupertinoModalPopup(
+                context: context,
+                builder: (context) {
+                  return CupertinoActionSheet(
+                    //title: Text('提示'),
+                    //message: Text('选择性别'),
+                    actions: <Widget>[
+                      CupertinoActionSheetAction(
+                        child: Text('接受'),
+                        onPressed: () {
+                          Navigator.of(context).pop(1);
+                        },
+                      ),
+                      CupertinoActionSheetAction(
+                        child: Text('拒绝'),
+                        onPressed: () {
+                          Navigator.of(context).pop(2);
+                        },
+                      ),
+                      CupertinoActionSheetAction(
+                        child: Text('忽略'),
+                        onPressed: () {
+                          Navigator.of(context).pop(0);
+                        },
+                      ),
+                    ],
+                    cancelButton: CupertinoActionSheetAction(
+                      child: Text('取消'),
+                      onPressed: () {
+                        Navigator.of(context).pop(9);
+                      },
+                    ),
+                  );
+                },
+              );
 
-          onTap: () {
-            Map<String, String> params = {
-              'uid': Provider.of<FriendProvider>(context, listen: false).friendsInviting[index].friendId.toString(),
-            };
+              var id = Provider.of<FriendProvider>(context,listen: false).friendsInviting[index].id;
+              switch (result) {
+                case 1 : {    // 接受
+                  Provider.of<FriendProvider>(context,listen: false).addFriend(index);
+                  break;
+                }
+                case 2 : {    // 拒绝
+                  FriendInvitingEntity.updateState(id, 2);
+                  break;
+                }
+              }
 
-            NavigatorUtils.push(
-                context, GlobalRouter.friendSetting, params: params);
-          },
+            },
+          ),
         );
       },
       separatorBuilder: (BuildContext context, int index) {

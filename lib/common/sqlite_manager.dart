@@ -100,11 +100,11 @@ class DbManager {
   // 测试
   static testDB() async {
     int id1 = await db.rawInsert(
-        'INSERT INTO Test(name, value, num) VALUES("some name", 1234, 456.789)');
-    print('DB inserted1: $id1');
+        'INSERT INTO Test(xid, name, value, num) VALUES(null, "some name", 1234, 456.789)');
+    print('Table test inserted: $id1');
 
     List<Map> list = await db.rawQuery('SELECT * FROM Test');
-    print('DB list: $list');
+    print('Table test list: $list');
 
   }
 

@@ -50,13 +50,6 @@ class FriendProvider extends ChangeNotifier {
   }
 
   // 增加新朋友
-//  void addFriend(FriendEntity friend) async {
-//    await FriendEntity.insert(friend);
-//
-//    _friends.add(friend);
-//
-//    notifyListeners();
-//  }
   void addFriend(int index) async {
     FriendInvitingEntity invitingEntity = _friendsInviting[index];
 
@@ -100,6 +93,14 @@ class FriendProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // 增加 好友
+  // 拒绝 邀约
+  void rejectInviting(int index) async {
+    var id = _friendsInviting[index].id;
+
+    FriendInvitingEntity.updateState(id, 2);
+    _friendsInviting[index].state = 2;
+
+    notifyListeners();
+  }
 
 }

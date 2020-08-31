@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ape/common/widget/app_bar_with_one_icon.dart';
 
 /// 设置好友信息
 class FriendSetting extends StatefulWidget {
@@ -29,21 +30,15 @@ class _FriendSettingState extends State<FriendSetting> {
     return SafeArea(
         child: WillPopScope(
           child: Scaffold(
-            appBar: AppBar(
-              elevation: 0.5,
-              brightness: Brightness.light,
-              backgroundColor: Colors.white,
-              iconTheme: IconThemeData(color: Colors.black),
-              textTheme: TextTheme(title: TextStyle(color: Colors.black,fontSize: 18)),
-              leading: BackButton(),
-              title: Text('资料设置'),
-              centerTitle: true,
-              actions: <Widget>[
-                IconButton(icon: Icon(Icons.add),onPressed: (){
+              appBar: AppBarWithOneIcon(
+                backgroundColor: Colors.green,
+                centerTitle: '资料设置',
+                actionIcon: Icon(Icons.add),
+                actionName: '添加',
+                onPressed: (){
 
-                },),
-              ],
-            ),
+                },
+              ),
             body: Column(
               children: <Widget>[
                 Text('Hello world!'),

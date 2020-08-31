@@ -98,8 +98,6 @@ class FriendInvitingEntity {
 
     var count = await DbManager.db.rawUpdate('update $tableName set state = ?, dealTime = ? where id = ?',[state, dealTime, id]);
 
-    print('count = $count');
-
     return count;
   }
 

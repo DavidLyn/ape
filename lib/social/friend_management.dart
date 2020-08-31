@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/provider/friend_provider.dart';
 import 'package:ape/common/widget/app_bar_with_one_icon.dart';
-import 'package:ape/entity/friend_inviting_entity.dart';
 
 /// 好友管理
 class FriendManagement extends StatefulWidget {
@@ -332,14 +331,13 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
                 },
               );
 
-              var id = Provider.of<FriendProvider>(context,listen: false).friendsInviting[index].id;
               switch (result) {
                 case 1 : {    // 接受
                   Provider.of<FriendProvider>(context,listen: false).addFriend(index);
                   break;
                 }
                 case 2 : {    // 拒绝
-                  FriendInvitingEntity.updateState(id, 2);
+                  Provider.of<FriendProvider>(context,listen: false).rejectInviting(index);
                   break;
                 }
               }

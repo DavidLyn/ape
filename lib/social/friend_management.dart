@@ -315,7 +315,7 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
                         },
                       ),
                       CupertinoActionSheetAction(
-                        child: Text('忽略'),
+                        child: Text('删除'),
                         onPressed: () {
                           Navigator.of(context).pop(0);
                         },
@@ -338,6 +338,9 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
                 }
                 case 2 : {    // 拒绝
                   Provider.of<FriendProvider>(context,listen: false).rejectInviting(index);
+                  break;
+                }
+                case 3 :{     // 删除
                   break;
                 }
               }

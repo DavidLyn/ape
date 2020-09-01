@@ -31,21 +31,17 @@ class FriendProvider extends ChangeNotifier {
       _friends.add(obj);
     }
 
-    print('_friends length = ${_friends.length}');
-
     var askforList = await FriendAskforEntity.getFriendAskforList();
     for (var obj in askforList) {
       _friendsAskfor.add(obj);
+      print('FriendAskfor from db = ${_friendsAskfor[_friendsAskfor.length-1].toMap()}');
     }
-
-    print('_friendsAskfor length = ${_friendsAskfor.length}');
 
     var invitingList = await FriendInvitingEntity.getFriendInvitingList();
     for (var obj in invitingList) {
       _friendsInviting.add(obj);
+      print('FriendInviting from db = ${_friendsInviting[_friendsInviting.length-1].toMap()}');
     }
-
-    print('_friendsInviting length = ${_friendsInviting.length}');
 
   }
 
@@ -86,9 +82,15 @@ class FriendProvider extends ChangeNotifier {
   // 增加 加友邀约
   void addFriendInviting(FriendInvitingEntity friendInviting) async {
 
+    print('------------------------------> addFriendInviting');
+
     await FriendInvitingEntity.insert(friendInviting);
 
     _friendsInviting.insert(0, friendInviting);
+
+    for (var obj in _friendsInviting) {
+      print('_friendsInviting from list : ${obj.toMap()}');
+    }
 
     notifyListeners();
   }

@@ -8,6 +8,7 @@ class FriendInvitingEntity {
   static String tableName = 'FriendInviting';
 
   int id;                 // 主键
+  String msgId;           // 消息ID,用于关联 请求 和 响应
   int uid;                // 本 App 用户id
   int friendId;           // 好友 用户id
   String nickname;        // 昵称
@@ -22,6 +23,7 @@ class FriendInvitingEntity {
 
   FriendInvitingEntity({
     this.id,
+    this.msgId,
     this.uid,
     this.friendId,
     this.nickname,
@@ -38,6 +40,7 @@ class FriendInvitingEntity {
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
     map['id'] = id;
+    map['msgId'] = msgId;
     map['uid'] = uid;
     map['friendId'] = friendId;
     map['nickname'] = nickname;
@@ -55,6 +58,7 @@ class FriendInvitingEntity {
   static FriendInvitingEntity fromMap(Map<String, dynamic> map) {
     FriendInvitingEntity friendInviting = new FriendInvitingEntity();
     friendInviting.id = map['id'];
+    friendInviting.msgId = map['msgId'];
     friendInviting.uid = map['uid'];
     friendInviting.friendId = map['friendId'];
     friendInviting.nickname = map['nickname'];

@@ -32,6 +32,7 @@ class DbManager {
 
           // 好友申请表 - FriendAskfor
           // id - 自增序号,主键
+          // msgId - 消息ID,用于关联 请求 和 响应
           // uid - 当前 App 用户id
           // friendId - 好友用户id
           // nickname - 好友昵称
@@ -44,10 +45,11 @@ class DbManager {
           // isValid - 1:有效 0:删除
           // deleteTime - 删除时间
           await db.execute(
-              'CREATE TABLE FriendAskfor (id INTEGER PRIMARY KEY, uid INTEGER, friendId INTEGER, nickname TEXT, avatar TEXT, profile TEXT, leavingWords TEXT, askforTime INTEGER, state INTEGER, responseTime INTEGER, isValid INTEGER, deleteTime INTEGER)');
+              'CREATE TABLE FriendAskfor (id INTEGER PRIMARY KEY, msgId TEXT, uid INTEGER, friendId INTEGER, nickname TEXT, avatar TEXT, profile TEXT, leavingWords TEXT, askforTime INTEGER, state INTEGER, responseTime INTEGER, isValid INTEGER, deleteTime INTEGER)');
 
           // 好友邀约表 - FriendInviting
           // id - 自增序号,主键
+          // msgId - 消息ID,用于关联 请求 和 响应
           // uid - 当前 App 用户id
           // friendId - 好友用户id
           // nickname - 好友昵称
@@ -60,7 +62,7 @@ class DbManager {
           // isValid - 1:有效 0:删除
           // deleteTime - 删除时间
           await db.execute(
-              'CREATE TABLE FriendInviting (id INTEGER PRIMARY KEY, uid INTEGER, friendId INTEGER, nickname TEXT, avatar TEXT, profile TEXT, leavingWords TEXT, recieveTime INTEGER, state INTEGER, dealTime INTEGER, isValid INTEGER, deleteTime INTEGER)');
+              'CREATE TABLE FriendInviting (id INTEGER PRIMARY KEY, msgId TEXT, uid INTEGER, friendId INTEGER, nickname TEXT, avatar TEXT, profile TEXT, leavingWords TEXT, recieveTime INTEGER, state INTEGER, dealTime INTEGER, isValid INTEGER, deleteTime INTEGER)');
 
           // 好友表 - Friend
           // id - 自增序号,主键

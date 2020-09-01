@@ -26,7 +26,7 @@ class MQTTMessage {
         msgId = json['msgId'],
         senderId = json['senderId'],
         receiverId = json['receiverId'],
-        sendTime = json['sendTime'],     //DateTime.parse(json['sendTime']),
+        sendTime = json['sendTime'] != null ? DateTime.parse(json['sendTime']) : null,
         payload = json['payload'];
 
   Map<String, dynamic> toJson() {

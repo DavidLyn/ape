@@ -24,7 +24,6 @@ class MQTTProvider {
 
   // note : tcp://192.168.1.101 or 192.168.1.101:1883 all are error!!!
   static const mqttServer = '47.94.248.253';
-  //static const mqttServer = '192.168.1.101';
 
   static const int keepAlivePeriod = 30;
 
@@ -227,7 +226,8 @@ class MQTTProvider {
   /// ------------------------  MQTT 消息处理  ------------------------
   static void dealMQTTMessage(String topic, MQTTMessage message) {
 
-    if (message.command == commandMakeFriend) {
+    // 注意 : 经测试向 xxx topic 发送消息时, 在 xxx topic 上也能收到该消息, 因此过滤掉此消息
+    if (message.command == commandMakeFriend && topic != topicOfCatEars) {
       makeFriend(message);
     }
 
@@ -239,6 +239,7 @@ class MQTTProvider {
 
     var friendInviting = FriendInvitingEntity();
     friendInviting.uid = UserInfo.user.uid;
+    friendInviting.msgId = message.msgId;
     friendInviting.friendId = int.parse(map['friendId']);
     friendInviting.nickname = map['nickname'];
     friendInviting.avatar = map['avatar'];

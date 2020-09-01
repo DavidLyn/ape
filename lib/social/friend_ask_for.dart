@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:flutter/material.dart';
 import 'package:ape/mqtt/mqtt_message.dart';
@@ -7,6 +8,7 @@ import 'package:ape/mqtt/mqtt_provider.dart';
 import 'package:ape/common/constants.dart';
 import 'package:ape/entity/friend_askfor_entity.dart';
 import 'package:ape/provider/friend_provider.dart';
+import 'package:ape/common/widget/app_bar_with_one_icon.dart';
 
 /// 发出加好友请求
 class FriendAskFor extends StatefulWidget {
@@ -40,42 +42,33 @@ class _FriendAskForState extends State<FriendAskFor> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0.5,
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
-          textTheme: TextTheme(title: TextStyle(color: Colors.black,fontSize: 18)),
-          leading: BackButton(),
-          title: Text('加友请求'),
-          centerTitle: true,
-          actions: <Widget>[
-            IconButton(icon: Icon(Icons.send),onPressed: (){
-              _sendAskFor(context);
-            },),
-          ],
-        ),
-        body: Padding(
-            padding: EdgeInsets.only(left: 10,right: 10),
-            child: TextField(
-                maxLength: 200,
-                maxLines: 6,
-                autofocus: true,
-                controller: _controller,
-                keyboardType: TextInputType.text,
-                //style: TextStyles.textDark14,
-                decoration: InputDecoration(
-                  hintText: '输入加好友请求',
-                  border: InputBorder.none,
-                  //hintStyle: TextStyles.textGrayC14
-                )
-            ),
+    return Scaffold(
+      appBar: AppBarWithOneIcon(
+        backgroundColor: Colors.green,
+        centerTitle: '加友请求',
+        actionIcon: Icon(Icons.playlist_add_check),
+        actionName: '请求',
+        onPressed: () {
+          _sendAskFor(context);
+        },
+      ),
+      body: Padding(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        child: TextField(
+            maxLength: 200,
+            maxLines: 6,
+            autofocus: true,
+            controller: _controller,
+            keyboardType: TextInputType.text,
+            //style: TextStyles.textDark14,
+            decoration: InputDecoration(
+              hintText: '输入加好友请求',
+              border: InputBorder.none,
+              //hintStyle: TextStyles.textGrayC14
+            )
         ),
       ),
     );
-
   }
 
   // 发送加友申请
@@ -88,6 +81,9 @@ class _FriendAskForState extends State<FriendAskFor> {
     message.receiverId = 0;     // 0 代表 后台
     message.sendTime = DateTime.now();
 
+    // 设置 消息ID
+    message.msgId = Uuid().v1();
+
     Map<String,String> map = {'friendId':widget.friendId.toString(),
       'leavingWords':_controller.text};
 
@@ -97,6 +93,7 @@ class _FriendAskForState extends State<FriendAskFor> {
       // 向 FriendAskfor 表写入记录
       var friendAskfor = FriendAskforEntity();
       friendAskfor.uid = UserInfo.user.uid;
+      friendAskfor.msgId = message.msgId;
       friendAskfor.friendId = widget.friendId;
       friendAskfor.nickname = widget.nickname;
       friendAskfor.avatar = widget.avatar;

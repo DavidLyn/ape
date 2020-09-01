@@ -264,6 +264,7 @@ class MQTTProvider {
     var msgId = message.msgId;
     var result = map['result'];
 
+    Provider.of<FriendProvider>(appContext,listen: false).invitingResponse(msgId, result);
 
   }
 

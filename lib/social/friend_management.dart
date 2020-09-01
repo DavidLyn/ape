@@ -333,7 +333,7 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
 
               switch (result) {
                 case 1 : {    // 接受
-                  Provider.of<FriendProvider>(context,listen: false).addFriend(index);
+                  Provider.of<FriendProvider>(context,listen: false).acceptInviting(index);
                   break;
                 }
                 case 2 : {    // 拒绝

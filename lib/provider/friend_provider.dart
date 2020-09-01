@@ -38,20 +38,19 @@ class FriendProvider extends ChangeNotifier {
     var askforList = await FriendAskforEntity.getFriendAskforList();
     for (var obj in askforList) {
       _friendsAskfor.add(obj);
-      print('FriendAskfor from db = ${_friendsAskfor[_friendsAskfor.length-1].toMap()}');
+      //print('FriendAskfor from db = ${_friendsAskfor[_friendsAskfor.length-1].toMap()}');
     }
 
     var invitingList = await FriendInvitingEntity.getFriendInvitingList();
     for (var obj in invitingList) {
       _friendsInviting.add(obj);
-      print('FriendInviting from db = ${_friendsInviting[_friendsInviting.length-1].toMap()}');
+      //print('FriendInviting from db = ${_friendsInviting[_friendsInviting.length-1].toMap()}');
     }
 
   }
 
-  // 增加新朋友
-  void addFriend(int index) async {
-    FriendInvitingEntity invitingEntity = _friendsInviting[index];
+  // 接受邀约 增加新朋友
+  void acceptInviting(int index) async {
 
     // 发送 邀请 响应
     var message = MQTTMessage();
@@ -72,11 +71,11 @@ class FriendProvider extends ChangeNotifier {
 
     // 在数据库中添加好友记录
     FriendEntity friend = FriendEntity();
-    friend.uid = invitingEntity.uid;
-    friend.friendId = invitingEntity.friendId;
-    friend.nickname = invitingEntity.nickname;
-    friend.avatar = invitingEntity.avatar;
-    friend.profile = invitingEntity.profile;
+    friend.uid = _friendsInviting[index].uid;
+    friend.friendId = _friendsInviting[index].friendId;
+    friend.nickname = _friendsInviting[index].nickname;
+    friend.avatar = _friendsInviting[index].avatar;
+    friend.profile = _friendsInviting[index].profile;
     friend.state = 1;
     friend.isValid = 1;
     friend.friendTime = DateTime.now();
@@ -84,9 +83,38 @@ class FriendProvider extends ChangeNotifier {
     await FriendEntity.insert(friend);
     _friends.add(friend);
 
+    print('################################### acceptInviting add friend ok');
+
     // 修改邀请记录状态
-    FriendInvitingEntity.updateState(invitingEntity.id, 1);
-    invitingEntity.state = 1;
+    FriendInvitingEntity.updateState(_friendsInviting[index].id, 1);
+    _friendsInviting[index].state = 1;
+
+    notifyListeners();
+  }
+
+  // 拒绝 邀约
+  void rejectInviting(int index) async {
+
+    // 发送 邀请 响应
+    var message = MQTTMessage();
+    message.type = 1;    // 响应报文
+    message.command = MQTTProvider.commandMakeFriendResponse;
+    message.senderId = UserInfo.user.uid;
+    message.receiverId = 0;     // 0 代表 后台
+    message.sendTime = DateTime.now();
+    message.msgId = _friendsInviting[index].msgId;
+
+    Map<String,String> map = {'result':'no','friendId':_friendsInviting[index].friendId.toString()};
+    message.payload = jsonEncode(map);
+
+    if (!MQTTProvider.publish(message: jsonEncode(message))) {
+      print('Make friend response sended error!');
+      return;
+    }
+
+    // 修改邀请记录状态
+    FriendInvitingEntity.updateState(_friendsInviting[index].id, 2);
+    _friendsInviting[index].state = 2;
 
     notifyListeners();
   }
@@ -106,20 +134,6 @@ class FriendProvider extends ChangeNotifier {
     await FriendInvitingEntity.insert(friendInviting);
 
     _friendsInviting.insert(0, friendInviting);
-
-    for (var obj in _friendsInviting) {
-      print('_friendsInviting from list : ${obj.toMap()}');
-    }
-
-    notifyListeners();
-  }
-
-  // 拒绝 邀约
-  void rejectInviting(int index) async {
-    var id = _friendsInviting[index].id;
-
-    FriendInvitingEntity.updateState(id, 2);
-    _friendsInviting[index].state = 2;
 
     notifyListeners();
   }
@@ -164,6 +178,8 @@ class FriendProvider extends ChangeNotifier {
 
       await FriendEntity.insert(friend);
       _friends.add(friend);
+
+      print('################################### invitingResponse add friend ok');
 
     }
 

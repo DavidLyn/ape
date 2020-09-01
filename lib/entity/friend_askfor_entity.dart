@@ -96,5 +96,15 @@ class FriendAskforEntity {
     return id;
   }
 
+  // 修改记录状态
+  static Future<int> updateState(int id,int state) async {
+    var responseTime = DateTime.now().millisecondsSinceEpoch;
+
+    var count = await DbManager.db.rawUpdate('update $tableName set state = ?, responseTime = ? where id = ?',[state, responseTime, id]);
+
+    return count;
+  }
+
+
 }
 

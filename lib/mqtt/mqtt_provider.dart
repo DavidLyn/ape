@@ -14,7 +14,8 @@ import 'package:ape/provider/friend_provider.dart';
 /// MQTT provider   去掉 extends ChangeNotifier
 class MQTTProvider {
 
-  static const commandMakeFriend = 'makeFriend';     // 申请加好友
+  static const commandMakeFriend = 'makeFriend';                     // 申请加好友
+  static const commandMakeFriendResponse = 'makeFriendResponse';     // 申请加好友响应
 
   // 向后台发送消息的 topic
   static const topicOfCatEars = 'cat/ears';
@@ -228,12 +229,15 @@ class MQTTProvider {
 
     // 注意 : 经测试向 xxx topic 发送消息时, 在 xxx topic 上也能收到该消息, 因此过滤掉此消息
     if (message.command == commandMakeFriend && topic != topicOfCatEars) {
-      makeFriend(message);
+      _makeFriend(message);
+    } else
+    if (message.command == commandMakeFriendResponse && topic != topicOfCatEars) {
+      _makeFriendResponse(message);
     }
-
   }
 
-  static void makeFriend(MQTTMessage message) {
+  /// 加友邀约 请求消息处理
+  static void _makeFriend(MQTTMessage message) {
 
     Map<String,dynamic> map = json.decode(message.payload);
 
@@ -252,4 +256,15 @@ class MQTTProvider {
     Provider.of<FriendProvider>(appContext,listen: false).addFriendInviting(friendInviting);
 
   }
+
+  /// 加友邀约 响应消息处理
+  static void _makeFriendResponse(MQTTMessage message) {
+    Map<String,dynamic> map = json.decode(message.payload);
+
+    var msgId = message.msgId;
+    var result = map['result'];
+
+
+  }
+
 }

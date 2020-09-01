@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ape/entity/friend_entity.dart';
 import 'package:ape/entity/friend_askfor_entity.dart';
 import 'package:ape/entity/friend_inviting_entity.dart';
+import 'package:ape/mqtt/mqtt_provider.dart';
+import 'package:ape/mqtt/mqtt_message.dart';
+import 'package:ape/common/constants.dart';
 
 /// 保存 好友 信息的 provider
 class FriendProvider extends ChangeNotifier {
@@ -49,8 +53,25 @@ class FriendProvider extends ChangeNotifier {
   void addFriend(int index) async {
     FriendInvitingEntity invitingEntity = _friendsInviting[index];
 
-    FriendEntity friend = FriendEntity();
+    // 发送 邀请 响应
+    var message = MQTTMessage();
+    message.type = 1;    // 响应报文
+    message.command = MQTTProvider.commandMakeFriendResponse;
+    message.senderId = UserInfo.user.uid;
+    message.receiverId = 0;     // 0 代表 后台
+    message.sendTime = DateTime.now();
+    message.msgId = _friendsInviting[index].msgId;
 
+    Map<String,String> map = {'result':'yes','friendId':_friendsInviting[index].friendId.toString()};
+    message.payload = jsonEncode(map);
+
+    if (!MQTTProvider.publish(message: jsonEncode(message))) {
+      print('Make friend response sended error!');
+      return;
+    }
+
+    // 在数据库中添加好友记录
+    FriendEntity friend = FriendEntity();
     friend.uid = invitingEntity.uid;
     friend.friendId = invitingEntity.friendId;
     friend.nickname = invitingEntity.nickname;
@@ -60,12 +81,12 @@ class FriendProvider extends ChangeNotifier {
     friend.isValid = 1;
     friend.friendTime = DateTime.now();
 
-    // 添加好友记录
     await FriendEntity.insert(friend);
     _friends.add(friend);
 
     // 修改邀请记录状态
     FriendInvitingEntity.updateState(invitingEntity.id, 1);
+    invitingEntity.state = 1;
 
     notifyListeners();
   }
@@ -81,8 +102,6 @@ class FriendProvider extends ChangeNotifier {
 
   // 增加 加友邀约
   void addFriendInviting(FriendInvitingEntity friendInviting) async {
-
-    print('------------------------------> addFriendInviting');
 
     await FriendInvitingEntity.insert(friendInviting);
 
@@ -101,6 +120,52 @@ class FriendProvider extends ChangeNotifier {
 
     FriendInvitingEntity.updateState(id, 2);
     _friendsInviting[index].state = 2;
+
+    notifyListeners();
+  }
+
+  // 加友邀约响应
+  void invitingResponse(String msgId, String result) async {
+
+    int index = -1;
+
+    for (int i = 0; i < _friendsAskfor.length; i++) {
+      if (_friendsAskfor[i].msgId == msgId) {
+        index = i;
+        break;
+      }
+    }
+
+    if (index == -1) {
+      print('!!!!!!!!!!!error : no equal msgId = $msgId');
+      return;
+    }
+
+    var state = 2;   // 缺省 拒绝
+    if (result == 'yes') {
+      state = 1;     // 接受
+    }
+
+    // 修改 加友请求记录 状态
+    FriendAskforEntity.updateState(_friendsAskfor[index].id, state);
+    _friendsAskfor[index].state = state;
+
+    // 接受时在数据库中添加好友记录
+    if (state == 1) {
+      FriendEntity friend = FriendEntity();
+      friend.uid = _friendsAskfor[index].uid;
+      friend.friendId = _friendsAskfor[index].friendId;
+      friend.nickname = _friendsAskfor[index].nickname;
+      friend.avatar = _friendsAskfor[index].avatar;
+      friend.profile = _friendsAskfor[index].profile;
+      friend.state = 1;
+      friend.isValid = 1;
+      friend.friendTime = DateTime.now();
+
+      await FriendEntity.insert(friend);
+      _friends.add(friend);
+
+    }
 
     notifyListeners();
   }

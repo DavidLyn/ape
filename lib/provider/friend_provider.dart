@@ -84,8 +84,11 @@ class FriendProvider extends ChangeNotifier {
     _friends.add(friend);
 
     // 修改邀请记录状态
-    FriendInvitingEntity.updateState(_friendsInviting[index].id, 1);
+    var dealTime = DateTime.now();
+
+    FriendInvitingEntity.updateState(_friendsInviting[index].id, 1, dealTime);
     _friendsInviting[index].state = 1;
+    _friendsInviting[index].dealTime = dealTime;
 
     notifyListeners();
   }
@@ -111,8 +114,11 @@ class FriendProvider extends ChangeNotifier {
     }
 
     // 修改邀请记录状态
-    FriendInvitingEntity.updateState(_friendsInviting[index].id, 2);
+    var dealTime = DateTime.now();
+
+    FriendInvitingEntity.updateState(_friendsInviting[index].id, 2, dealTime);
     _friendsInviting[index].state = 2;
+    _friendsInviting[index].dealTime = dealTime;
 
     notifyListeners();
   }

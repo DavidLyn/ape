@@ -12,4 +12,12 @@ class TimelineUtils {
   static String format(int ms, int locTimeMs) {
     return TimelineUtil.format(ms, locTimeMs: locTimeMs, locale: myLocale);
   }
+
+  static String formatByDatetime(DateTime ms, DateTime locTimeMs) {
+    if (ms == null || locTimeMs == null)
+      return '';
+
+    return TimelineUtil.format(ms.millisecondsSinceEpoch, locTimeMs: locTimeMs.millisecondsSinceEpoch, locale: myLocale);
+  }
+
 }

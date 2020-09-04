@@ -7,6 +7,7 @@ import 'package:ape/global/global_router.dart';
 import 'package:ape/provider/friend_provider.dart';
 import 'package:ape/common/widget/app_bar_with_one_icon.dart';
 import 'package:ape/entity/friend_inviting_entity.dart';
+import 'package:ape/util/timeline_utils.dart';
 
 /// 好友管理
 class FriendManagement extends StatefulWidget {
@@ -273,83 +274,6 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
     return ListView.separated(
       itemBuilder: (BuildContext context, int index) {
         return _createItem(context, index);
-//        return ListTile(
-//          leading: Container(
-//            height: 45,
-//            width: 45,
-//            decoration: BoxDecoration(
-//              shape: BoxShape.circle,
-//              image: DecorationImage(
-//                image: CachedNetworkImageProvider(Provider
-//                    .of<FriendProvider>(context)
-//                    .friendsInviting[index].avatar),
-//                fit: BoxFit.fill,
-//              ),
-//            ),
-//          ),
-//          title: Text(Provider
-//              .of<FriendProvider>(context)
-//              .friendsInviting[index].nickname),
-//          subtitle: Text(Provider
-//              .of<FriendProvider>(context)
-//              .friendsInviting[index].leavingWords),
-//          trailing: GestureDetector(
-//            behavior: HitTestBehavior.opaque,
-//            child: Icon(Icons.more_vert),
-//            onTap: () async {
-//              var result = await showCupertinoModalPopup(
-//                context: context,
-//                builder: (context) {
-//                  return CupertinoActionSheet(
-//                    //title: Text('提示'),
-//                    //message: Text('选择性别'),
-//                    actions: <Widget>[
-//                      CupertinoActionSheetAction(
-//                        child: Text('接受'),
-//                        onPressed: () {
-//                          Navigator.of(context).pop(1);
-//                        },
-//                      ),
-//                      CupertinoActionSheetAction(
-//                        child: Text('拒绝'),
-//                        onPressed: () {
-//                          Navigator.of(context).pop(2);
-//                        },
-//                      ),
-//                      CupertinoActionSheetAction(
-//                        child: Text('删除'),
-//                        onPressed: () {
-//                          Navigator.of(context).pop(0);
-//                        },
-//                      ),
-//                    ],
-//                    cancelButton: CupertinoActionSheetAction(
-//                      child: Text('取消'),
-//                      onPressed: () {
-//                        Navigator.of(context).pop(9);
-//                      },
-//                    ),
-//                  );
-//                },
-//              );
-//
-//              switch (result) {
-//                case 1 : {    // 接受
-//                  Provider.of<FriendProvider>(context,listen: false).acceptInviting(index);
-//                  break;
-//                }
-//                case 2 : {    // 拒绝
-//                  Provider.of<FriendProvider>(context,listen: false).rejectInviting(index);
-//                  break;
-//                }
-//                case 3 :{     // 删除
-//                  break;
-//                }
-//              }
-//
-//            },
-//          ),
-//        );
       },
       separatorBuilder: (BuildContext context, int index) {
         return Divider();
@@ -367,6 +291,12 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          // 条目间的分隔区域
+          Container(
+            //margin: EdgeInsets.only(top:  10),
+            height: 5,
+            color: Color(0xffEFEFEF),
+          ),
           _title(context, invitingEntity, index),
           _content(context, invitingEntity),
           _bottom(context, invitingEntity),
@@ -444,8 +374,6 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
                     context: context,
                     builder: (context) {
                       return CupertinoActionSheet(
-                        //title: Text('提示'),
-                        //message: Text('选择性别'),
                         actions: <Widget>[
                           CupertinoActionSheetAction(
                             child: Text('接受'),
@@ -507,10 +435,8 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
               ),
             )
                 : SizedBox.shrink(),
-
           ],
         ),
-
       );
   }
 
@@ -529,25 +455,81 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
   // 结尾
   Widget _bottom(BuildContext context, FriendInvitingEntity invitingEntity) {
     return Container(
-      child: Column(
+      margin: EdgeInsets.only(top: 10.0, bottom: 10.0,),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          // 内部分割线
+          // --- 状态
           Container(
-            margin: EdgeInsets.only(left: 15, right: 15, bottom: 10,top: 10),
-            height: 1,
-            color: Color(0xffDBDBDB),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.green),
+              borderRadius: BorderRadius.circular(3.0),
+            ),
+            margin: EdgeInsets.only(left: 20),
+            padding: EdgeInsets.fromLTRB(3, 3, 3, 3),
+            child: Text(
+              _getStateName(invitingEntity.state),
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.green,
+              ),
+            ),
           ),
-          // 内容区域
 
-          // 条目间的分隔区域
+          // --- 时间
           Container(
-            margin: EdgeInsets.only(top:  10),
-            height: 12,
-            color: Color(0xffEFEFEF),
+            margin: EdgeInsets.only(right: 20),
+            child: Text(
+              _getTimeInfo(invitingEntity),
+              style: TextStyle(
+                //color: Colors.green,
+                fontSize: 10,
+              ),
+            ),
           ),
+
         ],
       ),
     );
+  }
+
+  // 获取 状态 名称
+  String _getStateName(int state) {
+
+    switch (state) {
+      case 0 : {
+        return '待处理';
+      }
+      case 1 : {
+        return '已接受';
+      }
+      case 2 : {
+        return '已拒绝';
+      }
+      default :
+        return 'none';
+    }
+  }
+
+  // 获取 时间 信息
+  String _getTimeInfo(FriendInvitingEntity invitingEntity) {
+
+    switch (invitingEntity.state) {
+      case 0 : {
+        return TimelineUtils.formatByDatetime(invitingEntity.recieveTime, DateTime.now()) + ' 收到';
+      }
+      case 1 : {
+        return TimelineUtils.formatByDatetime(invitingEntity.dealTime, DateTime.now()) + ' 接受';
+      }
+      case 2 : {
+        return TimelineUtils.formatByDatetime(invitingEntity.dealTime, DateTime.now()) + ' 拒绝';
+      }
+      default :
+        return 'none';
+    }
+
   }
 
 }

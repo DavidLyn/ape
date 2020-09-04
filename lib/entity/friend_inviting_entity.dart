@@ -97,10 +97,9 @@ class FriendInvitingEntity {
   }
 
   // 修改记录状态
-  static Future<int> updateState(int id,int state) async {
-    var dealTime = DateTime.now().millisecondsSinceEpoch;
+  static Future<int> updateState(int id,int state, DateTime dealTime) async {
 
-    var count = await DbManager.db.rawUpdate('update $tableName set state = ?, dealTime = ? where id = ?',[state, dealTime, id]);
+    var count = await DbManager.db.rawUpdate('update $tableName set state = ?, dealTime = ? where id = ?',[state, dealTime.millisecondsSinceEpoch, id]);
 
     return count;
   }

@@ -16,6 +16,7 @@ import 'package:ape/util/log_utils.dart';
 import 'package:ape/util/file_utils.dart';
 import 'package:ape/common/constants.dart';
 import 'package:ape/provider/friend_provider.dart';
+import 'package:ape/util/timeline_utils.dart';
 
 // 初始化 provider
 List<SingleChildWidget> _providers = [
@@ -58,6 +59,9 @@ void main() async {
 
   // 初始化 UserInfo
   UserInfo.init();
+
+  // 初始化 timeline
+  TimelineUtils.init();
 
   // 不加这句好像后面的 Provider 会报错
   Provider.debugCheckInvalidValueType = null;

@@ -252,6 +252,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 
     return Scaffold(
       appBar: MyAppBar(
+        backgroundColor: Colors.green,
         centerTitle: '个人信息',
       ),
       body: Column(

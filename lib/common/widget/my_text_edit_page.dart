@@ -50,7 +50,8 @@ class _MyTextEditPageState extends State<MyTextEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        title: widget.title,
+        backgroundColor: Colors.green,
+        centerTitle: widget.title,
         actionName: '保存',
         onPressed: () {
           if (_controller.text.isEmpty) {

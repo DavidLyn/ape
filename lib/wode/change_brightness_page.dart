@@ -40,7 +40,8 @@ class _ChangeBrightnessPageState extends State<ChangeBrightnessPage> {
 
     return Scaffold(
       appBar: const MyAppBar(
-        title: '夜间模式',
+        backgroundColor: Colors.green,
+        centerTitle: '夜间模式',
       ),
       body: ListView.separated(
           shrinkWrap: true,

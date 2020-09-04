@@ -83,8 +83,6 @@ class FriendProvider extends ChangeNotifier {
     await FriendEntity.insert(friend);
     _friends.add(friend);
 
-    print('################################### acceptInviting add friend ok');
-
     // 修改邀请记录状态
     FriendInvitingEntity.updateState(_friendsInviting[index].id, 1);
     _friendsInviting[index].state = 1;
@@ -178,8 +176,6 @@ class FriendProvider extends ChangeNotifier {
 
       await FriendEntity.insert(friend);
       _friends.add(friend);
-
-      print('################################### invitingResponse add friend ok');
 
     }
 

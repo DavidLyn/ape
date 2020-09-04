@@ -61,6 +61,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
+        backgroundColor: Colors.green,
         centerTitle: '关于猩猩',
       ),
       body: Column(

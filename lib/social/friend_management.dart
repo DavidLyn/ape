@@ -318,7 +318,11 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
                 // --- 头像
                 InkWell(
                   onTap: (){
-                    // to-do
+                    Map<String, String> params = {
+                      'uid': invitingEntity.uid.toString(),
+                    };
+
+                    NavigatorUtils.push(context, GlobalRouter.personHome,params: params);
                   },
                   child: Container(
                     width: 40.0,
@@ -387,12 +391,6 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
                               Navigator.of(context).pop(2);
                             },
                           ),
-                          CupertinoActionSheetAction(
-                            child: Text('删除'),
-                            onPressed: () {
-                              Navigator.of(context).pop(0);
-                            },
-                          ),
                         ],
                         cancelButton: CupertinoActionSheetAction(
                           child: Text('取消'),
@@ -411,9 +409,6 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
                     }
                     case 2 : {    // 拒绝
                       Provider.of<FriendProvider>(context,listen: false).rejectInviting(index);
-                      break;
-                    }
-                    case 3 :{     // 删除
                       break;
                     }
                   }
@@ -460,27 +455,9 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          // --- 状态
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.green),
-              borderRadius: BorderRadius.circular(3.0),
-            ),
-            margin: EdgeInsets.only(left: 20),
-            padding: EdgeInsets.fromLTRB(3, 3, 3, 3),
-            child: Text(
-              _getStateName(invitingEntity.state),
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.green,
-              ),
-            ),
-          ),
-
           // --- 时间
           Container(
-            margin: EdgeInsets.only(right: 20),
+            margin: EdgeInsets.only(left: 20),
             child: Text(
               _getTimeInfo(invitingEntity),
               style: TextStyle(
@@ -490,27 +467,40 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
             ),
           ),
 
+          // --- 删除
+          GestureDetector(
+            onTap: () {
+              showCupertinoDialog(
+                context: context,
+                builder: (context){
+                  return CupertinoAlertDialog(
+                    title: Text('提示'),
+                    content: Text('确认删除吗?'),
+                    actions: <Widget>[
+                      CupertinoDialogAction(child: Text('取消'),onPressed: (){
+                        Navigator.pop(context);
+                      },),
+                      CupertinoDialogAction(child: Text('确认'),onPressed: () async {
+                        await Provider.of<FriendProvider>(context,listen: false).deleteInviting(invitingEntity);
+                        Navigator.pop(context);
+                      },),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 20),
+              child: Icon(
+                Icons.delete_sweep,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+
         ],
       ),
     );
-  }
-
-  // 获取 状态 名称
-  String _getStateName(int state) {
-
-    switch (state) {
-      case 0 : {
-        return '待处理';
-      }
-      case 1 : {
-        return '已接受';
-      }
-      case 2 : {
-        return '已拒绝';
-      }
-      default :
-        return 'none';
-    }
   }
 
   // 获取 时间 信息

@@ -49,6 +49,7 @@ class FriendProvider extends ChangeNotifier {
 
   }
 
+  // ---------------------------------------------------------------------------
   // 接受邀约 增加新朋友
   void acceptInviting(int index) async {
 
@@ -123,6 +124,16 @@ class FriendProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // 删除 邀约
+  void deleteInviting(FriendInvitingEntity obj) {
+
+    _friendsInviting.remove(obj);
+    FriendInvitingEntity.delete(obj.id);
+
+    notifyListeners();
+  }
+
+  // ---------------------------------------------------------------------------
   // 增加 加友申请
   void addFriendAskfor(FriendAskforEntity friendAskfor) async {
     await FriendAskforEntity.insert(friendAskfor);

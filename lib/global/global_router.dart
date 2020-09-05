@@ -21,6 +21,8 @@ import 'package:ape/social/friend_setting.dart';
 import 'package:ape/social/friend_adding.dart';
 import 'package:ape/social/friend_ask_for.dart';
 
+import 'package:ape/common/personal_home_page.dart';
+
 /// 定义全局 Router 和初始化方法
 class GlobalRouter {
   static final splash = '/';
@@ -46,6 +48,9 @@ class GlobalRouter {
 
   // 通用 记录 页
   static final writing = '/common/writing';
+
+  // 共用 个人主页
+  static final personHome = '/common/personHome';
 
   static final  router = Router();
 
@@ -138,6 +143,13 @@ class GlobalRouter {
 
       return FriendAskFor(friendId:friendId,nickname:nickname,avatar:avatar,profile:profile,);
     }));
+
+    router.define(personHome,
+        handler: Handler(handlerFunc: (_, Map<String, List<String>> params) {
+          var uid = int.parse(params['uid']?.first);
+
+          return PersonalHomePage(uid: uid);
+        }));
 
   }
 }

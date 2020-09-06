@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ape/global/global_router.dart';
 
 import 'package:ape/common/animated_switcher.dart';
 import 'package:ape/common/widget/my_error_page.dart';
@@ -213,7 +214,11 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
+                        Map<String, String> params = {
+                          'uid': userInfo.uid.toString(),
+                        };
 
+                        NavigatorUtils.push(context, GlobalRouter.personFollow,params: params);
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: 30,),
@@ -229,7 +234,11 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
 
                     GestureDetector(
                       onTap: () {
+                        Map<String, String> params = {
+                          'uid': userInfo.uid.toString(),
+                        };
 
+                        NavigatorUtils.push(context, GlobalRouter.personFan,params: params);
                       },
                       child: Container(
                         margin: EdgeInsets.only(left: 30,),

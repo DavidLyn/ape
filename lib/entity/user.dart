@@ -1,7 +1,7 @@
 
 /// 用户实体类
 class User {
-  // 用户名
+  // 用户 id
   int uid;
 
   // 用户名

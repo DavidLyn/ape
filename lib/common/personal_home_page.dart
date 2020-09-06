@@ -131,6 +131,9 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
         : MyLoadingPage(title: '个人基本信息',);
   }
 
+  // 读取 用户 基本信息
+
+
   // 显示用户基本信息 widget
   Widget _showUserBasicInfo() {
     return Container(

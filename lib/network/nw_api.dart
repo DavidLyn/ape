@@ -5,6 +5,7 @@ class NWApi {
     static final baseApi = 'http://192.168.1.102:8080/api/cat';
 //  static final baseApi = 'http://172.16.40.36:8080/api/cat';
 
+  // ------------------------- 用户注册、登录相关 ---------------------------------
   // 手机号、密码登录 Post
   static final login = '/user/login';
 
@@ -28,5 +29,7 @@ class NWApi {
 
   // 搜索用户
   static final searchUserByMobileOrName = '/user/searchByMobileOrName';
+
+  // ------------------------------ 社交相关 ------------------------------------
 
 }

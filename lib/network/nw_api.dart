@@ -31,5 +31,7 @@ class NWApi {
   static final searchUserByMobileOrName = '/user/searchByMobileOrName';
 
   // ------------------------------ 社交相关 ------------------------------------
+  // 获取用户基本信息
+  static final getUserInfo = '/social/userInfo';
 
 }

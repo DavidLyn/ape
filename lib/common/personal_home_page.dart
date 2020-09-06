@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:shimmer/shimmer.dart';
 import 'package:ape/common/animated_switcher.dart';
 import 'package:ape/common/widget/my_error_page.dart';
 import 'package:ape/common/widget/my_loading_page.dart';
+import 'package:ape/network/nw_api.dart';
+import 'package:ape/network/rest_result_wrapper.dart';
+import 'package:ape/network/dio_manager.dart';
+import 'package:ape/entity/user_info.dart';
 
 /// 个人主页
 class PersonalHomePage extends StatefulWidget {
@@ -28,6 +32,8 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
   bool isError = false;
   String errorMsg = '';
 
+  UserInfo userInfo;
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +49,9 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
         setState(() {});
       }
     });
+
+    // 读取用户基本信息
+    _getUserInfo();
   }
 
   @override
@@ -79,21 +88,10 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
                   ],
                   flexibleSpace: FlexibleSpaceBar(
                     centerTitle: true,
-                    background: Container(
-                      height: 200,
-                      color: Colors.yellow,
-                      alignment: Alignment.center,
-                      child: Text(
-                        'hello world',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
+                    background: _showUserBasicInfo(),
                     title: EmptyAnimatedSwitcher(
                       display: _showTopBtn,
-                      child: Text('app title'),
+                      child: Text('个人信息'),
                     ),
                   ),
                   expandedHeight: 200,
@@ -128,16 +126,140 @@ class _PersonalHomePageState extends State<PersonalHomePage> {
               ],
             ),
           )
-        : MyLoadingPage(title: '个人基本信息',);
+        : MyLoadingPage(title: '个人信息',);
   }
 
   // 读取 用户 基本信息
+  void _getUserInfo() {
+    DioManager().request<UserInfo>(
+        NWMethod.GET,
+        NWApi.getUserInfo,
+        params : <String,dynamic>{'uid': widget.uid},
+        success: (data,message) {
+          print('Get User Info success! data = $data');
 
+          setState(() {
+            userInfo = data;
+            isBasicInfoLoaded = true;
+          });
+
+        },
+        error: (error) {
+          print('Get User Info error! code = ${error.code}, message = ${error.message}');
+
+          setState(() {
+            isError = true;
+            errorMsg = '读取个人信息失败!';
+            isBasicInfoLoaded = true;
+          });
+        }
+    );
+
+  }
 
   // 显示用户基本信息 widget
   Widget _showUserBasicInfo() {
-    return Container(
+    return Column(
+      children: <Widget>[
+        Container(
+          height: 224,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/common/person_info_bg.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Column(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 25),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: CircleAvatar(
+                          backgroundImage: CachedNetworkImageProvider(userInfo.avatar),
+                          radius: 33.0,
+                        ),
+                      ),
+                    ),
 
+                  ],
+                ),
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(top: 15),
+                    child: Text(
+                      userInfo.nickname,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 30,),
+                        child: Text(
+                          '关注:' + userInfo.followNumber.toString(),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 30,),
+                        child: Text(
+                          '粉丝:' + userInfo.fanNumber.toString(),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+              Container(
+                margin: EdgeInsets.only(top: 10,),
+                child: Text(
+                  '简介:' + userInfo.profile,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -105,7 +105,7 @@ class _FriendManagementState extends State<FriendManagement> {
 
 }
 
-/// 朋友列表页面
+/// --------------------------------------------- 朋友列表页面
 class _FriendListPage extends StatefulWidget {
   @override
   _FriendListPageState createState() => _FriendListPageState();
@@ -131,28 +131,29 @@ class _FriendListPageState extends State<_FriendListPage> {
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
-          child: ListTile(
-            leading: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(Provider
-                      .of<FriendProvider>(context)
-                      .friends[index].avatar),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            title: Text(Provider
-                .of<FriendProvider>(context)
-                .friends[index].nickname),
-            subtitle: Text(Provider
-                .of<FriendProvider>(context)
-                .friends[index].profile),
-            trailing: Icon(Icons.sort),
-          ),
+            child: _createItem(context, index),
+//          child: ListTile(
+//            leading: Container(
+//              height: 45,
+//              width: 45,
+//              decoration: BoxDecoration(
+//                shape: BoxShape.circle,
+//                image: DecorationImage(
+//                  image: CachedNetworkImageProvider(Provider
+//                      .of<FriendProvider>(context)
+//                      .friends[index].avatar),
+//                  fit: BoxFit.fill,
+//                ),
+//              ),
+//            ),
+//            title: Text(Provider
+//                .of<FriendProvider>(context)
+//                .friends[index].nickname),
+//            subtitle: Text(Provider
+//                .of<FriendProvider>(context)
+//                .friends[index].profile),
+//            trailing: Icon(Icons.sort),
+//          ),
 
           onTap: () {
             Map<String, String> params = {
@@ -176,9 +177,173 @@ class _FriendListPageState extends State<_FriendListPage> {
     );
   }
 
+  // 创建 朋友 记录
+  Widget _createItem(BuildContext context, int index) {
+    var friendEntity = Provider.of<FriendProvider>(context).friends[index];
+
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          // 条目间的分隔区域
+          Container(
+            //margin: EdgeInsets.only(top:  10),
+            height: 5,
+            color: Color(0xffEFEFEF),
+          ),
+          _title(context, friendEntity, index),
+          _bottom(context, friendEntity),
+        ],
+
+      ),
+    );
+  }
+
+  // 标题
+  Widget _title(BuildContext context, FriendEntity friendEntity, int index) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 2.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              // --- 头像
+              InkWell(
+                onTap: (){
+                  Map<String, String> params = {
+                    'uid': friendEntity.uid.toString(),
+                  };
+
+                  NavigatorUtils.push(context, GlobalRouter.personHome,params: params);
+                },
+                child: Container(
+                  width: 40.0,
+                  height: 40.0,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.transparent,
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(friendEntity.avatar),
+                        fit: BoxFit.fill,
+                      )
+                  ),
+                ),
+              ),
+
+              // --- nickname
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(6.0, 0.0, 0.0, 0.0),
+                    child: Text(
+                      friendEntity.nickname,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color(0xffF86119),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(6.0, 2.0, 0.0, 0.0),
+                    child: Text(
+                      friendEntity.profile,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Color(0xff808080),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+            ],
+          ),
+
+          // --- button
+          SizedBox.shrink(),
+        ],
+      ),
+    );
+  }
+
+  // 结尾
+  Widget _bottom(BuildContext context, FriendEntity friendEntity) {
+    return Container(
+      margin: EdgeInsets.only(top: 10.0, bottom: 10.0,),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          // --- 时间
+          Container(
+            margin: EdgeInsets.only(left: 20),
+            child: Text(
+              _getTimeInfo(friendEntity),
+              style: TextStyle(
+                //color: Colors.green,
+                fontSize: 10,
+              ),
+            ),
+          ),
+
+          // --- 删除
+          GestureDetector(
+            onTap: () {
+              showCupertinoDialog(
+                context: context,
+                builder: (context){
+                  return CupertinoAlertDialog(
+                    title: Text('提示'),
+                    content: Text('确认删除吗?'),
+                    actions: <Widget>[
+                      CupertinoDialogAction(child: Text('取消'),onPressed: (){
+                        Navigator.pop(context);
+                      },),
+                      CupertinoDialogAction(child: Text('确认'),onPressed: () async {
+                        await Provider.of<FriendProvider>(context,listen: false).deleteFriend(friendEntity);
+                        Navigator.pop(context);
+                      },),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 20),
+              child: Icon(
+                Icons.delete_sweep,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
+
+  // 获取 时间 信息
+  String _getTimeInfo(FriendEntity friendEntity) {
+
+    switch (friendEntity.state) {
+      case 0 : {
+        return TimelineUtils.formatByDatetime(friendEntity.rejectTime, DateTime.now()) + ' 拉黑';
+      }
+      case 1 : {
+        return TimelineUtils.formatByDatetime(friendEntity.friendTime, DateTime.now()) + ' 成为好友';
+      }
+      default :
+        return 'none';
+    }
+  }
+
 }
 
-/// 请求页面
+/// --------------------------------------------- 请求页面
 class _FriendRequestPage extends StatefulWidget {
   @override
   _FriendRequestPageState createState() => _FriendRequestPageState();
@@ -393,7 +558,7 @@ class _FriendRequestPageState extends State<_FriendRequestPage> {
 
 }
 
-/// 邀约页面
+/// --------------------------------------------- 邀约页面
 class _FriendInvitedPage extends StatefulWidget {
   @override
   _FriendInvitedPageState createState() => _FriendInvitedPageState();

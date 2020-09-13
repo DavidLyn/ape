@@ -209,4 +209,14 @@ class FriendProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ---------------------------------------------------
+  // 删除 好友
+  void deleteFriend(FriendEntity obj) {
+
+    _friends.remove(obj);
+    FriendEntity.delete(obj.id);
+
+    notifyListeners();
+  }
+
 }

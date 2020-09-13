@@ -88,4 +88,10 @@ class FriendEntity {
     return id;
   }
 
+  // 删除记录
+  static Future<int> delete(int id) async {
+    var count = await DbManager.db.rawUpdate('update $tableName set isValid = 0, deleteTime = ? where id = ?',[DateTime.now().millisecondsSinceEpoch, id]);
+    return count;
+  }
+
 }

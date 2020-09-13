@@ -2,7 +2,7 @@
 ///
 class NWApi {
 //    static final baseApi = 'http://192.168.1.101:8080/api/cat';
-    static final baseApi = 'http://192.168.1.102:8080/api/cat';
+    static final baseApi = 'http://192.168.1.104:8080/api/cat';
 //  static final baseApi = 'http://172.16.40.36:8080/api/cat';
 
   // ------------------------- 用户注册、登录相关 ---------------------------------

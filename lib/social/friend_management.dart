@@ -7,6 +7,8 @@ import 'package:ape/global/global_router.dart';
 import 'package:ape/provider/friend_provider.dart';
 import 'package:ape/common/widget/app_bar_with_one_icon.dart';
 import 'package:ape/entity/friend_inviting_entity.dart';
+import 'package:ape/entity/friend_askfor_entity.dart';
+import 'package:ape/entity/friend_entity.dart';
 import 'package:ape/util/timeline_utils.dart';
 
 /// 好友管理
@@ -200,51 +202,193 @@ class _FriendRequestPageState extends State<_FriendRequestPage> {
   Widget build(BuildContext context) {
     return ListView.separated(
       itemBuilder: (BuildContext context, int index) {
-        return GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          child: ListTile(
-            leading: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(Provider
-                      .of<FriendProvider>(context)
-                      .friendsAskfor[index].avatar),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            title: Text(Provider
-                .of<FriendProvider>(context)
-                .friendsAskfor[index].nickname),
-            subtitle: Text(Provider
-                .of<FriendProvider>(context)
-                .friendsAskfor[index].profile),
-            trailing: Icon(Icons.sort),
-          ),
-
-          onTap: () {
-            Map<String, String> params = {
-              'uid': Provider
-                  .of<FriendProvider>(context, listen: false)
-                  .friendsAskfor[index].friendId.toString(),
-            };
-
-            NavigatorUtils.push(
-                context, GlobalRouter.friendSetting, params: params);
-          },
-        );
+        return _createItem(context, index);
       },
       separatorBuilder: (BuildContext context, int index) {
         return Divider();
       },
-      itemCount: Provider
-          .of<FriendProvider>(context)
-          .friendsAskfor
-          .length, //friendsAskfor.length,
+      itemCount: Provider.of<FriendProvider>(context).friendsAskfor.length, //friendsAskfor.length,
     );
+  }
+
+  // 创建 请求 记录
+  Widget _createItem(BuildContext context, int index) {
+    var askforEntity = Provider.of<FriendProvider>(context).friendsAskfor[index];
+
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          // 条目间的分隔区域
+          Container(
+            //margin: EdgeInsets.only(top:  10),
+            height: 5,
+            color: Color(0xffEFEFEF),
+          ),
+          _title(context, askforEntity, index),
+          _content(context, askforEntity),
+          _bottom(context, askforEntity),
+        ],
+
+      ),
+    );
+  }
+
+  // 标题
+  Widget _title(BuildContext context, FriendAskforEntity askforEntity, int index) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 2.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              // --- 头像
+              InkWell(
+                onTap: (){
+                  Map<String, String> params = {
+                    'uid': askforEntity.uid.toString(),
+                  };
+
+                  NavigatorUtils.push(context, GlobalRouter.personHome,params: params);
+                },
+                child: Container(
+                  width: 40.0,
+                  height: 40.0,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.transparent,
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(askforEntity.avatar),
+                        fit: BoxFit.fill,
+                      )
+                  ),
+                ),
+              ),
+
+              // --- nickname
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(6.0, 0.0, 0.0, 0.0),
+                    child: Text(
+                      askforEntity.nickname,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color(0xffF86119),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(6.0, 2.0, 0.0, 0.0),
+                    child: Text(
+                      askforEntity.profile,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Color(0xff808080),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+            ],
+          ),
+
+          // --- button
+          SizedBox.shrink(),
+        ],
+      ),
+    );
+  }
+
+  // 内容
+  Widget _content(BuildContext context, FriendAskforEntity askforEntity) {
+    return Container(
+      alignment: FractionalOffset.centerLeft,
+      margin: EdgeInsets.only(top: 5.0, left: 15, right: 15, bottom: 5),
+      child: Text(
+        askforEntity.leavingWords,
+        style: TextStyle(fontSize: 15,),
+      ),
+    );
+  }
+
+  // 结尾
+  Widget _bottom(BuildContext context, FriendAskforEntity askforEntity) {
+    return Container(
+      margin: EdgeInsets.only(top: 10.0, bottom: 10.0,),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          // --- 时间
+          Container(
+            margin: EdgeInsets.only(left: 20),
+            child: Text(
+              _getTimeInfo(askforEntity),
+              style: TextStyle(
+                //color: Colors.green,
+                fontSize: 10,
+              ),
+            ),
+          ),
+
+          // --- 删除
+          GestureDetector(
+            onTap: () {
+              showCupertinoDialog(
+                context: context,
+                builder: (context){
+                  return CupertinoAlertDialog(
+                    title: Text('提示'),
+                    content: Text('确认删除吗?'),
+                    actions: <Widget>[
+                      CupertinoDialogAction(child: Text('取消'),onPressed: (){
+                        Navigator.pop(context);
+                      },),
+                      CupertinoDialogAction(child: Text('确认'),onPressed: () async {
+                        await Provider.of<FriendProvider>(context,listen: false).deleteAskfor(askforEntity);
+                        Navigator.pop(context);
+                      },),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 20),
+              child: Icon(
+                Icons.delete_sweep,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
+
+  // 获取 时间 信息
+  String _getTimeInfo(FriendAskforEntity askforEntity) {
+
+    switch (askforEntity.state) {
+      case 0 : {
+        return TimelineUtils.formatByDatetime(askforEntity.askforTime, DateTime.now()) + ' 请求';
+      }
+      case 1 : {
+        return TimelineUtils.formatByDatetime(askforEntity.responseTime, DateTime.now()) + ' 被接受';
+      }
+      case 2 : {
+        return TimelineUtils.formatByDatetime(askforEntity.responseTime, DateTime.now()) + ' 被拒绝';
+      }
+      default :
+        return 'none';
+    }
   }
 
 }
@@ -519,7 +663,6 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
       default :
         return 'none';
     }
-
   }
 
 }

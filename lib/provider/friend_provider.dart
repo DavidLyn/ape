@@ -143,6 +143,16 @@ class FriendProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // 删除 申请
+  void deleteAskfor(FriendAskforEntity obj) {
+
+    _friendsAskfor.remove(obj);
+    FriendAskforEntity.delete(obj.id);
+
+    notifyListeners();
+  }
+
+
   // 增加 加友邀约
   void addFriendInviting(FriendInvitingEntity friendInviting) async {
 

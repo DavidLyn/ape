@@ -141,7 +141,9 @@ class _FriendListPageState extends State<_FriendListPage> {
             };
 
             NavigatorUtils.push(
-                context, GlobalRouter.friendSetting, params: params);
+                context, GlobalRouter.friendSetRelation, params: params);
+//            NavigatorUtils.push(
+//                context, GlobalRouter.friendSetting, params: params);
           },
         );
       },

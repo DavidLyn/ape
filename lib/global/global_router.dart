@@ -20,6 +20,7 @@ import 'package:ape/social/friend_management.dart';
 import 'package:ape/social/friend_setting.dart';
 import 'package:ape/social/friend_adding.dart';
 import 'package:ape/social/friend_ask_for.dart';
+import 'package:ape/social/friend_set_relation.dart';
 
 import 'package:ape/common/personal_home_page.dart';
 import 'package:ape/common/personal_fan_page.dart';
@@ -44,6 +45,7 @@ class GlobalRouter {
   static final friendSetting = '/social/friendSetting';
   static final friendAdding = '/social/friendAdding';
   static final friendAskFor = '/social/friendAskFor';
+  static final friendSetRelation = '/social/friendSetRelation';
 
   // 通用功能：编辑 text 字段
   static final textEdit = '/common/textEdit';
@@ -147,6 +149,8 @@ class GlobalRouter {
 
       return FriendAskFor(friendId:friendId,nickname:nickname,avatar:avatar,profile:profile,);
     }));
+
+    router.define(friendSetRelation, handler: Handler(handlerFunc: (_,params){return FriendSetRelation();}));
 
     router.define(personHome,
         handler: Handler(handlerFunc: (_, Map<String, List<String>> params) {

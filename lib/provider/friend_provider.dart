@@ -219,4 +219,19 @@ class FriendProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // 拉黑 好友
+  void blacklistFriend(FriendEntity obj) {
+
+    obj.state = 0;
+    obj.rejectTime = DateTime.now();
+
+    FriendEntity.blacklist(obj.id);
+
+    // Todo
+    // 向后台发送拉黑消息
+
+    notifyListeners();
+
+  }
+
 }

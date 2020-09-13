@@ -132,28 +132,6 @@ class _FriendListPageState extends State<_FriendListPage> {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
             child: _createItem(context, index),
-//          child: ListTile(
-//            leading: Container(
-//              height: 45,
-//              width: 45,
-//              decoration: BoxDecoration(
-//                shape: BoxShape.circle,
-//                image: DecorationImage(
-//                  image: CachedNetworkImageProvider(Provider
-//                      .of<FriendProvider>(context)
-//                      .friends[index].avatar),
-//                  fit: BoxFit.fill,
-//                ),
-//              ),
-//            ),
-//            title: Text(Provider
-//                .of<FriendProvider>(context)
-//                .friends[index].nickname),
-//            subtitle: Text(Provider
-//                .of<FriendProvider>(context)
-//                .friends[index].profile),
-//            trailing: Icon(Icons.sort),
-//          ),
 
           onTap: () {
             Map<String, String> params = {
@@ -264,7 +242,29 @@ class _FriendListPageState extends State<_FriendListPage> {
           ),
 
           // --- button
-          SizedBox.shrink(),
+          friendEntity.state == 1 ?  Container(
+            alignment: FractionalOffset.centerRight,
+            child: GestureDetector(
+              onTap: () {
+                Provider.of<FriendProvider>(context,listen: false).blacklistFriend(friendEntity);
+              },
+              child: Container(
+                padding: EdgeInsets.only(top: 3.0, bottom: 3.0, left: 4.0, right: 4.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.orange),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: Text('拉黑',
+                  style: TextStyle(
+                    color: Colors.orange,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ),
+          )
+              : SizedBox.shrink(),
         ],
       ),
     );

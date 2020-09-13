@@ -94,4 +94,10 @@ class FriendEntity {
     return count;
   }
 
+  // 拉黑
+  static Future<int> blacklist(int id) async {
+    var count = await DbManager.db.rawUpdate('update $tableName set state = 0, rejectTime = ? where id = ?',[DateTime.now().millisecondsSinceEpoch, id]);
+    return count;
+  }
+
 }

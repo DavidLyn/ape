@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -140,8 +141,14 @@ class _FriendListPageState extends State<_FriendListPage> {
                   .friends[index].friendId.toString(),
             };
 
-            NavigatorUtils.push(
-                context, GlobalRouter.friendSetRelation, params: params);
+            NavigatorUtils.pushWaitingResult(
+                context,
+                GlobalRouter.friendSetRelation,
+                (result){
+                  List<String> list = result;
+                  print('result = ${json.encode(list)}');
+                },
+                params: params);
 //            NavigatorUtils.push(
 //                context, GlobalRouter.friendSetting, params: params);
           },

@@ -11,7 +11,7 @@ class FriendSetRelation extends StatefulWidget {
 
 class _FriendSetRelationState extends State<FriendSetRelation> {
 
-  List<String> _forselectRelation = ['父亲','母亲','儿子','女儿','爷爷','奶奶','姥姥','姥爷','叔叔','婶婶','亲戚','老师','学生','导师','师兄','师弟','师姐','师妹'];
+  List<String> _forSelectRelation = ['父亲','母亲','儿子','女儿','爷爷','奶奶','姥姥','姥爷','叔叔','婶婶','亲戚','老师','学生','导师','师兄','师弟','师姐','师妹'];
 
   List<String> _selectedRelation = ['老师','师傅','徒弟','丈夫','基友','球友','老公','儿媳','女儿','上司'];
 
@@ -36,7 +36,7 @@ class _FriendSetRelationState extends State<FriendSetRelation> {
         actionIcon: Icon(Icons.save),
         actionName: '保存',
         onPressed: (){
-          // to-do
+          NavigatorUtils.goBackWithParams(context, _selectedRelation);
         },
       ),
       body: Column(
@@ -56,7 +56,10 @@ class _FriendSetRelationState extends State<FriendSetRelation> {
           ),
 
           // 可选 关系 标题
-          _forselectTitle(),
+          _forSelectTitle(),
+
+          // 可选 关系 列表
+          _forSelectList(),
 
         ],
       ),
@@ -128,7 +131,7 @@ class _FriendSetRelationState extends State<FriendSetRelation> {
     );
   }
 
-  Widget _forselectTitle() {
+  Widget _forSelectTitle() {
     return Container(
       margin: EdgeInsets.only(left: 10,top: 5,),
       decoration: BoxDecoration(
@@ -140,6 +143,39 @@ class _FriendSetRelationState extends State<FriendSetRelation> {
           fontSize: 20,
           color: Colors.blue,
         ),
+      ),
+    );
+  }
+
+  Widget _forSelectList() {
+    return Container(
+      margin: EdgeInsets.only(top: 10,left: 10,right: 10,),
+      child: Wrap(
+        children: List.generate(_forSelectRelation.length, (i){
+          return GestureDetector(
+            onTap: () {
+              if (_selectedRelation.indexOf(_forSelectRelation[i]) == -1) {
+                setState(() {
+                  _selectedRelation.add(_forSelectRelation[i]);
+                });
+              }
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 5,right: 5,top: 5,bottom: 5,),
+              child: Container(
+                padding: EdgeInsets.only(left: 5,right: 5,top: 1,bottom: 1,),
+                child: Text(_forSelectRelation[i]),
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.blue,
+                  width: 2,
+                ),
+              ),
+            ),
+          );
+        }),
       ),
     );
   }

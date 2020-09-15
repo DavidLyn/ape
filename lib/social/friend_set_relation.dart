@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/common/widget/app_bar_with_one_icon.dart';
 
@@ -9,6 +10,8 @@ class FriendSetRelation extends StatefulWidget {
 }
 
 class _FriendSetRelationState extends State<FriendSetRelation> {
+
+  List<String> _forselectRelation = ['父亲','母亲','儿子','女儿','爷爷','奶奶','姥姥','姥爷','叔叔','婶婶','亲戚','老师','学生','导师','师兄','师弟','师姐','师妹'];
 
   List<String> _selectedRelation = ['老师','师傅','徒弟','丈夫','基友','球友','老公','儿媳','女儿','上司'];
 
@@ -30,6 +33,11 @@ class _FriendSetRelationState extends State<FriendSetRelation> {
       appBar: AppBarWithOneIcon(
         backgroundColor: Colors.green,
         centerTitle: '关系',
+        actionIcon: Icon(Icons.save),
+        actionName: '保存',
+        onPressed: (){
+          // to-do
+        },
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,6 +48,16 @@ class _FriendSetRelationState extends State<FriendSetRelation> {
           // 已选 关系 列表
           _selectedList(),
 
+          // 分隔线
+          Container(
+            margin: EdgeInsets.only(top:  10,left: 5,right: 5,),
+            height: 2,
+            color: Color(0xffEFEFEF),
+          ),
+
+          // 可选 关系 标题
+          _forselectTitle(),
+
         ],
       ),
     );
@@ -47,14 +65,15 @@ class _FriendSetRelationState extends State<FriendSetRelation> {
 
   Widget _selectedTitle() {
     return Container(
-      margin: EdgeInsets.only(left: 10,top: 5,),
+      margin: EdgeInsets.only(left: 10,top: 15,),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(width: 5,)),
+        border: Border(bottom: BorderSide(width: 2,color: Colors.orange,)),
       ),
       child: Text(
         '已选关系',
         style: TextStyle(
-          fontSize: 18,
+          fontSize: 20,
+          color: Colors.orange,
         ),
       ),
     );
@@ -62,24 +81,65 @@ class _FriendSetRelationState extends State<FriendSetRelation> {
 
   Widget _selectedList() {
     return Container(
+      margin: EdgeInsets.only(top: 10,left: 10,right: 10,),
       child: Wrap(
         children: List.generate(_selectedRelation.length, (i){
           return GestureDetector(
-            onTap: (){
+            onLongPress: () {
+              showCupertinoDialog(
+                context: context,
+                builder: (context){
+                  return CupertinoAlertDialog(
+                    title: Text('提示'),
+                    content: Text('确认删除关系<${_selectedRelation[i]}>吗?'),
+                    actions: <Widget>[
+                      CupertinoDialogAction(child: Text('取消'),onPressed: (){
+                        Navigator.pop(context);
+                      },),
+                      CupertinoDialogAction(child: Text('确认'),onPressed: () async {
+                        setState(() {
+                          _selectedRelation.removeAt(i);
+                        });
 
+                        Navigator.pop(context);
+                      },),
+                    ],
+                  );
+                },
+              );
             },
             child: Container(
-              child: Text(_selectedRelation[i]),
+              margin: EdgeInsets.only(left: 5,right: 5,top: 5,bottom: 5,),
+              child: Container(
+                padding: EdgeInsets.only(left: 5,right: 5,top: 1,bottom: 1,),
+                child: Text(_selectedRelation[i]),
+              ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: Colors.blue,
+                  color: Colors.orange,
                   width: 2,
                 ),
               ),
             ),
           );
         }),
+      ),
+    );
+  }
+
+  Widget _forselectTitle() {
+    return Container(
+      margin: EdgeInsets.only(left: 10,top: 5,),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(width: 2,color: Colors.blue,)),
+      ),
+      child: Text(
+        '可选关系',
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.blue,
+        ),
       ),
     );
   }

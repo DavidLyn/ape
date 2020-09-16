@@ -17,8 +17,9 @@ class FriendAskFor extends StatefulWidget {
   final String nickname;
   final String avatar;
   final String profile;
+  final int gender;
 
-  FriendAskFor({this.friendId,this.nickname,this.avatar,this.profile,});
+  FriendAskFor({this.friendId,this.nickname,this.avatar,this.profile,this.gender});
 
   @override
   _FriendAskForState createState() => _FriendAskForState();
@@ -98,6 +99,7 @@ class _FriendAskForState extends State<FriendAskFor> {
       friendAskfor.nickname = widget.nickname;
       friendAskfor.avatar = widget.avatar;
       friendAskfor.profile = widget.profile;
+      friendAskfor.gender = widget.gender;
       friendAskfor.askforTime = DateTime.now();
       friendAskfor.leavingWords = _controller.text;
       friendAskfor.isValid = 1;   // 未删除

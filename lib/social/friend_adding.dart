@@ -292,6 +292,7 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
                   'nickname': userList[index].nickname,
                   'avatar': userList[index].avatar,
                   'profile': userList[index].profile,
+                  'gender': userList[index].gender.toString(),
                 };
 
                 NavigatorUtils.pushWaitingResult(context, GlobalRouter.friendAskFor,(_){

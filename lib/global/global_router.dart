@@ -146,8 +146,9 @@ class GlobalRouter {
       var nickname = params['nickname']?.first;
       var avatar = params['avatar']?.first;
       var profile = params['profile']?.first;
+      var gender = int.parse(params['gender']?.first);
 
-      return FriendAskFor(friendId:friendId,nickname:nickname,avatar:avatar,profile:profile,);
+      return FriendAskFor(friendId:friendId,nickname:nickname,avatar:avatar,profile:profile,gender:gender,);
     }));
 
     router.define(friendSetRelation, handler: Handler(handlerFunc: (_,params){return FriendSetRelation();}));

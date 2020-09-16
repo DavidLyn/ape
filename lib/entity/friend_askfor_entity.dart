@@ -14,6 +14,7 @@ class FriendAskforEntity {
   String nickname;        // 昵称
   String avatar;          // 好友头像
   String profile;         // 好友简介
+  int gender;             // 性别 1-男 2-女 0-保密
   String leavingWords;    // 留言
   DateTime askforTime;    // 请求时间
   int state;              // 当前状态  0 - 发出请求尚未收到响应  1 - 对方已响应且已接受成为好友 2 - 对方已响应且已拒绝成为好友
@@ -29,6 +30,7 @@ class FriendAskforEntity {
     this.nickname,
     this.avatar,
     this.profile,
+    this.gender,
     this.leavingWords,
     this.askforTime,
     this.state : 0,
@@ -46,6 +48,7 @@ class FriendAskforEntity {
     map['nickname'] = nickname;
     map['avatar'] = avatar;
     map['profile'] = profile;
+    map['gender'] = gender;
     map['leavingWords'] = leavingWords;
     map['askforTime'] = askforTime?.millisecondsSinceEpoch;
     map['state'] = state;
@@ -64,6 +67,7 @@ class FriendAskforEntity {
     friendAskfor.nickname = map['nickname'];
     friendAskfor.avatar = map['avatar'];
     friendAskfor.profile = map['profile'];
+    friendAskfor.gender = map['gender'];
     friendAskfor.leavingWords = map['leavingWords'];
     friendAskfor.askforTime = map['askforTime'] != null ? DateTime.fromMillisecondsSinceEpoch(map['askforTime']) : null;
     friendAskfor.state = map['state'];

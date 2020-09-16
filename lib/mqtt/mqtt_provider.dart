@@ -248,6 +248,7 @@ class MQTTProvider {
     friendInviting.nickname = map['nickname'];
     friendInviting.avatar = map['avatar'];
     friendInviting.profile = map['profile'];
+    friendInviting.gender = int.parse(map['gender']);
     friendInviting.leavingWords = map['leavingWords'];
     friendInviting.recieveTime = DateTime.now();
     friendInviting.isValid = 1;     // 有效标志

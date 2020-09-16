@@ -14,6 +14,7 @@ class FriendInvitingEntity {
   String nickname;        // 昵称
   String avatar;          // 好友头像
   String profile;         // 好友简介
+  int gender;             // 性别 1-男 2-女 0-保密
   String leavingWords;    // 留言
   DateTime recieveTime;   // 收到时间
   int state;              // 当前状态  0 - 收到未处理 1 - 接受成为好友 2 - 拒绝成为好友
@@ -29,6 +30,7 @@ class FriendInvitingEntity {
     this.nickname,
     this.avatar,
     this.profile,
+    this.gender,
     this.leavingWords,
     this.recieveTime,
     this.state : 0,
@@ -46,6 +48,7 @@ class FriendInvitingEntity {
     map['nickname'] = nickname;
     map['avatar'] = avatar;
     map['profile'] = profile;
+    map['gender'] = gender;
     map['leavingWords'] = leavingWords;
     map['recieveTime'] = recieveTime?.millisecondsSinceEpoch;
     map['state'] = state;
@@ -64,6 +67,7 @@ class FriendInvitingEntity {
     friendInviting.nickname = map['nickname'];
     friendInviting.avatar = map['avatar'];
     friendInviting.profile = map['profile'];
+    friendInviting.gender = map['gender'];
     friendInviting.leavingWords = map['leavingWords'];
     friendInviting.recieveTime = map['recieveTime'] != null ? DateTime.fromMillisecondsSinceEpoch(map['recieveTime']) : null;
     friendInviting.state = map['state'];

@@ -77,6 +77,7 @@ class FriendProvider extends ChangeNotifier {
     friend.nickname = _friendsInviting[index].nickname;
     friend.avatar = _friendsInviting[index].avatar;
     friend.profile = _friendsInviting[index].profile;
+    friend.gender = _friendsInviting[index].gender;
     friend.state = 1;
     friend.isValid = 1;
     friend.friendTime = DateTime.now();
@@ -197,6 +198,7 @@ class FriendProvider extends ChangeNotifier {
       friend.nickname = _friendsAskfor[index].nickname;
       friend.avatar = _friendsAskfor[index].avatar;
       friend.profile = _friendsAskfor[index].profile;
+      friend.gender = _friendsAskfor[index].gender;
       friend.state = 1;
       friend.isValid = 1;
       friend.friendTime = DateTime.now();

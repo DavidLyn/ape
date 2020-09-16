@@ -19,6 +19,10 @@ class FriendEntity {
   DateTime rejectTime;  // 拉黑时间
   DateTime deleteTime;  // 删除时间
 
+  int gender;             // 性别 1-男 2-女 0-保密
+  String relation;        // 关系
+
+
   FriendEntity({
     this.id,
     this.uid,
@@ -31,6 +35,8 @@ class FriendEntity {
     this.rejectTime,
     this.friendTime,
     this.deleteTime,
+    this.gender,
+    this.relation,
   });
 
   Map<String, dynamic> toMap() {
@@ -46,6 +52,10 @@ class FriendEntity {
     map['friendTime'] = friendTime?.millisecondsSinceEpoch;
     map['rejectTime'] = rejectTime?.millisecondsSinceEpoch;
     map['deleteTime'] = deleteTime?.millisecondsSinceEpoch;
+
+    map['gender'] = gender;
+    map['relation'] = relation;
+
     return map;
   }
 
@@ -62,6 +72,10 @@ class FriendEntity {
     friend.friendTime = map['friendTime'] != null ? DateTime.fromMillisecondsSinceEpoch(map['friendTime']) : null;
     friend.rejectTime = map['rejectTime'] != null ? DateTime.fromMillisecondsSinceEpoch(map['rejectTime']) : null;
     friend.deleteTime = map['deleteTime'] != null ? DateTime.fromMillisecondsSinceEpoch(map['deleteTime']) : null;
+
+    friend.gender = map['gender'];
+    friend.relation = map['relation'];
+
     return friend;
   }
 

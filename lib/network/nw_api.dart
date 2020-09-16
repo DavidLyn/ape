@@ -34,4 +34,7 @@ class NWApi {
   // 获取用户基本信息
   static final getUserInfo = '/social/userInfo';
 
+  // 修改与好友的关系
+  static final updateFriendRelation = '/social/updateRelation';
+
 }

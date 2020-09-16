@@ -1,10 +1,19 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/common/widget/app_bar_with_one_icon.dart';
+import 'package:ape/provider/friend_provider.dart';
 
 /// 设置 朋友 关系
 class FriendSetRelation extends StatefulWidget {
+
+  // 已设置的关系
+  final String relation;
+
+  FriendSetRelation({this.relation});
+
   @override
   _FriendSetRelationState createState() => _FriendSetRelationState();
 }
@@ -12,12 +21,18 @@ class FriendSetRelation extends StatefulWidget {
 class _FriendSetRelationState extends State<FriendSetRelation> {
 
   List<String> _forSelectRelation = ['父亲','母亲','儿子','女儿','爷爷','奶奶','姥姥','姥爷','叔叔','婶婶','亲戚','老师','学生','导师','师兄','师弟','师姐','师妹'];
+//  List<String> _forSelectRelation = List<String>();
 
-  List<String> _selectedRelation = ['老师','师傅','徒弟','丈夫','基友','球友','老公','儿媳','女儿','上司'];
+//  List<String> _selectedRelation = ['老师','师傅','徒弟','丈夫','基友','球友','老公','儿媳','女儿','上司'];
+  List<String> _selectedRelation = List<String>();
 
   @override
   void initState() {
     super.initState();
+
+    if (widget.relation.isNotEmpty) {
+      _selectedRelation.addAll(jsonDecode(widget.relation));
+    }
 
   }
 

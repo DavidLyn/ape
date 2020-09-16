@@ -81,17 +81,18 @@ class DbManager {
           // deleteTime - 删除时间
           //
           // relation - 关系
+          // updateTime - 修改时间
 
           await db.execute(
-              'CREATE TABLE Friend (id INTEGER PRIMARY KEY, uid INTEGER, friendId INTEGER, nickname TEXT, avatar TEXT, profile TEXT, gender INTEGER, state INTEGER, isValid INTEGER, friendTime INTEGER, rejectTime INTEGER, deleteTime INTEGER, relation TEXT)');
+              'CREATE TABLE Friend (id INTEGER PRIMARY KEY, uid INTEGER, friendId INTEGER, nickname TEXT, avatar TEXT, profile TEXT, gender INTEGER, state INTEGER, isValid INTEGER, friendTime INTEGER, rejectTime INTEGER, deleteTime INTEGER, relation TEXT, updateTime INTEGER)');
         },
         onUpgrade: (Database db, int oldVersion, int newVersion) async {
           print('DB onUpgrade oldVersion:$oldVersion, newVersion=$newVersion');
 
-          if (oldVersion == 1 && newVersion == 2) {
-            // 增加 relation 字段
-            await db.execute("ALTER TABLE Friend ADD relation TEXT");
-          }
+//          if (oldVersion == 1 && newVersion == 2) {
+//            // 增加 relation 字段
+//            await db.execute("ALTER TABLE Friend ADD relation TEXT");
+//          }
 
         },
         onOpen: (Database db) async {

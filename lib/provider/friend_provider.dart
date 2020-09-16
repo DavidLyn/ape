@@ -6,6 +6,10 @@ import 'package:ape/entity/friend_inviting_entity.dart';
 import 'package:ape/mqtt/mqtt_provider.dart';
 import 'package:ape/mqtt/mqtt_message.dart';
 import 'package:ape/common/constants.dart';
+import 'package:ape/network/dio_manager.dart';
+import 'package:ape/network/nw_api.dart';
+import 'package:ape/network/rest_result_wrapper.dart';
+import 'package:ape/util/other_utils.dart';
 
 /// 保存 好友 信息的 provider
 class FriendProvider extends ChangeNotifier {
@@ -234,6 +238,34 @@ class FriendProvider extends ChangeNotifier {
 
     notifyListeners();
 
+  }
+
+  // ---------------------------------------------------
+  // 修改 关系
+  void modifyRelation(FriendEntity friend, String relation) {
+
+    // 修改后台数据库
+    DioManager().request<String>(
+        NWMethod.POST,
+        NWApi.updateFriendRelation,
+        data: {'uid': friend.id.toString(),'friendId': friend.friendId.toString(),'relation': relation},
+        success: (data,message) {
+          print("Update realtion success! relation = $relation");
+
+          // 修改 friendList
+          friend.relation = relation;
+
+          // 修改本地数据库
+          FriendEntity.updateRelation(friend.id, relation);
+
+          notifyListeners();
+        },
+        error: (error) {
+          print("Update realtion error! code = ${error.code}, message = ${error.message}");
+
+          OtherUtils.showToastMessage(error.message ?? 'save failed！');
+        }
+    );
   }
 
 }

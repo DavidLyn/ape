@@ -114,4 +114,10 @@ class FriendEntity {
     return count;
   }
 
+  // 修改 关系
+  static Future<int> updateRelation(int id, String relation) async {
+    var count = await DbManager.db.rawUpdate('update $tableName set updateTime = ?, relation = ? where id = ?',[DateTime.now().millisecondsSinceEpoch, relation, id]);
+    return count;
+  }
+
 }

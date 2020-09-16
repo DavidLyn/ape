@@ -151,7 +151,10 @@ class GlobalRouter {
       return FriendAskFor(friendId:friendId,nickname:nickname,avatar:avatar,profile:profile,gender:gender,);
     }));
 
-    router.define(friendSetRelation, handler: Handler(handlerFunc: (_,params){return FriendSetRelation();}));
+    router.define(friendSetRelation, handler: Handler(handlerFunc: (_,Map<String, List<String>> params){
+      var relation = params['relation']?.first;
+      return FriendSetRelation(relation: relation,);
+    }));
 
     router.define(personHome,
         handler: Handler(handlerFunc: (_, Map<String, List<String>> params) {

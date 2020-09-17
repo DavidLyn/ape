@@ -37,4 +37,7 @@ class NWApi {
   // 修改与好友的关系
   static final updateFriendRelation = '/social/updateRelation';
 
+  // 删除/拉黑 好友
+  static final deleteFriend = '/social/deleteFriend';
+
 }

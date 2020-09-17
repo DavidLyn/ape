@@ -228,16 +228,28 @@ class FriendProvider extends ChangeNotifier {
   // 拉黑 好友
   void blacklistFriend(FriendEntity obj) {
 
-    obj.state = 0;
-    obj.rejectTime = DateTime.now();
-
-    FriendEntity.blacklist(obj.id);
-
-    // Todo
     // 向后台发送拉黑消息
+    DioManager().request<String>(
+        NWMethod.POST,
+        NWApi.deleteFriend,
+        data: {'uid': obj.id.toString(),'friendId': obj.friendId.toString()},
+        success: (data,message) {
+          print("Black friend success!");
 
-    notifyListeners();
+          obj.state = 0;
+          obj.rejectTime = DateTime.now();
 
+          FriendEntity.blacklist(obj.id);
+
+          notifyListeners();
+
+        },
+        error: (error) {
+          print("Update realtion error! code = ${error.code}, message = ${error.message}");
+
+          OtherUtils.showToastMessage(error.message ?? 'save failed！');
+        }
+    );
   }
 
   // ---------------------------------------------------

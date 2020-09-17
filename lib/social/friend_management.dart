@@ -136,7 +136,7 @@ class _FriendListPageState extends State<_FriendListPage> {
 
           onTap: () {
             Map<String, String> params = {
-              'relation': Provider.of<FriendProvider>(context, listen: false).friends[index].relation,
+              'relation': Provider.of<FriendProvider>(context, listen: false).friends[index].relation ?? '',
             };
 
             NavigatorUtils.pushWaitingResult(
@@ -144,7 +144,6 @@ class _FriendListPageState extends State<_FriendListPage> {
                 GlobalRouter.friendSetRelation,
                 (result){
                   List<String> list = result;
-                  print('result = ${json.encode(list)}');
                   var friend = Provider.of<FriendProvider>(context, listen: false).friends[index];
                   Provider.of<FriendProvider>(context, listen: false).modifyRelation(friend, json.encode(list));
                 },

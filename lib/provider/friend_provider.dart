@@ -232,7 +232,7 @@ class FriendProvider extends ChangeNotifier {
     DioManager().request<String>(
         NWMethod.POST,
         NWApi.deleteFriend,
-        data: {'uid': obj.id.toString(),'friendId': obj.friendId.toString()},
+        data: {'uid': obj.uid.toString(),'friendId': obj.friendId.toString()},
         success: (data,message) {
           print("Black friend success!");
 
@@ -260,7 +260,7 @@ class FriendProvider extends ChangeNotifier {
     DioManager().request<String>(
         NWMethod.POST,
         NWApi.updateFriendRelation,
-        data: {'uid': friend.id.toString(),'friendId': friend.friendId.toString(),'relation': relation},
+        data: {'uid': friend.uid.toString(),'friendId': friend.friendId.toString(),'relation': relation},
         success: (data,message) {
           print("Update realtion success! relation = $relation");
 

@@ -31,7 +31,12 @@ class _FriendSetRelationState extends State<FriendSetRelation> {
     super.initState();
 
     if (widget.relation.isNotEmpty) {
-      _selectedRelation.addAll(jsonDecode(widget.relation));
+      List<dynamic> list = jsonDecode(widget.relation);
+
+      for (var obj in list) {
+        _selectedRelation.add(obj);
+      }
+     // _selectedRelation.addAll(list);
     }
 
   }

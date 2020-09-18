@@ -13,6 +13,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+
+  # 为生成 apk 而添加
+  flutter_plugin_android_lifecycle: ^1.0.9
+
   # 据说是为了在 ios 上运行而必须添加的
   flutter_cupertino_localizations: ^1.0.1
 

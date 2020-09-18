@@ -11,6 +11,7 @@ import 'package:ape/entity/friend_inviting_entity.dart';
 import 'package:ape/entity/friend_askfor_entity.dart';
 import 'package:ape/entity/friend_entity.dart';
 import 'package:ape/util/timeline_utils.dart';
+import 'package:ape/common/widget/my_gender_image.dart';
 
 /// 好友管理
 class FriendManagement extends StatefulWidget {
@@ -246,6 +247,8 @@ class _FriendListPageState extends State<_FriendListPage> {
                 ],
               ),
 
+              // --- 性别图像
+              MyGenderImage(gender : friendEntity.gender),
             ],
           ),
 

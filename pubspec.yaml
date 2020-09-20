@@ -97,7 +97,7 @@ dependencies:
   uuid: 2.2.2
 
   # 官方 webview https://github.com/flutter/plugins/tree/master/packages/webview_flutter
-  webview_flutter: ^0.3.22+1
+  # webview_flutter: ^0.3.22+1
 
 dev_dependencies:
   flutter_test:

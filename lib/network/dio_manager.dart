@@ -49,8 +49,8 @@ class DioManager {
         contentType: Headers.jsonContentType,
         responseType: ResponseType.json,
         receiveDataWhenStatusError: false,
-        connectTimeout: 30000,
-        receiveTimeout: 3000,
+        connectTimeout: 300000,       // 连接超时设置为 300 秒
+        receiveTimeout: 300000,       // 接收超时设置为 300 秒
       );
 
       _dio = Dio(options);

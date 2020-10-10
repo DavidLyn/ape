@@ -84,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
         error: (error) {
           Log.e("Register error! code = ${error.code}, message = ${error.message}");
 
-          OtherUtils.showToastMessage('注册失败!');
+          OtherUtils.showToastMessage('注册失败:${error.code}!');
         }
     );
 
@@ -145,7 +145,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 error: (error) {
                   Log.e("Send sms error! code = ${error.code}, message = ${error.message}");
 
-                  OtherUtils.showToastMessage('短信发送失败!');
+                  OtherUtils.showToastMessage('短信发送失败:${error.code}!');
                   return false;
                 }
             );

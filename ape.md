@@ -291,6 +291,17 @@ compileSdkVersion 28
 
 ## adb 的使用
 
++ adb devices - 列出设备
+
++ adb shell - 进入设备的 shell 界面
+
++ 在设备安装 apk
+
+```
+adb install 安装包的地址  #默认安装
+adb install -r  "安装包的地址"         #覆盖安装（已安装了）
+```
+
 ---
 # ios 调试
 ## 设置权限

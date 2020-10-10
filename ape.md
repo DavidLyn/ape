@@ -150,3 +150,165 @@ _showDatePicker() async{
     });
 }
 ```
+---
+# Android 调试
+## 打包生成 APK
+### 生成密钥文件
+
+> 创建目录 /Users/lvweiwei/ViviProj/gorilla/apekey
+> 
+> 各种密码：123456
+
+```
+keytool -genkey -v -keystore ape.jks -keyalg RSA -keysize 2048 -validity 10000 -alias ape
+```
+
+```
+输入密钥库口令:  123456
+再次输入新口令:  123456
+您的名字与姓氏是什么?
+  [Unknown]:  lvvv
+您的组织单位名称是什么?
+  [Unknown]:  vivi
+您的组织名称是什么?
+  [Unknown]:  vivi
+您所在的城市或区域名称是什么?
+  [Unknown]:  beijing
+您所在的省/市/自治区名称是什么?
+  [Unknown]:  beijing
+该单位的双字母国家/地区代码是什么?
+  [Unknown]:  cn
+CN=lvvv, OU=vivi, O=vivi, L=beijing, ST=beijing, C=cn是否正确?
+  [否]:  y
+
+```
+
+### 修改 /android/app/build.gradle 文件
+
+> 按注释修改
+
+```
+android {
+    compileSdkVersion 28
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "com.lvlv.gorilla.ape"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    /*针对打包新加的 -- start*/
+    signingConfigs {
+        release {
+//            keyAlias keystoreProperties['keyAlias']
+//            keyPassword keystoreProperties['keyPassword']
+//            storeFile file(keystoreProperties['storeFile'])
+//            storePassword keystoreProperties['storePassword']
+            keyAlias "ape"
+            keyPassword "123456"
+            storeFile file("/Users/lvweiwei/ViviProj/gorilla/apekey/ape.jks")
+            storePassword "123456"
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+    /*针对打包新加的 -- end */
+
+    // 原有内容被注释
+//    buildTypes {
+//        release {
+//            // TODO: Add your own signing config for the release build.
+//            // Signing with the debug keys for now, so `flutter run --release` works.
+//            signingConfig signingConfigs.debug
+//        }
+//    }
+}
+```
+
+### 设置网络权限
+
+修改 `android\app\src\main\AndroidManifest.xml` 在 `</manifest> `前面加上代码：
+
+```
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+```
+
+### 打包生成 APK
+
+> 直接在 Android Studio 的 Terinal 执行命令
+
+```
+flutter build apk
+```
+
+**生成的 apk 位置：当前项目\build\app\outputs\apk\release\xx.apk**
+
+### 错误处理
+
++ 出现 **Execution failed for task ':keyboard_visibility:verifyReleaseResources'.**，将插件 **keyboard_visibility** 的 **build.gradle** 的 
+
+```
+compileSdkVersion 27
+```
+
+修改为：
+
+```
+compileSdkVersion 28
+```
+
++ 出现 **Task 'assembleAarRelease' not found in root project 'flutter_plugin_android_lifecycle'.**
+
+在 pubspec.yaml 中添加：
+
+```
+  flutter_plugin_android_lifecycle: ^1.0.9
+```
+
+### 参考
+
+[flutter打包Android的apk](https://blog.csdn.net/weixin_42912237/article/details/90258414)
+
+[Flutter打包apk中的一些巨坑](https://blog.csdn.net/weixin_30415801/article/details/99567010)
+
+## adb 的使用
+
+---
+# ios 调试
+## 设置权限
+
+在 ```<project root>/ios/Runner/Info.plist``` 中：
+
+```
+<key>NSPhotoLibraryUsageDescription</key>
+<string>需要您的同意,APP才能访问相册</string>
+
+<key>NSCameraUsageDescription</key>
+<string>需要您的同意,APP才能访问相机</string>
+
+<key>NSMicrophoneUsageDescription</key>
+<string>需要您的同意,APP才能访问麦克风</string>
+
+<key>NSLocationUsageDescription</key>
+<string>需要您的同意, APP才能访问位置</string>
+```
+
+**详细参见：[iOS info.plist访问权限设置](https://blog.csdn.net/qq_16696763/article/details/88863057)**

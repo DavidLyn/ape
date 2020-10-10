@@ -24,7 +24,8 @@ class MQTTProvider {
   static const topicPrefixToListen = 'cat/msg/';
 
   // note : tcp://192.168.1.101 or 192.168.1.101:1883 all are error!!!
-  static const mqttServer = '47.94.248.253';
+  //static const mqttServer = '47.94.248.253';
+  static const mqttServer = '39.107.140.193';
 
   static const int keepAlivePeriod = 30;
 

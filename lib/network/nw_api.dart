@@ -5,9 +5,12 @@ class NWApi {
     static final baseApi = 'http://39.107.140.193:8080/api/cat';
 //  static final baseApi = 'http://172.16.40.36:8080/api/cat';
 
-  // ------------------------- 用户注册、登录相关 ---------------------------------
+  // ------------------------- 用户注册、登录、退出登录相关 ---------------------------------
   // 手机号、密码登录 Post
   static final login = '/user/login';
+
+  // 退出登录
+  static final logout = '/user/logout';
 
   // 手机号、短信认证码登录 Post
   static final smslogin = '/user/smslogin';

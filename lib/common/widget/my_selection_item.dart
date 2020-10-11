@@ -85,16 +85,6 @@ class MySelectionItemState extends State<MySelectionItem> {
               icon: widget.icon,
               title: widget.title,
             ),
-//            ValueListenableBuilder(
-//                valueListenable: widget.redrawNote,
-//                builder: (context, value, child) => _RightComponent(
-//                  onTap: widget.onTap,
-//                  content: widget.content,
-//                  textAlign: widget.textAlign,
-//                  maxLines: widget.maxLines,
-//                  image: widget.image,
-//                ),
-//            ),
             _RightComponent(
               onTap: widget.onTap,
               content: widget.content,

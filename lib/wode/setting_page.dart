@@ -6,6 +6,12 @@ import 'package:ape/common/constants.dart';
 import 'package:ape/common/widget/my_app_bar.dart';
 import 'package:ape/common/widget/my_selection_item.dart';
 import 'package:ape/mqtt/mqtt_provider.dart';
+import 'package:ape/network/nw_api.dart';
+import 'package:ape/network/rest_result_wrapper.dart';
+import 'package:ape/network/dio_manager.dart';
+import 'package:ape/util/other_utils.dart';
+import 'package:ape/util/log_utils.dart';
+import 'package:ape/entity/user.dart';
 
 /// 设置 页面
 class SettingPage extends StatefulWidget {
@@ -106,6 +112,21 @@ class _SettingPageState extends State<SettingPage> {
 
                 // 关闭 mqtt
                 MQTTProvider.disconnect();
+
+                // 通知后台退出登录
+                DioManager().request<String>(
+                    NWMethod.GET,
+                    NWApi.logout,
+                    params: <String,dynamic>{'uid':UserInfo.user.uid},
+                    success: (data,message) {
+                      Log.d("Logout success!");
+                    },
+                    error: (error) {
+                      Log.e("Logout error! code = ${error.code}, message = ${error.message}");
+
+                      OtherUtils.showToastMessage('退出登录失败 : ${error.code}!');
+                    }
+                );
 
                 NavigatorUtils.push(context, GlobalRouter.splash, clearStack: true);
               },),

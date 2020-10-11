@@ -18,12 +18,13 @@ class SpConstants {
 
 }
 
-/// 当前用户信息
+/// 当前用户信息 - main 启动时将读取当前用户信息
 class UserInfo {
 
   static User user;
 
   static void init() {
+    print('Current user info is reading...');
     if (user == null) {
       user = getLocalUser();
     }

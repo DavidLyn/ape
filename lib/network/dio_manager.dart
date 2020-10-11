@@ -151,6 +151,17 @@ class DioManager {
 
   }
 
+  /// 下载并保存文件
+  Future<bool> downloadFile(fileUrl, savePath) async {
+    try {
+      await _dio.download(fileUrl, savePath);
+      return true;
+    } on Exception catch(e) {
+      print('Download file error : $e');
+      return false;
+    }
+  }
+
   // 错误信息
   RestErrorEntity createErrorEntity(DioError error) {
     switch (error.type) {

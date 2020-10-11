@@ -11,7 +11,6 @@ import 'package:ape/network/rest_result_wrapper.dart';
 import 'package:ape/network/dio_manager.dart';
 import 'package:ape/util/other_utils.dart';
 import 'package:ape/util/log_utils.dart';
-import 'package:ape/entity/user.dart';
 
 /// 设置 页面
 class SettingPage extends StatefulWidget {

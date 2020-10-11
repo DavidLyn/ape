@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -314,39 +315,44 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     }
 
     // 上传文件
-    DioManager().uploadAvatar(NWApi.uploadAvatar, uid, imageFile,
+    await DioManager().uploadAvatar(NWApi.uploadAvatar, uid, imageFile,
         success: (data, message) {
       Log.d('Avatar upload success! data = ' + data);
 
       UserInfo.setAvatar(data);
 
-    }, error: (error) {
+      // 删除原有头像文件
+      var oldFile = FlutterStars.SpUtil.getString(SpConstants.userAvatar);
+
+      if (oldFile.isNotEmpty) {
+        ApplicationDocumentManager.deleteFile(oldFile);
+      }
+
+      // 保存当前头像文件
+      String path = imageFile.path;
+      var name = path.substring(path.lastIndexOf("/") + 1, path.length);
+      var suffix = name.substring(name.lastIndexOf(".") + 1, name.length);
+
+      // 注意:此处需要换一下文件名,不然可能是缓存的原因 MyAvatar 的图片不会更换
+      var num = Random().nextInt(1000);
+      var newFile = '${ApplicationDocumentManager.documentsPath}/avatar$num.$suffix';
+
+      ApplicationDocumentManager.writeFile(newFile, imageFile);
+
+      // 记录新头像文件名
+      FlutterStars.SpUtil.putString(SpConstants.userAvatar, newFile);
+
+      // 刷新界面
+      _itemAvatarKey.currentState.setImage(MyAvatar(
+        width: 28.0,
+        height: 28.0,
+      ));
+
+      }, error: (error) {
       Log.e("Avatar upload error! code = ${error.code}, message = ${error.message}");
+      OtherUtils.showToastMessage('更换头像失败 : ${error.code}!');
     });
 
-    // 删除原有头像文件
-    var oldFile = FlutterStars.SpUtil.getString(SpConstants.userAvatar);
-
-    if (oldFile.isNotEmpty) {
-      ApplicationDocumentManager.deleteFile(oldFile);
-    }
-
-    // 保存当前头像文件
-    String path = imageFile.path;
-    var name = path.substring(path.lastIndexOf("/") + 1, path.length);
-    var suffix = name.substring(name.lastIndexOf(".") + 1, name.length);
-
-    var newFile = '${ApplicationDocumentManager.documentsPath}/avatar.$suffix';
-
-    ApplicationDocumentManager.writeFile(newFile, imageFile);
-
-    // 记录新头像文件名
-    FlutterStars.SpUtil.putString(SpConstants.userAvatar, newFile);
-
-    // 刷新界面
-    _itemAvatarKey.currentState.setImage(MyAvatar(
-      width: 28.0,
-      height: 28.0,
-    ));
   }
+
 }

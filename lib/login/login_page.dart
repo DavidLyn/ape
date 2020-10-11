@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
       success: (data,message) {
         Log.d("Login success! user = $data");
 
-        // 将 user 保存到本地
+        // 将 user 保存到本地,拉取头像等
         UserInfo.saveUserToLocal(data);
 
         // 保存已登录状态

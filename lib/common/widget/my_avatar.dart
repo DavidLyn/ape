@@ -26,10 +26,10 @@ class MyAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+
     var avatarFile = FlutterStars.SpUtil.getString(SpConstants.userAvatar);
 
-    return avatarFile.isEmpty ? 
+    return avatarFile.isEmpty ?
      Image.asset( 'assets/images/common/default_avatar.png',
        width: width,
        height: height,

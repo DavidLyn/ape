@@ -1,5 +1,8 @@
 import 'package:flustars/flustars.dart' as flutter_stars;
+import 'dart:math';
 import 'package:ape/entity/user.dart';
+import 'package:ape/util/file_utils.dart';
+import 'package:ape/network/dio_manager.dart';
 
 /// 保存可能被多个模块引用的 Shared Preference 常量
 class SpConstants {
@@ -66,7 +69,7 @@ class UserInfo {
 
   }
 
-  static void saveUserToLocal(User user) {
+  static void saveUserToLocal(User user) async {
 
     UserInfo.user = user;
 
@@ -84,6 +87,36 @@ class UserInfo {
     flutter_stars.SpUtil.putInt('sp_status',user.status);
     flutter_stars.SpUtil.putInt('sp_gender',user.gender);
     flutter_stars.SpUtil.putString('sp_profile',user.profile);
+
+    // 设置 avatar 文件
+    if (user.avatar == null || user.avatar.isEmpty) {
+      flutter_stars.SpUtil.putString(SpConstants.userAvatar, '');
+    } else {
+      // 删除原有头像文件
+      var oldFile = flutter_stars.SpUtil.getString(SpConstants.userAvatar);
+
+      if (oldFile.isNotEmpty) {
+        ApplicationDocumentManager.deleteFile(oldFile);
+      }
+
+      // 分解文件名和后缀名
+      String path = user.avatar;
+      var name = path.substring(path.lastIndexOf("/") + 1, path.length);
+      var suffix = name.substring(name.lastIndexOf(".") + 1, name.length);
+
+      // 注意:此处需要换一下文件名,不然可能是缓存的原因 MyAvatar 的图片不会更换
+      var num = Random().nextInt(1000);
+      var newFile = '${ApplicationDocumentManager.documentsPath}/avatar$num.$suffix';
+
+      // 下载头像文件
+      if (await DioManager().downloadFile(path, newFile)) {
+        // 记录新头像文件名
+        flutter_stars.SpUtil.putString(SpConstants.userAvatar, newFile);
+        print('Set avatar file ok : $newFile');
+      } else {
+        flutter_stars.SpUtil.putString(SpConstants.userAvatar, '');
+      };
+    }
   }
 
   static void setNickname(String nickname) {

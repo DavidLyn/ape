@@ -3,6 +3,12 @@ import 'dart:math';
 import 'package:ape/entity/user.dart';
 import 'package:ape/util/file_utils.dart';
 import 'package:ape/network/dio_manager.dart';
+import 'package:ape/common/sqlite_manager.dart';
+import 'package:ape/network/nw_api.dart';
+import 'package:ape/network/rest_result_wrapper.dart';
+import 'package:ape/util/other_utils.dart';
+import 'package:ape/util/log_utils.dart';
+import 'package:ape/entity/friend_entity.dart';
 
 /// 保存可能被多个模块引用的 Shared Preference 常量
 class SpConstants {
@@ -69,7 +75,8 @@ class UserInfo {
 
   }
 
-  static void saveUserToLocal(User user) async {
+  /// 用户重新登录(login or smsLogin)后调用本方法设置本地信息
+  static void saveUserToLocal(User user, {bool isReload : false}) async {
 
     UserInfo.user = user;
 
@@ -88,7 +95,7 @@ class UserInfo {
     flutter_stars.SpUtil.putInt('sp_gender',user.gender);
     flutter_stars.SpUtil.putString('sp_profile',user.profile);
 
-    // 设置 avatar 文件
+    // 读取当前用户的 avatar 文件到本地
     if (user.avatar == null || user.avatar.isEmpty) {
       flutter_stars.SpUtil.putString(SpConstants.userAvatar, '');
     } else {
@@ -116,6 +123,51 @@ class UserInfo {
       } else {
         flutter_stars.SpUtil.putString(SpConstants.userAvatar, '');
       };
+    }
+
+    // 根据需要重载当前用户相关信息至本地
+    if (isReload) {
+      // 删除本地数据表信息, 将来需扩展 ......
+      await DbManager.db.execute('delete from FriendAskfor');
+      await DbManager.db.execute('delete from FriendInviting');
+      await DbManager.db.execute('delete from Friend');
+
+      // 从后台拉取当前用户相关信息并保存
+      DioManager().request<List<dynamic>>(
+          NWMethod.GET,
+          NWApi.reloadFriends,
+          params : <String,dynamic>{'uid':user.uid},
+          success: (data,message) {
+            Log.d("Reload friends success!");
+
+            if (data.length > 0) {
+              for (Map<String,dynamic> obj in data) {
+                print('obj = $obj');
+
+                FriendEntity friend = FriendEntity();
+                friend.uid = obj['uid'];
+                friend.friendId = obj['friendId'];
+                friend.nickname = obj['nickname'];
+                friend.profile = obj['profile'];
+                friend.gender = obj['gender'];
+                friend.state = obj['state'];
+                friend.relation = obj['relation'];
+                friend.avatar = obj['avatar'];
+                friend.friendTime = DateTime.parse(obj['friendTime']);
+
+                FriendEntity.insert(friend);
+              }
+            }
+
+            return true;
+          },
+          error: (error) {
+            Log.e("Reload friends error! code = ${error.code}, message = ${error.message}");
+
+            OtherUtils.showToastMessage('拉取好友信息失败 : ${error.code}!');
+            return false;
+          }
+      );
     }
   }
 

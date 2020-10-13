@@ -33,6 +33,9 @@ class NWApi {
   // 搜索用户
   static final searchUserByMobileOrName = '/user/searchByMobileOrName';
 
+  // 重载用户信息
+  static final reloadFriends = '/user/reloadFriends';
+
   // ------------------------------ 社交相关 ------------------------------------
   // 获取用户基本信息
   static final getUserInfo = '/social/userInfo';

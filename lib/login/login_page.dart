@@ -73,8 +73,8 @@ class _LoginPageState extends State<LoginPage> {
       success: (data,message) {
         Log.d("Login success! user = $data");
 
-        // 将 user 保存到本地,拉取头像等
-        UserInfo.saveUserToLocal(data);
+        // 将 user 保存到本地,拉取头像等, 当 变更号码需重载用户信息
+        UserInfo.saveUserToLocal(data, isReload : userid == null);
 
         // 保存已登录状态
         FlutterStars.SpUtil.putBool(SpConstants.isNotLogin, false);

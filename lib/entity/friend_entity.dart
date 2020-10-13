@@ -22,7 +22,6 @@ class FriendEntity {
   int gender;             // 性别 1-男 2-女 0-保密
   String relation;        // 关系
 
-
   FriendEntity({
     this.id,
     this.uid,

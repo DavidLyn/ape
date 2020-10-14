@@ -292,4 +292,16 @@ class FriendProvider extends ChangeNotifier {
     );
   }
 
+  // ---------------------------------------------------
+  // 根据 friendId 检查是否为好友
+  bool isFriend(int friendId) {
+    for (var obj in _friends) {
+      if (obj.friendId == friendId) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 }

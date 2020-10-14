@@ -132,6 +132,15 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
       },
     );
 
+    var itemMobile = MySelectionItem(
+      icon: Icon(
+        Icons.phone,
+        color: Colors.green,
+      ),
+      title: '电话',
+      content: UserInfo.user.mobile,
+      onTap: null,
+    );
 
     var itemBirthday = MySelectionItem(
       key: _itemBirthdayKey,
@@ -261,6 +270,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
           itemAvatar,
           itemNickname,
           itemProfile,
+          itemMobile,
           itemBirthday,
           _itemGender,
         ],

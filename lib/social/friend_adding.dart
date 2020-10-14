@@ -1,5 +1,7 @@
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:ape/global/global_router.dart';
@@ -10,6 +12,7 @@ import 'package:ape/util/log_utils.dart';
 import 'package:ape/entity/user.dart';
 import 'package:ape/common/widget/app_bar_with_one_icon.dart';
 import 'package:ape/common/constants.dart';
+import 'package:ape/provider/friend_provider.dart';
 
 enum PageStatus {
   busy,
@@ -299,7 +302,7 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
             title: Text(userList[index].nickname),
             subtitle: Text(userList[index].profile),
             ///trailing: Icon(Icons.sort),
-            trailing: RaisedButton(
+            trailing: !Provider.of<FriendProvider>(context,listen: false).isFriend(userList[index].uid) ? RaisedButton(
               textColor: Colors.green,
               onPressed: (){
                 Map<String,String> params = {
@@ -316,7 +319,7 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
 
               },
               child: Text('请求加好友'),
-            ),
+            ) : Text('已是好友',style: TextStyle(fontSize: 14,color: Colors.black38),),
           ),
           onTap: () {
             Map<String, String> params = {
@@ -335,4 +338,5 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
       itemCount: userList.length,
     );
   }
+
 }

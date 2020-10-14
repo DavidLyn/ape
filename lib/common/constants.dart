@@ -1,5 +1,8 @@
 import 'package:flustars/flustars.dart' as flutter_stars;
 import 'dart:math';
+import 'package:provider/provider.dart';
+
+import 'package:ape/main.dart';
 import 'package:ape/entity/user.dart';
 import 'package:ape/util/file_utils.dart';
 import 'package:ape/network/dio_manager.dart';
@@ -9,6 +12,8 @@ import 'package:ape/network/rest_result_wrapper.dart';
 import 'package:ape/util/other_utils.dart';
 import 'package:ape/util/log_utils.dart';
 import 'package:ape/entity/friend_entity.dart';
+import 'package:ape/provider/friend_provider.dart';
+import 'package:ape/mqtt/mqtt_provider.dart';
 
 /// 保存可能被多个模块引用的 Shared Preference 常量
 class SpConstants {
@@ -33,7 +38,6 @@ class UserInfo {
   static User user;
 
   static void init() {
-    print('Current user info is reading...');
     if (user == null) {
       user = getLocalUser();
     }
@@ -133,7 +137,7 @@ class UserInfo {
       await DbManager.db.execute('delete from Friend');
 
       // 从后台拉取当前用户相关信息并保存
-      DioManager().request<List<dynamic>>(
+      await DioManager().request<List<dynamic>>(
           NWMethod.GET,
           NWApi.reloadFriends,
           params : <String,dynamic>{'uid':user.uid},
@@ -155,9 +159,17 @@ class UserInfo {
                 friend.avatar = obj['avatar'];
                 friend.friendTime = DateTime.parse(obj['friendTime']);
 
+                if (obj.containsKey("deleteTime")) {
+                  friend.deleteTime = DateTime.parse(obj['deleteTime']);
+                }
+
                 FriendEntity.insert(friend);
               }
+
             }
+
+            // 重新装载缓存中的 好友 信息
+            Provider.of<FriendProvider>(appContext, listen: false).reloadFriends();
 
             return true;
           },
@@ -169,6 +181,9 @@ class UserInfo {
           }
       );
     }
+
+    // 启动 mqtt
+    //MQTTProvider.connect(clientId : user.uid?.toString());
   }
 
   static void setNickname(String nickname) {

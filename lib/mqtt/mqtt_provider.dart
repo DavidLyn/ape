@@ -161,6 +161,7 @@ class MQTTProvider {
     isConnected = false;
 
     client?.disconnect();
+    client = null;
   }
 
   /// publish message
@@ -239,7 +240,6 @@ class MQTTProvider {
 
   /// 加友邀约 请求消息处理
   static void _makeFriend(MQTTMessage message) {
-
     Map<String,dynamic> map = json.decode(message.payload);
 
     var friendInviting = FriendInvitingEntity();

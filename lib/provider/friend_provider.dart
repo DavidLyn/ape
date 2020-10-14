@@ -54,6 +54,18 @@ class FriendProvider extends ChangeNotifier {
   }
 
   // ---------------------------------------------------------------------------
+  // 重载好友等信息
+  void reloadFriends() async {
+    _friends.clear();
+    _friendsAskfor.clear();
+    _friendsInviting.clear();
+
+    await _getFriendsFromDB();
+
+    notifyListeners();
+  }
+
+  // ---------------------------------------------------------------------------
   // 接受邀约 增加新朋友
   void acceptInviting(int index) async {
 

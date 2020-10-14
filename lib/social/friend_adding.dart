@@ -9,6 +9,7 @@ import 'package:ape/network/rest_result_wrapper.dart';
 import 'package:ape/util/log_utils.dart';
 import 'package:ape/entity/user.dart';
 import 'package:ape/common/widget/app_bar_with_one_icon.dart';
+import 'package:ape/common/constants.dart';
 
 enum PageStatus {
   busy,
@@ -40,10 +41,10 @@ class _FriendAddingState extends State<FriendAdding> {
       appBar: AppBarWithOneIcon(
         backgroundColor: Colors.green,
         centerTitle: '添加吾友',
-        actionIcon: Icon(Icons.add),
-        actionName: '添加',
-        onPressed: (){
-        },
+//        actionIcon: Icon(Icons.add),
+//        actionName: '添加',
+//        onPressed: (){
+//        },
       ),
       body: Column(
         children: <Widget>[
@@ -57,12 +58,12 @@ class _FriendAddingState extends State<FriendAdding> {
   Widget _searchItem() {
     return GestureDetector(
       child: Padding(
-        padding: EdgeInsets.only(left: 1,right: 1,top: 1,),
+        padding: EdgeInsets.only(left: 5,right: 5,top: 3,),
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(color:Colors.grey,width: 1.0,),
+            border: Border.all(color:Colors.black12,width: 1.0,),
             color: Colors.white10,
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            borderRadius: BorderRadius.all(Radius.circular(15.0)),
           ),
           alignment: Alignment.center,
           height: 36,
@@ -123,7 +124,21 @@ class _SearchFriendDelegate extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     if (query.length == 0) {
-      return Text('请输入搜索关键字!');
+      return Container(
+        alignment: Alignment.center,
+        child: Text('请输入搜索关键字!',
+          style: TextStyle(color: Colors.black38,fontSize: 28),
+        ),
+      );
+    }
+
+    if (query == UserInfo.user.mobile) {
+      return Container(
+        alignment: Alignment.center,
+        child: Text('请输入非本人的手机号!',
+          style: TextStyle(color: Colors.black38,fontSize: 20),
+        ),
+      );
     }
 
     return FriendSearchByMobile(mobile: query,);
@@ -132,7 +147,7 @@ class _SearchFriendDelegate extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     return Center(
-      child: Text('输入搜索关键字',style: TextStyle(fontSize: 28,color: Colors.grey),),
+      child: Text('输入搜索关键字',style: TextStyle(fontSize: 24,color: Colors.black38),),
     );
   }
 
@@ -141,7 +156,7 @@ class _SearchFriendDelegate extends SearchDelegate<String> {
     var theme = Theme.of(context);
     return super.appBarTheme(context).copyWith(
 //        primaryColor: theme.scaffoldBackgroundColor,
-        primaryColor: Colors.green,
+        primaryColor: Colors.greenAccent,
         primaryColorBrightness: theme.brightness,
     );
   }
@@ -219,7 +234,7 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
             '正在查询数据......',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 32.0,
+              fontSize: 28.0,
               fontWeight:
               FontWeight.bold,
             ),
@@ -237,7 +252,7 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
               '查询数据出错!',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 32.0,
+                fontSize: 28.0,
                 fontWeight:
                 FontWeight.bold,
               ),
@@ -255,7 +270,7 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
               '查询不到数据!',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 32.0,
+                fontSize: 28.0,
                 fontWeight:
                 FontWeight.bold,
               ),
@@ -300,11 +315,15 @@ class _FriendSearchByMobileState extends State<FriendSearchByMobile> {
                 }, params:params);
 
               },
-              child: Text('请求加友'),
+              child: Text('请求加好友'),
             ),
           ),
-
           onTap: () {
+            Map<String, String> params = {
+              'uid': userList[index].uid.toString(),
+            };
+
+            NavigatorUtils.push(context, GlobalRouter.personHome,params: params);
 
           },
         );

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:ape/main.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class MQTTProvider {
 
   static const commandMakeFriend = 'makeFriend';                     // 申请加好友
   static const commandMakeFriendResponse = 'makeFriendResponse';     // 申请加好友响应
+  static const commandGetUnsentMessage = 'getUnsentMessage';         // 获取后台未发送的消息
 
   // 向后台发送消息的 topic
   static const topicOfCatEars = 'cat/ears';
@@ -132,6 +134,9 @@ class MQTTProvider {
 
     // 订阅 cat/msg/{uid} 主题, cat 将向该主题发送消息
     subscribe('$topicPrefixToListen${UserInfo.user.uid}');
+
+    // 订阅 cat/msg/{uid} 主题后, 请求后台发送 unsent 消息
+    _getUnsentMessage();
   }
 
   /// reconnect
@@ -226,9 +231,27 @@ class MQTTProvider {
     print('MQTT::Ping response client callback invoked');
   }
 
+  /// ------------------------  向后台发送获取 unsent 消息的请求  ------------------
+  static void _getUnsentMessage() {
+    var message = MQTTMessage();
+    message.type = 0;
+    message.command = MQTTProvider.commandGetUnsentMessage;
+    message.senderId = UserInfo.user.uid;
+    message.receiverId = 0;     // 0 代表 后台
+    message.sendTime = DateTime.now();
+
+    // 设置 消息ID
+    message.msgId = Uuid().v1();
+
+    message.payload = '';    // payload 可为空
+
+    // 向 topicOfCatEars 发送
+    publish(message: jsonEncode(message));
+
+  }
+
   /// ------------------------  MQTT 消息处理  ------------------------
   static void dealMQTTMessage(String topic, MQTTMessage message) {
-
     // 注意 : 经测试向 xxx topic 发送消息时, 在 xxx topic 上也能收到该消息, 因此过滤掉此消息
     if (message.command == commandMakeFriend && topic != topicOfCatEars) {
       _makeFriend(message);
@@ -245,7 +268,11 @@ class MQTTProvider {
     var friendInviting = FriendInvitingEntity();
     friendInviting.uid = UserInfo.user.uid;
     friendInviting.msgId = message.msgId;
-    friendInviting.friendId = int.parse(map['friendId']);
+
+    // 注意:根据协议约定,此处需做一下调换
+    //friendInviting.friendId = int.parse(map['friendId']);
+    friendInviting.friendId = int.parse(map['uid']);
+
     friendInviting.nickname = map['nickname'];
     friendInviting.avatar = map['avatar'];
     friendInviting.profile = map['profile'];

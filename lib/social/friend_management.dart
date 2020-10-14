@@ -200,7 +200,7 @@ class _FriendListPageState extends State<_FriendListPage> {
               InkWell(
                 onTap: (){
                   Map<String, String> params = {
-                    'uid': friendEntity.uid.toString(),
+                    'uid': friendEntity.friendId.toString(),
                   };
 
                   NavigatorUtils.push(context, GlobalRouter.personHome,params: params);
@@ -424,7 +424,7 @@ class _FriendRequestPageState extends State<_FriendRequestPage> {
               InkWell(
                 onTap: (){
                   Map<String, String> params = {
-                    'uid': askforEntity.uid.toString(),
+                    'uid': askforEntity.friendId.toString(),
                   };
 
                   NavigatorUtils.push(context, GlobalRouter.personHome,params: params);
@@ -639,7 +639,7 @@ class _FriendInvitedPageState extends State<_FriendInvitedPage> {
                 InkWell(
                   onTap: (){
                     Map<String, String> params = {
-                      'uid': invitingEntity.uid.toString(),
+                      'uid': invitingEntity.friendId.toString(),
                     };
 
                     NavigatorUtils.push(context, GlobalRouter.personHome,params: params);

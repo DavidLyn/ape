@@ -132,8 +132,8 @@ class UserInfo {
     // 根据需要重载当前用户相关信息至本地
     if (isReload) {
       // 删除本地数据表信息, 将来需扩展 ......
-      await DbManager.db.execute('delete from FriendAskfor');
-      await DbManager.db.execute('delete from FriendInviting');
+      //await DbManager.db.execute('delete from FriendAskfor');
+      //await DbManager.db.execute('delete from FriendInviting');
       await DbManager.db.execute('delete from Friend');
 
       // 从后台拉取当前用户相关信息并保存
@@ -182,8 +182,6 @@ class UserInfo {
       );
     }
 
-    // 启动 mqtt
-    //MQTTProvider.connect(clientId : user.uid?.toString());
   }
 
   static void setNickname(String nickname) {

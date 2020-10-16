@@ -28,8 +28,13 @@ class _WodePageState extends State<WodePage>
     return Scaffold(
       appBar: AppBar(
         title: Badge(
-          badgeContent: Text('3'),
-          badgeColor: Colors.yellow,
+//          badgeContent: Text('1',style: TextStyle(fontSize: 6),),
+          badgeContent: null,
+          //badgeColor: Colors.yellow,
+//          position: BadgePosition.topRight(top:-8,right: -8),
+          position: BadgePosition.topRight(top:-4,right: -4),
+          shape: BadgeShape.circle,
+          showBadge : true,
           child: Text(
             '我的',
             style: TextStyle(

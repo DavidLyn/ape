@@ -16,6 +16,7 @@ import 'package:ape/util/log_utils.dart';
 import 'package:ape/util/file_utils.dart';
 import 'package:ape/common/constants.dart';
 import 'package:ape/provider/friend_provider.dart';
+import 'package:ape/provider/badge_provider.dart';
 import 'package:ape/util/timeline_utils.dart';
 
 // 初始化 provider
@@ -26,6 +27,10 @@ List<SingleChildWidget> _providers = [
 
   ChangeNotifierProvider<FriendProvider>(
     create: (context) => FriendProvider(),
+  ),
+
+  ChangeNotifierProvider<BadgeProvider>(
+    create: (context) => BadgeProvider(),
   ),
 ];
 

@@ -85,6 +85,14 @@ class DbManager {
 
           await db.execute(
               'CREATE TABLE Friend (id INTEGER PRIMARY KEY, uid INTEGER, friendId INTEGER, nickname TEXT, avatar TEXT, profile TEXT, gender INTEGER, state INTEGER, isValid INTEGER, friendTime INTEGER, rejectTime INTEGER, deleteTime INTEGER, relation TEXT, updateTime INTEGER)');
+
+          // 徽章表 - Badge
+          // id - 自增序号,主键
+          // keyName - 键
+          // value - 值
+          await db.execute(
+              'CREATE TABLE Badge (id INTEGER PRIMARY KEY, keyName TEXT, value INTEGER)');
+
         },
         onUpgrade: (Database db, int oldVersion, int newVersion) async {
           print('DB onUpgrade oldVersion:$oldVersion, newVersion=$newVersion');

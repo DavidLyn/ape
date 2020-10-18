@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ape/entity/friend_entity.dart';
 import 'package:ape/entity/friend_askfor_entity.dart';
 import 'package:ape/entity/friend_inviting_entity.dart';
@@ -10,6 +11,8 @@ import 'package:ape/network/dio_manager.dart';
 import 'package:ape/network/nw_api.dart';
 import 'package:ape/network/rest_result_wrapper.dart';
 import 'package:ape/util/other_utils.dart';
+import 'package:ape/provider/badge_provider.dart';
+import 'package:ape/main.dart';
 
 /// 保存 好友 信息的 provider
 class FriendProvider extends ChangeNotifier {
@@ -42,13 +45,11 @@ class FriendProvider extends ChangeNotifier {
     var askforList = await FriendAskforEntity.getFriendAskforList();
     for (var obj in askforList) {
       _friendsAskfor.add(obj);
-      //print('FriendAskfor from db = ${_friendsAskfor[_friendsAskfor.length-1].toMap()}');
     }
 
     var invitingList = await FriendInvitingEntity.getFriendInvitingList();
     for (var obj in invitingList) {
       _friendsInviting.add(obj);
-      //print('FriendInviting from db = ${_friendsInviting[_friendsInviting.length-1].toMap()}');
     }
 
   }
@@ -178,6 +179,9 @@ class FriendProvider extends ChangeNotifier {
     _friendsInviting.insert(0, friendInviting);
 
     notifyListeners();
+
+    // 设置相关 badge
+    Provider.of<BadgeProvider>(appContext,listen: false).increment(BadgeProvider.addFriendInviting);
   }
 
   // 加友邀约响应
@@ -222,6 +226,8 @@ class FriendProvider extends ChangeNotifier {
       await FriendEntity.insert(friend);
       _friends.add(friend);
 
+      // 设置相关 badge
+      Provider.of<BadgeProvider>(appContext,listen: false).increment(BadgeProvider.addNewFriend);
     }
 
     notifyListeners();

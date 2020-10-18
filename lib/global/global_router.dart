@@ -26,6 +26,9 @@ import 'package:ape/common/personal_home_page.dart';
 import 'package:ape/common/personal_fan_page.dart';
 import 'package:ape/common/personal_follow_page.dart';
 
+import 'package:ape/group/group_management.dart';
+import 'package:ape/group/group_creating.dart';
+
 /// 定义全局 Router 和初始化方法
 class GlobalRouter {
   static final splash = '/';
@@ -46,6 +49,9 @@ class GlobalRouter {
   static final friendAdding = '/social/friendAdding';
   static final friendAskFor = '/social/friendAskFor';
   static final friendSetRelation = '/social/friendSetRelation';
+
+  static final groupManagement = '/group/groupManagement';
+  static final groupCreating = '/group/groupCreating';
 
   // 通用功能：编辑 text 字段
   static final textEdit = '/common/textEdit';
@@ -176,6 +182,14 @@ class GlobalRouter {
 
           return PersonalFollowPage(uid: uid);
         }));
+
+    router.define(groupManagement, handler: Handler(handlerFunc: (_, params) {
+      return GroupManagement();
+    }));
+
+    router.define(groupCreating, handler: Handler(handlerFunc: (_, params) {
+      return GroupCreating();
+    }));
 
   }
 }

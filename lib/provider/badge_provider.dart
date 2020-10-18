@@ -4,16 +4,20 @@ import 'package:badges/badges.dart';
 import 'package:ape/entity/badge_entity.dart';
 
 // 描述关联关系
-Map<String,List<String>> _badgeRelations = {
-  'example1' : ['1','2'],
-  'example2' : ['1','2'],
+Map<String, List<String>> _badgeRelations = {
+  'example1': ['1', '2'],
+  'example2': ['1', '2'],
 };
-
-// 徽章 map
-Map<String,int> _badgeMap = Map<String,int>();
 
 /// 徽章 Provider
 class BadgeProvider extends ChangeNotifier {
+
+  static String pageHomeWode = 'pageHomeWode';
+  static String addFriendInviting = 'addFriendInviting';
+  static String addNewFriend = 'addNewFriend';
+
+  // 徽章 map
+  Map<String, int> _badgeMap = Map<String, int>();
 
   BadgeProvider() {
     _init();
@@ -21,7 +25,6 @@ class BadgeProvider extends ChangeNotifier {
 
   // 初始化 _badgeMap
   void _init() async {
-
     var list = await BadgeEntity.getBadgeList();
 
     for (BadgeEntity obj in list) {
@@ -32,7 +35,7 @@ class BadgeProvider extends ChangeNotifier {
   }
 
   // 递增
-  void increment(String keyName,{int step : 1}) {
+  void increment(String keyName, {int step: 1}) {
     if (_badgeMap.containsKey(keyName)) {
       _badgeMap[keyName] = _badgeMap[keyName] + step;
     } else {
@@ -60,11 +63,8 @@ class BadgeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-}
-
-/// 徽章工具类
-class BadgeUtil {
-  static Widget getBadge({@required String key,@required Widget child,bool withContent : true}) {
+  // 获取 badge
+  Widget getBadge({@required String key, @required Widget child, bool withContent: true}) {
     if (!_badgeMap.containsKey(key)) {
       return child;
     }
@@ -83,17 +83,19 @@ class BadgeUtil {
 
     var item;
     if (withContent) {
-      item = Text(content,style: TextStyle(fontSize: 6),);
+      item = Text(
+        content,
+        style: TextStyle(fontSize: 6),
+      );
     }
 
     return Badge(
       badgeContent: item,
 //    position: BadgePosition.topRight(top:-8,right: -8),
-      position: BadgePosition.topRight(top:-4,right: -4),
+      position: BadgePosition.topRight(top: -4, right: -4),
       shape: BadgeShape.circle,
       child: child,
       showBadge: true,
     );
-
   }
 }

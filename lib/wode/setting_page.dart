@@ -68,6 +68,11 @@ class _SettingPageState extends State<SettingPage> {
                 onTap: () => NavigatorUtils.push(context, GlobalRouter.friendManagement)
             ),
             MySelectionItem(
+                icon: Icon(Icons.group, color: Colors.green,),
+                title: '吾群',
+                onTap: () => NavigatorUtils.push(context, GlobalRouter.groupManagement)
+            ),
+            MySelectionItem(
                 icon: Icon(Icons.announcement, color: Colors.green,),
                 title: '清除缓存',
                 content: '23.5MB',

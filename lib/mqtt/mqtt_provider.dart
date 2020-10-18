@@ -270,7 +270,6 @@ class MQTTProvider {
     friendInviting.msgId = message.msgId;
 
     // 注意:根据协议约定,此处需做一下调换
-    //friendInviting.friendId = int.parse(map['friendId']);
     friendInviting.friendId = int.parse(map['uid']);
 
     friendInviting.nickname = map['nickname'];

@@ -6,6 +6,8 @@ import 'package:ape/wode/wode_page.dart';
 import 'package:ape/common/widget/double_tap_back_exit_app.dart';
 import 'package:ape/mqtt/mqtt_provider.dart';
 import 'package:ape/common/constants.dart';
+import 'package:ape/provider/badge_provider.dart';
+import 'package:provider/provider.dart';
 
 /// Home 页面
 class HomePage extends StatefulWidget {
@@ -42,11 +44,24 @@ class _HomePageState extends State<HomePage> {
           const Icon(Icons.people,size: 25,color: Colors.green,),
         ],
         [
-          const Icon(Icons.account_circle,size: 25,),
-          const Icon(Icons.account_circle,size: 25,color: Colors.green,),
+//          const Icon(Icons.account_circle,size: 25,),
+//          const Icon(Icons.account_circle,size: 25,color: Colors.green,),
+          Provider.of<BadgeProvider>(context,listen: false).getBadge(
+              key: BadgeProvider.pageHomeWode,
+              child: Icon(Icons.account_circle,size: 25,),
+          ),
+          Provider.of<BadgeProvider>(context,listen: false).getBadge(
+            key: BadgeProvider.pageHomeWode,
+            child: Icon(Icons.account_circle,size: 25,color: Colors.green,),
+          ),
         ],
       ];
       _list = List.generate(_appBarTitles.length, (i) {
+
+        Provider.of<BadgeProvider>(context,listen: false).getBadge(
+            key: 'page_home_wode',
+            child: null
+        );
         return BottomNavigationBarItem(
             icon: _tabImages[i][0],
             activeIcon: _tabImages[i][1],
@@ -91,7 +106,12 @@ class _HomePageState extends State<HomePage> {
               unselectedFontSize: 10.0,
               selectedItemColor: Colors.green,
               unselectedItemColor: Color(0xffbfbfbf),
-              onTap: (index) => _pageController.jumpToPage(index),
+              onTap: (index) {
+                if (index == 2) {
+                  Provider.of<BadgeProvider>(context,listen: false).reset(BadgeProvider.pageHomeWode);
+                }
+                _pageController.jumpToPage(index);
+              },
           ),
           // 使用PageView的原因参看 https://zhuanlan.zhihu.com/p/58582876
           body: PageView(

@@ -12,6 +12,7 @@ import 'package:ape/entity/friend_askfor_entity.dart';
 import 'package:ape/entity/friend_entity.dart';
 import 'package:ape/util/timeline_utils.dart';
 import 'package:ape/common/widget/my_gender_image.dart';
+import 'package:ape/provider/badge_provider.dart';
 
 /// 好友管理
 class FriendManagement extends StatefulWidget {
@@ -59,15 +60,27 @@ class _FriendManagementState extends State<FriendManagement> {
               padding: EdgeInsets.symmetric(horizontal: 70),
               child: TabBar(
                 tabs: [
-                  Tab(
-                    text: "吾友",
+                  Provider.of<BadgeProvider>(context,listen: false).getBadge(
+                      key: BadgeProvider.addNewFriend,
+                      child: Tab(
+                        text: "吾友",
+                      ),
                   ),
+//                  Tab(
+//                    text: "吾友",
+//                  ),
                   Tab(
                     text: "请求",
                   ),
-                  Tab(
-                    text: "邀约",
+                  Provider.of<BadgeProvider>(context,listen: false).getBadge(
+                    key: BadgeProvider.addFriendInviting,
+                    child: Tab(
+                      text: "邀约",
+                    ),
                   ),
+//                  Tab(
+//                    text: "邀约",
+//                  ),
                 ],
                 controller: mTabcontroller,
                 //配置控制器
@@ -85,6 +98,14 @@ class _FriendManagementState extends State<FriendManagement> {
                 unselectedLabelStyle: TextStyle(
                   fontSize: 14.0,
                 ),
+                onTap: (index) {
+                  if (index == 0) {
+                    Provider.of<BadgeProvider>(context,listen: false).reset(BadgeProvider.addNewFriend);
+                  }
+                  if (index == 2) {
+                    Provider.of<BadgeProvider>(context,listen: false).reset(BadgeProvider.addFriendInviting);
+                  }
+                },
               ),
             ),
             Expanded(

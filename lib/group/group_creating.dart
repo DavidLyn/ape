@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ape/common/widget/app_bar_with_one_icon.dart';
 import 'package:ape/global/global_router.dart';
+import 'package:ape/common/widget/my_text_field.dart';
+import 'package:ape/util/other_utils.dart';
 
 /// 创建新群组
 class GroupCreating extends StatefulWidget {
@@ -11,6 +13,12 @@ class GroupCreating extends StatefulWidget {
 }
 
 class _GroupCreatingState extends State<GroupCreating> {
+
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _profileController = TextEditingController();
+//  final FocusNode _nodeName = FocusNode();
+//  final FocusNode _nodeProfile = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -30,12 +38,41 @@ class _GroupCreatingState extends State<GroupCreating> {
         actionIcon: Icon(Icons.save),
         actionName: '保存',
         onPressed: () {
-//          NavigatorUtils.push(context, GlobalRouter.groupCreating);
+          if (_nameController.text.isEmpty) {
+            OtherUtils.showToastMessage('请设置群名称');
+            return;
+          }
+
+          NavigatorUtils.goBack(context);
         },
       ),
       body: Column(
         children: <Widget>[
           _itemPhoto(),
+          SizedBox(height: 8),
+          Container(
+            padding: EdgeInsets.only(left: 16,right: 16,),
+            child: MyTextField(
+              key: const Key('name'),
+              //focusNode: _nodeName,
+              controller: _nameController,
+              maxLength: 30,
+              keyboardType: TextInputType.text,
+              hintText: '请输入群名称(不超过30个字符)',
+            ),
+          ),
+          SizedBox(height: 8),
+          Container(
+            padding: EdgeInsets.only(left: 16,right: 16,),
+            child: MyTextField(
+              key: const Key('profile'),
+              //focusNode: _nodeProfile,
+              controller: _profileController,
+              maxLength: 60,
+              keyboardType: TextInputType.text,
+              hintText: '请输入群简介(不超过60个字符)',
+            ),
+          ),
         ],
       ),
     );
@@ -58,16 +95,7 @@ class _GroupCreatingState extends State<GroupCreating> {
             shape: BoxShape.circle,
             color: Colors.black12,
           ),
-          child: Container(
-            padding: EdgeInsets.only(top: 40),
-            child: Column(
-              children: <Widget>[
-                Center(
-                  child: Text('选择照片'),
-                ),
-              ],
-            ),
-          ),
+          child: Text('选择照片'),
         ),
       ),
     );

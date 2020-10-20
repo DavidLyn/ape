@@ -36,7 +36,7 @@ class NWApi {
   // 重载用户信息
   static final reloadFriends = '/user/reloadFriends';
 
-  // ------------------------------ 社交相关 ------------------------------------
+  // ------------------------------ 社交(好友)相关 ------------------------------------
   // 获取用户基本信息
   static final getUserInfo = '/social/userInfo';
 
@@ -45,5 +45,9 @@ class NWApi {
 
   // 删除/拉黑 好友
   static final deleteFriend = '/social/deleteFriend';
+
+  // ------------------------------ 社交(群组)相关 ------------------------------------
+  // 创建新群组
+  static final createGroup = '/group/createGroup';
 
 }

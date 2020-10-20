@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
@@ -5,6 +7,10 @@ import 'package:ape/common/widget/app_bar_with_one_icon.dart';
 import 'package:ape/global/global_router.dart';
 import 'package:ape/common/widget/my_text_field.dart';
 import 'package:ape/util/other_utils.dart';
+import 'package:ape/network/dio_manager.dart';
+import 'package:ape/network/nw_api.dart';
+import 'package:ape/common/constants.dart';
+import 'package:ape/util/log_utils.dart';
 
 /// 创建新群组
 class GroupCreating extends StatefulWidget {
@@ -14,6 +20,8 @@ class GroupCreating extends StatefulWidget {
 
 class _GroupCreatingState extends State<GroupCreating> {
 
+  File avatar;
+
   TextEditingController _nameController = TextEditingController();
   TextEditingController _profileController = TextEditingController();
 //  final FocusNode _nodeName = FocusNode();
@@ -22,6 +30,8 @@ class _GroupCreatingState extends State<GroupCreating> {
   @override
   void initState() {
     super.initState();
+
+    avatar = null;
   }
 
   @override
@@ -37,11 +47,28 @@ class _GroupCreatingState extends State<GroupCreating> {
         centerTitle: '创建新群',
         actionIcon: Icon(Icons.save),
         actionName: '保存',
-        onPressed: () {
-          if (_nameController.text.isEmpty) {
-            OtherUtils.showToastMessage('请设置群名称');
+        onPressed: () async {
+          if (avatar == null) {
+            OtherUtils.showToastMessage('请设置照片');
             return;
           }
+
+          if (_nameController.text.isEmpty) {
+            OtherUtils.showToastMessage('请设置名称');
+            return;
+          }
+
+          await DioManager().createGroup( NWApi.createGroup, UserInfo.user.uid, _nameController.text, _profileController.text,
+            avatar,
+            success: (String data, String msg) {
+              print('data = $data');
+              print('message = $msg');
+            },
+            error: (error) {
+              Log.e("Create group error! code = ${error.code}, message = ${error.message}");
+              OtherUtils.showToastMessage(error.message ?? 'create group failed');
+            },
+          );
 
           NavigatorUtils.goBack(context);
         },
@@ -84,7 +111,7 @@ class _GroupCreatingState extends State<GroupCreating> {
         _selectPhoto(context);
       },
       child: Center(
-        child: Container(
+        child: avatar == null ? Container(
           margin: EdgeInsets.only(
             top: 8,
           ),
@@ -96,6 +123,18 @@ class _GroupCreatingState extends State<GroupCreating> {
             color: Colors.black12,
           ),
           child: Text('选择照片'),
+        ) : Container(
+          margin: EdgeInsets.only(
+            top: 8,
+          ),
+          alignment: Alignment.center,
+          height: 100,
+          width: 100,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.black12,
+            image: DecorationImage(image: FileImage(avatar),fit: BoxFit.fill),
+          ),
         ),
       ),
     );
@@ -112,20 +151,28 @@ class _GroupCreatingState extends State<GroupCreating> {
                 leading: Icon(Icons.photo_camera),
                 title: Text('相机'),
                 onTap: () async {
-                  var imageFile =
+                  var avatarNew =
                       await ImagePicker.pickImage(source: ImageSource.camera);
+                  if (avatarNew != null) {
+                    setState(() {
+                      avatar = avatarNew;
+                    });
+                  }
                   Navigator.pop(context);
-                  //_saveImage(imageFile);
                 },
               ),
               ListTile(
                 leading: Icon(Icons.photo_library),
                 title: Text('相册'),
                 onTap: () async {
-                  var imageFile =
+                  var avatarNew =
                       await ImagePicker.pickImage(source: ImageSource.gallery);
+                  if (avatarNew != null) {
+                    setState(() {
+                      avatar = avatarNew;
+                    });
+                  }
                   Navigator.pop(context);
-                  //_saveImage(imageFile);
                 },
               ),
             ],

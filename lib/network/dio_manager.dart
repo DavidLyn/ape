@@ -34,7 +34,6 @@ import 'package:ape/common/constants.dart';
 ///  }
 ///);
 class DioManager {
-
   static final DioManager _shared = DioManager._internal();
 
   factory DioManager() => _shared;
@@ -43,14 +42,13 @@ class DioManager {
 
   DioManager._internal() {
     if (_dio == null) {
-
       BaseOptions options = BaseOptions(
         baseUrl: NWApi.baseApi,
         contentType: Headers.jsonContentType,
         responseType: ResponseType.json,
         receiveDataWhenStatusError: false,
-        connectTimeout: 300000,       // 连接超时设置为 300 秒
-        receiveTimeout: 300000,       // 接收超时设置为 300 秒
+        connectTimeout: 300000, // 连接超时设置为 300 秒
+        receiveTimeout: 300000, // 接收超时设置为 300 秒
       );
 
       _dio = Dio(options);
@@ -58,7 +56,6 @@ class DioManager {
       // 添加拦截器
       _dio.interceptors.add(_AuthenticationInterceptor());
       _dio.interceptors.add(_LoggingInterceptor());
-
     }
   }
 
@@ -69,20 +66,28 @@ class DioManager {
   // params：URL 请求参数,Map 类型
   // success：请求成功回调
   // error：请求失败回调
-  Future request<T>(NWMethod method, String path, {Map data, Map params, Function(T t,String msg) success, Function(RestErrorEntity) error}) async {
+  Future request<T>(NWMethod method, String path,
+      {Map data,
+      Map params,
+      Function(T t, String msg) success,
+      Function(RestErrorEntity) error}) async {
     try {
-      Response response = await _dio.request(path, data : data, queryParameters: params, options: Options(method: NWMethodValues[method]));
+      Response response = await _dio.request(path,
+          data: data,
+          queryParameters: params,
+          options: Options(method: NWMethodValues[method]));
       if (response != null) {
-        RestResultBaseWrapper entity = RestResultBaseWrapper<T>.fromJson(response.data);
+        RestResultBaseWrapper entity =
+            RestResultBaseWrapper<T>.fromJson(response.data);
         if (entity.code == 0) {
-          success(entity.data,entity.message);
+          success(entity.data, entity.message);
         } else {
           error(RestErrorEntity(code: entity.code, message: entity.message));
         }
       } else {
         error(RestErrorEntity(code: -1, message: "未知错误"));
       }
-    } on DioError catch(e) {
+    } on DioError catch (e) {
       error(createErrorEntity(e));
     }
   }
@@ -94,11 +99,19 @@ class DioManager {
   // params：请求参数
   // success：请求成功回调
   // error：请求失败回调
-  Future requestList<T>(NWMethod method, String path, {Map data, Map params, Function(List<T>) success, Function(RestErrorEntity) error}) async {
+  Future requestList<T>(NWMethod method, String path,
+      {Map data,
+      Map params,
+      Function(List<T>) success,
+      Function(RestErrorEntity) error}) async {
     try {
-      Response response = await _dio.request(path, data : data, queryParameters: params, options: Options(method: NWMethodValues[method]));
+      Response response = await _dio.request(path,
+          data: data,
+          queryParameters: params,
+          options: Options(method: NWMethodValues[method]));
       if (response != null) {
-        RestResultListWrapper entity = RestResultListWrapper<T>.fromJson(response.data);
+        RestResultListWrapper entity =
+            RestResultListWrapper<T>.fromJson(response.data);
 
         if (entity.code == 0) {
           success(entity.data);
@@ -108,17 +121,15 @@ class DioManager {
       } else {
         error(RestErrorEntity(code: -1, message: "未知错误"));
       }
-    } on DioError catch(e) {
+    } on DioError catch (e) {
       error(createErrorEntity(e));
     }
   }
 
   // 上传头像
-  Future uploadAvatar( String urlPath,
-                       int uid,
-                       File image,
-                       { Function(String data,String msg) success,
-                         Function(RestErrorEntity) error }) async {
+  Future uploadAvatar(String urlPath, int uid, File image,
+      {Function(String data, String msg) success,
+      Function(RestErrorEntity) error}) async {
     String path = image.path;
     var name = path.substring(path.lastIndexOf("/") + 1, path.length);
     var suffix = name.substring(name.lastIndexOf(".") + 1, name.length);
@@ -133,75 +144,120 @@ class DioManager {
     });
 
     try {
-      Response response = await _dio.request(urlPath, data : formData, options: Options(method: 'post'));
+      Response response = await _dio.request(urlPath,
+          data: formData, options: Options(method: 'post'));
 
       if (response != null) {
-        RestResultBaseWrapper entity = RestResultBaseWrapper<String>.fromJson(response.data);
+        RestResultBaseWrapper entity =
+            RestResultBaseWrapper<String>.fromJson(response.data);
         if (entity.code == 0) {
-          success(entity.data,entity.message);
+          success(entity.data, entity.message);
         } else {
           error(RestErrorEntity(code: entity.code, message: entity.message));
         }
       } else {
         error(RestErrorEntity(code: -1, message: "未知错误"));
       }
-    } on DioError catch(e) {
+    } on DioError catch (e) {
       error(createErrorEntity(e));
     }
-
   }
 
-  /// 下载并保存文件
+  // 下载并保存文件
   Future<bool> downloadFile(fileUrl, savePath) async {
     try {
       await _dio.download(fileUrl, savePath);
       return true;
-    } on Exception catch(e) {
+    } on Exception catch (e) {
       print('Download file error : $e');
       return false;
+    }
+  }
+
+  // 创建新群组
+  Future createGroup(
+      String urlPath, int uid, String name, String profile, File image,
+      {Function(String data, String msg) success,
+      Function(RestErrorEntity) error}) async {
+    String path = image.path;
+    var name = path.substring(path.lastIndexOf("/") + 1, path.length);
+    var suffix = name.substring(name.lastIndexOf(".") + 1, name.length);
+
+    FormData formData = FormData.fromMap({
+      'uid': uid,
+      'name': name,
+      'profile': profile,
+      'file': MultipartFile.fromBytes(
+        image.readAsBytesSync(),
+        filename: name,
+        contentType: MediaType.parse("image/$suffix"),
+      ),
+    });
+
+    try {
+      Response response = await _dio.request(urlPath,
+          data: formData, options: Options(method: 'post'));
+
+      if (response != null) {
+        RestResultBaseWrapper entity =
+            RestResultBaseWrapper<String>.fromJson(response.data);
+        if (entity.code == 0) {
+          success(entity.data, entity.message);
+        } else {
+          error(RestErrorEntity(code: entity.code, message: entity.message));
+        }
+      } else {
+        error(RestErrorEntity(code: -1, message: "未知错误"));
+      }
+    } on DioError catch (e) {
+      error(createErrorEntity(e));
     }
   }
 
   // 错误信息
   RestErrorEntity createErrorEntity(DioError error) {
     switch (error.type) {
-      case DioErrorType.CANCEL:{
-        return RestErrorEntity(code: -1, message: "请求取消");
-      }
-      break;
-      case DioErrorType.CONNECT_TIMEOUT:{
-        return RestErrorEntity(code: -1, message: "连接超时");
-      }
-      break;
-      case DioErrorType.SEND_TIMEOUT:{
-        return RestErrorEntity(code: -1, message: "请求超时");
-      }
-      break;
-      case DioErrorType.RECEIVE_TIMEOUT:{
-        return RestErrorEntity(code: -1, message: "响应超时");
-      }
-      break;
-      case DioErrorType.RESPONSE:{
-        try {
-          int errCode = error.response.statusCode;
-          String errMsg = error.response.statusMessage;
-          return RestErrorEntity(code: errCode, message: errMsg);
-        } on Exception catch(_) {
-          return RestErrorEntity(code: -1, message: "未知错误");
+      case DioErrorType.CANCEL:
+        {
+          return RestErrorEntity(code: -1, message: "请求取消");
         }
-      }
-      break;
-      default: {
-        return RestErrorEntity(code: -1, message: error.message);
-      }
+        break;
+      case DioErrorType.CONNECT_TIMEOUT:
+        {
+          return RestErrorEntity(code: -1, message: "连接超时");
+        }
+        break;
+      case DioErrorType.SEND_TIMEOUT:
+        {
+          return RestErrorEntity(code: -1, message: "请求超时");
+        }
+        break;
+      case DioErrorType.RECEIVE_TIMEOUT:
+        {
+          return RestErrorEntity(code: -1, message: "响应超时");
+        }
+        break;
+      case DioErrorType.RESPONSE:
+        {
+          try {
+            int errCode = error.response.statusCode;
+            String errMsg = error.response.statusMessage;
+            return RestErrorEntity(code: errCode, message: errMsg);
+          } on Exception catch (_) {
+            return RestErrorEntity(code: -1, message: "未知错误");
+          }
+        }
+        break;
+      default:
+        {
+          return RestErrorEntity(code: -1, message: error.message);
+        }
     }
   }
-
 }
 
 /// 将 token 追加到 header 中的拦截器
 class _AuthenticationInterceptor extends Interceptor {
-
   @override
   onRequest(RequestOptions options) {
     // token 放在 user.password 中
@@ -214,12 +270,10 @@ class _AuthenticationInterceptor extends Interceptor {
 
     return super.onRequest(options);
   }
-
 }
 
 /// 输出 http 请求响应日志的拦截器
-class _LoggingInterceptor extends Interceptor{
-
+class _LoggingInterceptor extends Interceptor {
   DateTime _startTime;
   DateTime _endTime;
 
@@ -230,7 +284,11 @@ class _LoggingInterceptor extends Interceptor{
     if (options.queryParameters.isEmpty) {
       Log.d('RequestUrl: ' + options.baseUrl + options.path);
     } else {
-      Log.d('RequestUrl: ' + options.baseUrl + options.path + '?' + Transformer.urlEncodeMap(options.queryParameters));
+      Log.d('RequestUrl: ' +
+          options.baseUrl +
+          options.path +
+          '?' +
+          Transformer.urlEncodeMap(options.queryParameters));
     }
     Log.d('RequestMethod: ' + options.method);
     Log.d('RequestHeaders:' + options.headers.toString());

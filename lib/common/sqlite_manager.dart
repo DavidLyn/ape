@@ -93,6 +93,35 @@ class DbManager {
           await db.execute(
               'CREATE TABLE Badge (id INTEGER PRIMARY KEY, keyName TEXT, value INTEGER)');
 
+          // 群组表 - GroupMain
+          // id - 自增序号,主键
+          // uid - 所属 uid
+          // groupId - 群组ID
+          // tag - 标签
+          // name - 群组名
+          // avatar - 头像
+          // profile - 群组简介
+          // createTime - 创建时间
+          // updateTime - 修改时间
+          // dismissTime - 解散时间
+          // state - 状态 1-正常 0-解散
+          await db.execute(
+              'CREATE TABLE GroupMain (id INTEGER PRIMARY KEY, uid INTEGER, groupId INTEGER, tag TEXT, name TEXT, avatar TEXT, profile TEXT, createTime INTEGER, updateTime INTEGER, dismissTime INTEGER, state INTEGER)');
+
+          // 组员表 - Grouper
+          // id - 自增序号,主键
+          // uid - 所属 uid
+          // groupId - 群组ID
+          // groupUid - 群成员 uid
+          // avatar - 群成员 头像
+          // role - 角色 0-群主 1-管理员 9-普通组员
+          // joinTime - 入群时间
+          // updateTime - 修改时间
+          // quitTime - 退群时间
+          // state - 状态 1-正常 0-已退群
+          await db.execute(
+              'CREATE TABLE Grouper (id INTEGER PRIMARY KEY, uid INTEGER, groupId INTEGER, groupUid INTEGER, avatar TEXT, role INTEGER, joinTime INTEGER, updateTime INTEGER, quitTime INTEGER, state INTEGER)');
+
         },
         onUpgrade: (Database db, int oldVersion, int newVersion) async {
           print('DB onUpgrade oldVersion:$oldVersion, newVersion=$newVersion');

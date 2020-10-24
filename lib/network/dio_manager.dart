@@ -176,8 +176,8 @@ class DioManager {
 
   // 创建新群组
   Future createGroup(
-      String urlPath, int uid, String name, String profile, File image,
-      {Function(String data, String msg) success,
+      String urlPath, int uid, String groupName, String profile, File image,
+      {Function(Map<String,dynamic> data, String msg) success,
       Function(RestErrorEntity) error}) async {
     String path = image.path;
     var name = path.substring(path.lastIndexOf("/") + 1, path.length);
@@ -185,7 +185,7 @@ class DioManager {
 
     FormData formData = FormData.fromMap({
       'uid': uid,
-      'name': name,
+      'name': groupName,
       'profile': profile,
       'file': MultipartFile.fromBytes(
         image.readAsBytesSync(),
@@ -200,7 +200,7 @@ class DioManager {
 
       if (response != null) {
         RestResultBaseWrapper entity =
-            RestResultBaseWrapper<String>.fromJson(response.data);
+            RestResultBaseWrapper<Map<String,dynamic>>.fromJson(response.data);
         if (entity.code == 0) {
           success(entity.data, entity.message);
         } else {

@@ -58,9 +58,9 @@ class _GroupCreatingState extends State<GroupCreating> {
             return;
           }
 
-          await DioManager().createGroup( NWApi.createGroup, UserInfo.user.uid, _nameController.text, _profileController.text,
+          await DioManager().createGroup( NWApi.createGroup, UserInfo.user.uid, _nameController.text, _profileController.text??'',
             avatar,
-            success: (String data, String msg) {
+            success: (Map<String,dynamic> data, String msg) {
               print('data = $data');
               print('message = $msg');
             },

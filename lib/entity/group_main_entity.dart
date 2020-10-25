@@ -29,7 +29,7 @@ class GroupMainEntity {
     this.createTime,
     this.updateTime,
     this.dismissTime,
-    this.state,
+    this.state : 1,
   });
 
   Map<String, dynamic> toMap() {
